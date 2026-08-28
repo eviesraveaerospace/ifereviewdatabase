@@ -44,7 +44,10 @@ def main():
 
     added_total = 0
     for name, cid in channels.items():
-        ids = crawler._yt_search_channel(cid, limit=50)          # 50 most recent uploads
+        # Full-history backfill: page through the channel's entire uploads
+        # playlist (1 API unit per 50 videos — even a 3,000-video channel
+        # costs only ~60 units).
+        ids = crawler._yt_search_channel(cid, limit=10**9)
         details = crawler._yt_fetch_details(ids)
         added = 0
         for vid_id in ids:

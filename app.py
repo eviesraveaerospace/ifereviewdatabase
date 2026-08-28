@@ -264,20 +264,32 @@ def filter_ife_reviews():
 
         if search:
             notes = _load_notes()
-            def _matches(r):
-                if search in (r.get("title") or "").lower():
-                    return True
-                if search in (r.get("transcript_excerpt") or "").lower():
-                    return True
-                if any(search in (c.get("text") or "").lower() for c in r.get("captions") or []):
-                    return True
-                if any(search in (c.get("title") or "").lower() for c in r.get("chapters") or []):
-                    return True
+            # Multi-word queries match as AND over terms; each term can hit any
+            # field ("icelandair boeing" → an Icelandair 737 review matches via
+            # the airline tag + aircraft tag, no verbatim phrase needed).
+            terms = search.split()
+            def _haystack(r):
+                parts = [
+                    r.get("title") or "",
+                    r.get("channel_title") or "",
+                    r.get("ife_system") or "",
+                    r.get("transcript_excerpt") or "",
+                    " ".join(a.get("keyword", "") for a in r.get("airlines_mentioned") or []),
+                    " ".join(a.get("keyword", "") for a in r.get("aircraft_mentioned") or []),
+                    " ".join((c.get("text") or "") for c in r.get("captions") or []),
+                    " ".join((c.get("title") or "") for c in r.get("chapters") or []),
+                ]
                 for n in notes.get(r.get("url", ""), []):
-                    if search in (n.get("text", "") + " " + n.get("author", "")).lower():
-                        return True
-                return False
-            filtered = [r for r in filtered if _matches(r)]
+                    parts.append(n.get("text", "") + " " + n.get("author", ""))
+                hay = " ".join(parts).lower()
+                # searching "boeing"/"airbus" should also hit model-number tags
+                if "boeing" in hay or re.search(r'\b7\d7\b', hay):
+                    hay += " boeing"
+                if "airbus" in hay or re.search(r'\ba3\d{2}\b', hay):
+                    hay += " airbus"
+                return hay
+            filtered = [r for r in filtered
+                        if (lambda h: all(t in h for t in terms))(_haystack(r))]
 
         paged = data_manager.paginate(filtered, page, PER_PAGE)
         return jsonify({
@@ -1214,14 +1226,17 @@ def _make_internal_review(title="", text="", airline="", aircraft="", system="",
 
     low = (title + " " + text).lower()
     feats = {f: True for f, kws in IFE_FEATURE_KEYWORDS.items() if any(kw in low for kw in kws)}
+    # Word-boundary matching (same as the crawler) — substring matching mis-tags
+    # short carrier names like "ana"/"delta"/"level" inside unrelated words.
+    from ife_crawler import _keyword_hits, _keyword_re
     airlines = ([{"keyword": airline.lower(), "mentions": 1}] if airline else [])
-    for kw in AIRLINE_KEYWORDS:
-        if kw in low and all(a["keyword"] != kw for a in airlines):
-            airlines.append({"keyword": kw, "mentions": low.count(kw)})
+    for kw in _keyword_hits(low, AIRLINE_KEYWORDS):
+        if all(a["keyword"] != kw for a in airlines):
+            airlines.append({"keyword": kw, "mentions": len(_keyword_re(kw).findall(low))})
     aircraft_m = ([{"keyword": aircraft.lower(), "mentions": 1}] if aircraft else [])
-    for kw in AIRCRAFT_KEYWORDS:
-        if kw in low and all(a["keyword"] != kw for a in aircraft_m):
-            aircraft_m.append({"keyword": kw, "mentions": low.count(kw)})
+    for kw in _keyword_hits(low, AIRCRAFT_KEYWORDS):
+        if all(a["keyword"] != kw for a in aircraft_m):
+            aircraft_m.append({"keyword": kw, "mentions": len(_keyword_re(kw).findall(low))})
 
     try:
         rating = int(rating) if rating not in (None, "") else None

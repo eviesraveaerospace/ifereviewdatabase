@@ -93,6 +93,28 @@ def _is_offtopic(title):
     return bool(_HOTEL_RE.search(title)) and not _AVIATION_RE.search(title)
 
 
+# ── Crawler relevance gate, re-applied to cached videos ──────────────────────
+# Uses the same (word-boundaried) gate the crawler now applies at crawl time,
+# so junk admitted by the old substring gate gets purged retroactively.
+import ife_crawler as _ic
+
+_gate = _ic.IFECrawler.__new__(_ic.IFECrawler)   # helpers only, no network setup
+_TRUSTED_CHANNELS = {n.lower().replace(" (official)", "") for n in _ic.KNOWN_IFE_CHANNELS}
+
+
+def _video_fails_gate(r):
+    if r.get("media_type") != "video":
+        return False
+    title = r.get("title", "")
+    channel = (r.get("channel_title") or "").strip().lower()
+    return not (
+        channel in _TRUSTED_CHANNELS
+        or _gate._has_ife_keyword(title)
+        or _gate._is_aviation_review(title)
+        or bool(r.get("ife_system"))
+    )
+
+
 def _press_has_ife_content(r):
     """Return True if press article actually covers IFE topics."""
     combined = " ".join([
@@ -122,6 +144,7 @@ for r in data["reviews"]:
         or _is_offtopic(title)
         or any(s.lower() in title.lower() for s in BAD_TITLE_SUBSTRINGS)
         or (is_press and not _press_has_ife_content(r))
+        or _video_fails_gate(r)
     )
     if bad:
         removed.append(f"[{'press' if is_press else 'video'}] {title[:80]}")

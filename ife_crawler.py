@@ -35,6 +35,7 @@ SOURCE_TIERS = {
         "paxinternational.com", "businesstraveller.com", "airlineratings.com",
         "ainonline.com", "aircraft-interiors-international.com", "runwaygirlnetwork.com",
         "aviationpros.com", "cntraveler.com", "travelandleisure.com",
+        "paxex.aero", "aircraftinteriorsinternational.com",
     ],
     # Tier 2 — specialist aviation/travel creators and blogs
     2: [
@@ -127,12 +128,12 @@ _IFE_WORD_RE = re.compile(r'\bife\b', re.IGNORECASE)
 
 IFE_TITLE_KEYWORDS = [
     "inflight entertainment", "in-flight entertainment", "in flight entertainment",
-    "ife system", "ife review",
+    "ife system", "ife review", "ifec", "astrova",
     "panasonic ex3", "panasonic ex2", "panasonic ex1", "panasonic astrova",
     "thales avant", "thales inflyt", "safran rave", "spi rave", "rave aerospace",
     "emirates ice", "viasat ife", "oryx one", "krisworld",
     "studiocx", "studioex", "planet ife", "collins venue",
-    "seatback entertainment", "seatback screen", "seatback display",
+    "seatback entertainment", "seatback screen", "seatback display", "seatback",
     "airline entertainment review", "flight entertainment system",
     "4k ife", "4k inflight", "oled inflight",
     # broader flight-review terms — nearly every cabin/seat review covers IFE
@@ -274,6 +275,12 @@ AIRLINE_KEYWORDS = [
     "virgin atlantic", "iberia", "tap air portugal", "swiss", "austrian airlines",
     "qantas", "air new zealand", "china eastern", "china southern", "hainan airlines",
     "level", "wizz air", "ryanair", "easyjet",
+    # Safran RAVE operators (must stay in sync with AIRLINE_IFE_LOOKUP)
+    "icelandair", "sun country", "volaris", "frontier airlines", "allegiant",
+    # other frequently reviewed carriers
+    "jetblue", "hawaiian airlines", "aer lingus", "ita airways", "westjet",
+    "latam", "avianca", "condor", "discover airlines", "breeze airways",
+    "porter airlines", "spirit airlines", "zipair", "saudia", "aeromexico",
 ]
 
 AIRCRAFT_KEYWORDS = [
@@ -281,6 +288,23 @@ AIRCRAFT_KEYWORDS = [
     "dreamliner", "airbus", "boeing", "737 max", "a321neo", "a350-900", "a350-1000",
     "777x", "787-9", "787-10",
 ]
+
+
+# Word-boundary keyword matching — short names like "ana", "jal", "level",
+# "swiss", or "delta" must not match inside unrelated words ("banana", "wife",
+# "sea level"). Substring `kw in text` matching is what let story-narration and
+# anime spam through the relevance gate.
+_KEYWORD_RE_CACHE: Dict[str, "re.Pattern"] = {}
+
+def _keyword_re(kw: str) -> "re.Pattern":
+    pat = _KEYWORD_RE_CACHE.get(kw)
+    if pat is None:
+        pat = re.compile(r'(?<![\w-])' + re.escape(kw) + r'(?![\w-])', re.IGNORECASE)
+        _KEYWORD_RE_CACHE[kw] = pat
+    return pat
+
+def _keyword_hits(text: str, keywords: List[str]) -> List[str]:
+    return [kw for kw in keywords if _keyword_re(kw).search(text)]
 
 
 # ── Structured spec extraction ────────────────────────────────────────────────
@@ -398,6 +422,7 @@ AIRLINE_IFE_LOOKUP = {
     "sun country":       "Safran RAVE",
     "volaris":           "Safran RAVE",
     "frontier":          "Safran RAVE",
+    "frontier airlines": "Safran RAVE",
     "allegiant":         "Safran RAVE",
 }
 
@@ -444,11 +469,10 @@ KNOWN_IFE_CHANNELS: dict = {
     # Verified channel IDs — each costs 100 API units/day
     # To verify: channels?part=snippet&id=UC... (1 unit, batch up to 50)
     "Million Miles Marc":       "UCGZI_9g_4mWWZbTvO1N9Y4Q",  # verified ✓
-    "ThemeParksandAttractions": "UCAzX7J8GbLSELJX4ecUI04A",  # verified ✓
     "Chris Films Things":       "UCIIotzUXweA445T6h8fBXRQ",  # verified ✓
     "theplanesguy":             "UClm9qlyx-E68Q3gGuaBj-SQ",  # verified ✓
     "From the Wing":            "UCOBUoOstpv-yCHZk2B77gXw",  # verified ✓
-    "Nonstop Dan":              "UCLQ5XNN9iT4DmCbZXpy5Fdw",  # verified ✓
+    "Nonstop Dan":              "UCrLe85KbtkqnnSnIVc-KLjA",  # main flight-review channel (old ID was Nonstop Dan Vlogs — hotels)
     "Simply Aviation":          "UCEF-9XhkdyFY0hMRUkmxXfQ",  # verified ✓
     "Eric Struk":               "UCDv-Fv9bAt-1bU9EBOnqHvw",  # verified ✓
     "Dennis Bunnik":            "UCQrk97MBH6DToctKRfQJcNQ",  # verified ✓ (DennisBunnik Travels)
@@ -516,6 +540,12 @@ AUTO_DISCOVERY_QUERIES = [
     'new inflight entertainment system airline launch 2025',
     'aircraft interiors expo IFE system 2024',
     'airline wifi Starlink passenger review 2025',
+    # Site-targeted — PaxEx trade press (Runway Girl Network and peers)
+    'site:runwaygirlnetwork.com inflight entertainment',
+    'site:runwaygirlnetwork.com IFE review',
+    'site:apex.aero inflight entertainment',
+    'site:paxex.aero inflight entertainment',
+    'site:aircraftinteriorsinternational.com inflight entertainment',
     # French (Air France, Corsair — both RAVE Ultra operators)
     '"divertissement à bord" Air France avis',
     '"divertissement en vol" Air France classe affaires',
@@ -673,6 +703,8 @@ _AIRLINE_QUERY_TEMPLATES = [
     "{a} inflight entertainment review",
     "{a} economy class review IFE",
     "{a} business class review screen",
+    # generic — gate accepts any flight review now, so search for them too
+    "{a} trip report",
 ]
 # Aircraft-type queries (an IFE system usually ships per fleet type).
 _AIRCRAFT_QUERIES = [
@@ -951,32 +983,47 @@ class IFECrawler:
             return []
 
     def _yt_search_channel(self, channel_id: str, limit: int = 50, published_after: str = None) -> List[str]:
-        """Search within a specific channel — catches reviewers regardless of keyword matching."""
-        params = {
-            "part": "id",
-            "channelId": channel_id,
-            "type": "video",
-            "maxResults": min(limit, 50),
-            "order": "date",
-            "key": self.api_key,
-        }
-        if published_after:
-            params["publishedAfter"] = published_after
+        """List a channel's uploads via its uploads playlist (ID = channel ID with
+        UC→UU). playlistItems costs 1 quota unit per 50 videos vs 100 for
+        search.list, and paginates arbitrarily deep — so backfills can reach past
+        the 50 most recent uploads. Items come newest-first; stops early once
+        published_after is passed."""
+        playlist_id = "UU" + channel_id[2:] if channel_id.startswith("UC") else channel_id
+        ids: List[str] = []
+        page_token = None
         try:
-            resp = self.session.get(
-                "https://www.googleapis.com/youtube/v3/search",
-                params=params,
-                timeout=15,
-                verify=self.verify_ssl,
-            )
-            resp.raise_for_status()
-            return [
-                item["id"]["videoId"]
-                for item in resp.json().get("items", [])
-                if item.get("id", {}).get("videoId")
-            ]
+            while len(ids) < limit:
+                params = {
+                    "part": "snippet,contentDetails",
+                    "playlistId": playlist_id,
+                    "maxResults": min(limit - len(ids), 50),
+                    "key": self.api_key,
+                }
+                if page_token:
+                    params["pageToken"] = page_token
+                resp = self.session.get(
+                    "https://www.googleapis.com/youtube/v3/playlistItems",
+                    params=params,
+                    timeout=15,
+                    verify=self.verify_ssl,
+                )
+                resp.raise_for_status()
+                data = resp.json()
+                for item in data.get("items", []):
+                    vid = item.get("contentDetails", {}).get("videoId")
+                    if not vid:
+                        continue
+                    published = (item.get("contentDetails", {}).get("videoPublishedAt")
+                                 or item.get("snippet", {}).get("publishedAt") or "")
+                    if published_after and published and published < published_after:
+                        return ids
+                    ids.append(vid)
+                page_token = data.get("nextPageToken")
+                if not page_token:
+                    break
+            return ids
         except Exception:
-            return []
+            return ids
 
     def _yt_fetch_details(self, video_ids: List[str]) -> Dict[str, dict]:
         """Batch-fetch snippet + statistics for up to 50 videos per call (1 quota unit each)."""
@@ -1001,18 +1048,38 @@ class IFECrawler:
                 pass
         return details
 
-    # Broader "is this a flight/cabin review" gate — applied only to videos from
-    # trusted reviewer channels, whose titles often name the airline/class rather
-    # than an explicit IFE keyword (e.g. "Emirates A380 First Class").
+    # Broader "is this a flight/cabin review" gate — accepts any video whose
+    # title/description names an airline, aircraft, or review term (e.g.
+    # "Icelandair 737 MAX 8 Economy Class Trip Report"), no IFE keyword needed.
     _AVIATION_REVIEW_TERMS = (
         "business class", "first class", "economy class", "premium economy",
         "class review", "cabin", "flight review", "trip report", "inflight",
         "in-flight", "in flight", "onboard", "on board", "seat review", "flew",
     )
 
+    # Generic aviation vocabulary — catches reviews of carriers that aren't in
+    # AIRLINE_KEYWORDS (Starlux, SriLankan, Asiana, IndiGo, …). Word-boundaried
+    # so "flew"≠"flower"; includes the airplane emoji and CJK/Korean cabin terms.
+    _AVIATION_GENERIC_RE = re.compile(
+        r'\b(airlines?|airways|airline\b|air lines|flights?|flying|flew|aviation'
+        r'|aircraft|airplanes?|aeroplanes?|planes?|airport|boarding|takeoff|landing'
+        r'|fly|flies|flag carrier'
+        r'|boeing|airbus|embraer|a3\d{2}s?|7\d7s?|dreamliners?)\b'
+        r'|✈|飛行機|機内|机上|机内|搭乗|航空|エコノミー|ビジネスクラス|ファーストクラス'
+        r'|항공|기내|비행',
+        re.IGNORECASE,
+    )
+
+    # Carrier names shaped like "Air China" / "Oman Air" / "Riyadh Air" that
+    # aren't in AIRLINE_KEYWORDS. Case-sensitive on purpose — proper nouns only,
+    # so "air conditioner" or "fresh air" never match.
+    _AIR_CARRIER_RE = re.compile(r'\b[Aa][Ii][Rr]\s+[A-Z]|\b[A-Z][a-zA-Z]+\s+[Aa][Ii][Rr]\b')
+
     def _is_aviation_review(self, text: str) -> bool:
         t = text.lower()
-        if self._mentions(t, AIRLINE_KEYWORDS) or self._mentions(t, AIRCRAFT_KEYWORDS):
+        if _keyword_hits(t, AIRLINE_KEYWORDS) or _keyword_hits(t, AIRCRAFT_KEYWORDS):
+            return True
+        if self._AVIATION_GENERIC_RE.search(text) or self._AIR_CARRIER_RE.search(text):
             return True
         return any(k in t for k in self._AVIATION_REVIEW_TERMS)
 
@@ -1032,9 +1099,11 @@ class IFECrawler:
         # so AI drama / movie review descriptions don't slip through via "life"/"wife".
         desc_match = self._has_ife_keyword(description, skip_broad=True)
         if not title_match and not desc_match:
-            # Trusted reviewer channels: accept genuine flight/cabin reviews even
-            # without an explicit IFE keyword — their content covers IFE.
-            if not (trusted and self._is_aviation_review(title + " " + description)):
+            # Accept any genuine flight/cabin review even without an explicit
+            # IFE keyword — most cabin reviews cover the IFE anyway. Title only:
+            # long descriptions of unrelated videos routinely contain "flew",
+            # "cabin", "on board", or an airline-name lookalike.
+            if not self._is_aviation_review(title):
                 return None
 
         published_at = snippet.get("publishedAt", "")
@@ -1152,8 +1221,11 @@ class IFECrawler:
             channel_meta = soup.find("link", {"itemprop": "name"})
             channel_title = channel_meta["content"].strip() if channel_meta and channel_meta.get("content") else ""
 
-            if not self._has_ife_keyword(title) and not self._has_ife_keyword(description):
-                return None
+            if not self._has_ife_keyword(title) and not self._has_ife_keyword(description, skip_broad=True):
+                # Same fallback as the API path: genuine flight/cabin reviews
+                # nearly always cover the IFE even without an explicit keyword.
+                if not self._is_aviation_review(title):
+                    return None
             if _is_spam_video(title):
                 return None
 
@@ -1445,7 +1517,8 @@ class IFECrawler:
         return {f: True for f, kws in IFE_FEATURE_KEYWORDS.items() if any(kw in text for kw in kws)}
 
     def _mentions(self, text: str, keywords: List[str]) -> List[Dict]:
-        out = [{"keyword": kw, "mentions": text.count(kw)} for kw in keywords if kw in text]
+        out = [{"keyword": kw, "mentions": len(_keyword_re(kw).findall(text))}
+               for kw in _keyword_hits(text, keywords)]
         return sorted(out, key=lambda x: x["mentions"], reverse=True)[:5]
 
     def _year_from_meta(self, soup: BeautifulSoup) -> Optional[int]:

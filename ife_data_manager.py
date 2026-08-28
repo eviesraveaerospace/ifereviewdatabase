@@ -1,7 +1,16 @@
 import json
 import os
+import re
 from datetime import datetime
 from ife_crawler import IFECrawler
+
+# CJK / Hangul / Thai / Arabic / Cyrillic — a title with 3+ such chars is a
+# non-English-language upload.
+_NONLATIN_RE = re.compile(r'[぀-ヿ㐀-鿿가-힯฀-๿؀-ۿЀ-ӿ]')
+
+
+def _is_nonlatin_title(title: str) -> bool:
+    return len(_NONLATIN_RE.findall(title or "")) >= 3
 
 # ── VADER sentiment (optional — degrades gracefully if nltk missing) ──────────
 try:
@@ -69,9 +78,41 @@ class IFEDataManager:
             if r_richer:
                 best[url] = r
         deduped = list(best.values())
+
+        # Language duplicates: bilingual channels (e.g. Jayden Wong) upload the
+        # same review twice — an English and a non-English version — usually
+        # within minutes of each other. When a same-channel English-titled video
+        # exists within 12 h of a non-Latin-titled one, keep the English one.
+        def _exact_ts(r):
+            # Real publish timestamp only — the year-based fallback in
+            # _published_ts would make all undated same-year videos "simultaneous".
+            try:
+                return datetime.fromisoformat((r.get("published_at") or "").replace("Z", "+00:00")).timestamp()
+            except ValueError:
+                return None
+
+        latin_ts_by_channel = {}
+        for r in deduped:
+            if r.get("media_type") != "video" or _is_nonlatin_title(r.get("title", "")):
+                continue
+            ts = _exact_ts(r)
+            if ts:
+                latin_ts_by_channel.setdefault((r.get("channel_title") or "").strip().lower(), []).append(ts)
+
+        def _is_lang_dup(r):
+            if r.get("media_type") != "video" or not _is_nonlatin_title(r.get("title", "")):
+                return False
+            ts = _exact_ts(r)
+            if ts is None:
+                return False
+            partners = latin_ts_by_channel.get((r.get("channel_title") or "").strip().lower(), [])
+            return any(abs(ts - p) <= 12 * 3600 for p in partners)
+
+        deduped = [r for r in deduped if not _is_lang_dup(r)]
+
         removed = len(self.data.get("reviews", [])) - len(deduped)
         if removed > 0:
-            print(f"[dedupe] removed {removed} duplicate-URL review(s)")
+            print(f"[dedupe] removed {removed} duplicate review(s)")
         self.data["reviews"] = deduped
 
     def save_cache(self):
