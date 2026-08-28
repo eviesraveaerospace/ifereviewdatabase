@@ -51,6 +51,37 @@ def segs_to_result(segs):
     return caps, excerpt, full
 
 
+# Helper-only crawler instance (no network setup) for text analysis.
+_analyzer = IFECrawler.__new__(IFECrawler)
+from ife_crawler import _extract_specs, AIRLINE_KEYWORDS, AIRCRAFT_KEYWORDS, infer_ife_system
+
+# Fields (re)derived from the transcript — merged into the cache alongside the
+# transcript itself.
+ENRICH_KEYS = ("ife_system", "ife_system_guess", "ife_features", "ife_specs",
+               "airlines_mentioned", "aircraft_mentioned")
+
+
+def enrich_from_transcript(r):
+    """Re-run system/feature/spec/mention detection now that the transcript
+    exists — crawl-time detection only saw title+description, so systems that
+    are named only in speech (very common) were never tagged."""
+    text = (r.get("title", "") + " " + (r.get("transcript_full") or "")).lower()
+    detected = _analyzer._detect_system(text)
+    if detected and not r.get("ife_system"):
+        r["ife_system"] = detected
+        r["ife_system_inferred"] = False
+    feats = dict(r.get("ife_features") or {})
+    feats.update(_analyzer._features(text))
+    r["ife_features"] = feats
+    specs = _extract_specs(text)
+    specs.update(r.get("ife_specs") or {})   # keep existing values on conflict
+    r["ife_specs"] = specs
+    r["airlines_mentioned"] = _analyzer._mentions(text, AIRLINE_KEYWORDS)
+    r["aircraft_mentioned"] = _analyzer._mentions(text, AIRCRAFT_KEYWORDS)
+    if not r.get("ife_system"):
+        r["ife_system_guess"] = infer_ife_system(r["airlines_mentioned"], r["aircraft_mentioned"])
+
+
 def fetch_yt_segs(video_id, cookies_path=None):
     """Try YouTube transcript API (manual → auto-generated → any language)."""
     try:
@@ -250,7 +281,7 @@ def main():
                 if u in processed and u in by_url:
                     tgt = by_url[u]
                     for k in ("transcript_available", "transcript_excerpt", "captions",
-                              "transcript_full", "transcript_source"):
+                              "transcript_full", "transcript_source") + ENRICH_KEYS:
                         if k in rr:
                             tgt[k] = rr[k]
             if to_remove:
@@ -278,6 +309,7 @@ def main():
             r["transcript_excerpt"] = excerpt
             r["captions"] = caps
             r["transcript_full"] = full
+            enrich_from_transcript(r)
             processed.add(r["url"])
             yt_ok += 1
             print(f"[{idx}/{len(targets)}] YT-OK    {vid_id}")
@@ -298,6 +330,7 @@ def main():
                 r["captions"] = caps
                 r["transcript_full"] = full
                 r["transcript_source"] = "whisper"
+                enrich_from_transcript(r)
                 processed.add(r["url"])
                 whisper_ok += 1
                 print(f"[{idx}/{len(targets)}] WH-OK    {vid_id}  ({len(caps)} caps)")
