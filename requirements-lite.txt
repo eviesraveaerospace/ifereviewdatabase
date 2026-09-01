@@ -1,0 +1,11 @@
+requests
+beautifulsoup4
+flask
+gunicorn
+youtube-transcript-api
+python-dotenv
+yt-dlp
+nltk
+anthropic
+deep-translator
+openpyxl
