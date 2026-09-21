@@ -274,9 +274,10 @@ def filter_ife_reviews():
                     r.get("channel_title") or "",
                     r.get("ife_system") or "",
                     r.get("transcript_excerpt") or "",
+                    r.get("transcript_full_en") or "",
                     " ".join(a.get("keyword", "") for a in r.get("airlines_mentioned") or []),
                     " ".join(a.get("keyword", "") for a in r.get("aircraft_mentioned") or []),
-                    " ".join((c.get("text") or "") for c in r.get("captions") or []),
+                    " ".join((c.get("text_en") or c.get("text") or "") for c in r.get("captions") or []),
                     " ".join((c.get("title") or "") for c in r.get("chapters") or []),
                 ]
                 for n in notes.get(r.get("url", ""), []):
@@ -412,7 +413,9 @@ def export_csv():
                 return True
             if q in (r.get("transcript_excerpt") or "").lower():
                 return True
-            if any(q in (c.get("text") or "").lower() for c in r.get("captions") or []):
+            if q in (r.get("transcript_full_en") or "").lower():
+                return True
+            if any(q in (c.get("text_en") or c.get("text") or "").lower() for c in r.get("captions") or []):
                 return True
             if any(q in (c.get("title") or "").lower() for c in r.get("chapters") or []):
                 return True
@@ -660,8 +663,8 @@ def _feature_mentions(reviews):
     """How often each feature is actually *discussed* in transcripts (not just tagged)."""
     out = {}
     for r in reviews:
-        parts = [r.get("transcript_excerpt") or ""]
-        parts += [c.get("text", "") for c in (r.get("captions") or [])]
+        parts = [r.get("transcript_excerpt") or "", r.get("transcript_full_en") or ""]
+        parts += [c.get("text_en") or c.get("text", "") for c in (r.get("captions") or [])]
         text = " ".join(parts).lower()
         if not text.strip():
             continue
@@ -790,8 +793,8 @@ def ife_feature_detail():
         kws = IFE_FEATURE_KEYWORDS.get(key, [])
         mentions = 0
         for r in tagged:
-            parts = [r.get("transcript_excerpt") or ""]
-            parts += [c.get("text", "") for c in (r.get("captions") or [])]
+            parts = [r.get("transcript_excerpt") or "", r.get("transcript_full_en") or ""]
+            parts += [c.get("text_en") or c.get("text", "") for c in (r.get("captions") or [])]
             text = " ".join(parts).lower()
             mentions += sum(text.count(kw) for kw in kws)
 
@@ -994,10 +997,11 @@ def _search_text(r: dict) -> str:
         r.get("ife_system", "") or "",
         r.get("channel_title", "") or "",
         r.get("transcript_excerpt", "") or "",
+        r.get("transcript_full_en", "") or "",
         " ".join(a.get("keyword", "") for a in r.get("airlines_mentioned", [])),
         " ".join(a.get("keyword", "") for a in r.get("aircraft_mentioned", [])),
         " ".join(r.get("ife_features", {}).keys()),
-        " ".join(c.get("text", "") for c in r.get("captions", []) or []),
+        " ".join(c.get("text_en") or c.get("text", "") for c in r.get("captions", []) or []),
     ]
     return " ".join(parts)
 

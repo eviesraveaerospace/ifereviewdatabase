@@ -8,4 +8,6 @@ yt-dlp
 nltk
 anthropic
 deep-translator
+langdetect
+argostranslate
 openpyxl
