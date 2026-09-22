@@ -20,6 +20,14 @@ from pathlib import Path
 
 sys.stdout.reconfigure(encoding="utf-8")
 
+# Pick up YOUTUBE_COOKIES_B64 / WHISPER_MODEL from a local .env (CI sets them
+# directly in the job environment, which load_dotenv leaves untouched).
+try:
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).parent / ".env")
+except ImportError:
+    pass
+
 from youtube_transcript_api import YouTubeTranscriptApi
 
 # Write cookies.txt from env if provided, return path or None

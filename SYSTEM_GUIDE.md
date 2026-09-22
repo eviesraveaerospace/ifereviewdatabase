@@ -2,7 +2,7 @@
 
 Everything about how this system works: what it collects, how it parses, what queries and keywords it uses, when things run, and how to pick the work back up on a fresh machine.
 
-Last updated: July 31, 2026 · Database at time of writing: **1,249 reviews** (1,225 videos, 24 articles), **622 with transcripts**, **107 explicitly matched to a named IFE system**. Non-English titles, captions, and comments carry English translations (`title_en` / `text_en`).
+Last updated: September 22, 2026 · Database at time of writing: **7,443 reviews** (7,400 videos, 42 articles, 1 internal), **1,321 with transcripts** (323 via Whisper), **192 explicitly matched to a named IFE system**, **2,195 with chapters**. Non-English transcripts carry a full English translation (`transcript_full_en`); non-English titles, captions, and comments carry `title_en` / `text_en`.
 
 ---
 
@@ -27,7 +27,7 @@ A self-hosted competitive-intelligence tool for airline in-flight entertainment 
 
 ### Fields on each review record
 
-`url`, `title`, `year`, `published_at`, `channel_title`, `view_count`, `like_count`, `media_type` (video/article), `source_tier`/`source_name` (1 Press, 2 Creator/Official), `airlines_mentioned`, `aircraft_mentioned`, `ife_system` (only when explicitly named in content), `ife_system_guess` (airline-based inference — never displayed), `ife_system_manual` (true when hand-corrected), `ife_features` (feature tags), `ife_specs`, `sentiment`, `transcript_available`, `transcript_excerpt`, `captions` (timestamped lines), `transcript_full`, `transcript_source` (captions/whisper), `chapters`, `yt_comments`.
+`url`, `title`, `year`, `published_at`, `channel_title`, `view_count`, `like_count`, `media_type` (video/article), `source_tier`/`source_name` (1 Press, 2 Creator/Official), `airlines_mentioned`, `aircraft_mentioned`, `ife_system` (only when explicitly named in content), `ife_system_guess` (airline-based inference — never displayed), `ife_system_manual` (true when hand-corrected), `ife_features` (feature tags), `ife_specs`, `sentiment`, `transcript_available`, `transcript_excerpt`, `captions` (timestamped lines), `transcript_full`, `transcript_source` (captions/whisper), `transcript_lang` (langdetect code, or `garbage` for Whisper hallucination output), `transcript_full_en` (English translation when the transcript is not English), `transcript_excerpt_orig` (pre-translation excerpt), `title_en`, `chapters`, `yt_comments`.
 
 ## 3. How data is collected and parsed
 
@@ -50,7 +50,11 @@ The searchable text = title + description + transcript. Against it:
 
 ### Transcript backfill (for videos discovery missed)
 
-`backfill_transcripts.py` walks all videos without transcripts: YouTube captions first, then **local Whisper** (via yt-dlp audio download) for videos with no captions. Checkpoints the cache every 25 videos. YouTube bot-blocks anonymous transcript requests after a while — set `YOUTUBE_COOKIES_B64` (base64 of a Netscape cookies.txt exported from a logged-in browser) to get past it. **As of July 30: 539 videos still lack transcripts because of a bot-block mid-run; rerun with cookies to continue.**
+`backfill_transcripts.py` walks all videos without transcripts: YouTube captions first, then **local Whisper** (via yt-dlp audio download) for videos with no captions. Checkpoints the cache every 25 videos with a merge-based save, so it can run while the dashboard or `translate_captions.py` is also writing. `MAX_RUNTIME_MIN` stops it cleanly after a time budget. YouTube bot-blocks anonymous transcript requests from most fixed IPs — set `YOUTUBE_COOKIES_B64` in `.env` (base64 of a Netscape cookies.txt exported from a logged-in browser); if unset it tries to borrow cookies from a signed-in Edge/Chrome/Firefox profile on the same machine. **As of September 22: 6,079 videos lack transcripts** — the daily cloud crawl adds far more videos than the nightly Whisper window can transcribe, so the backlog grows unless the grind runs every night.
+
+### Translation (for non-English transcripts)
+
+`translate_captions.py` runs after the backfill. For each transcript that is not English it produces `transcript_full_en` (offline **Argos Translate** when a language pack is installed, otherwise Google Translate via `deep-translator`), rebuilds `transcript_excerpt` / `captions` from the English text, and re-runs system/feature/airline/aircraft detection on it. It also flags Whisper hallucination output (repeated filler on silent or music-only audio) as `transcript_lang=garbage` so it is excluded from search. A legacy per-line pass still translates non-Latin titles, caption lines, and comments (`title_en` / `text_en`). Dashboard search and feature counters include the English text.
 
 ## 4. Current queries and keywords
 
@@ -71,15 +75,15 @@ Counts as of July 30, 2026 (all defined in [ife_crawler.py](ife_crawler.py)):
 | Daily discovery crawl | 3:00 AM UTC daily (`daily_crawl.yml`), commits `ife_cache.json` to git | GitHub Actions (cloud) |
 | Transcript backfill workflows | manual dispatch (`backfill.yml`, `backfill_transcripts.yml`) | GitHub Actions |
 | Local background crawl | on server start, then every 24 h while `serve.py`/`app.py` runs (7-day lookback, max 500) | your machine |
-| Dashboard auto-start | Windows scheduled task "IFE ReviewDB Dashboard" launches `serve.py` (hidden) at every logon | your machine |
-| Nightly transcript grind | Windows scheduled task "IFE ReviewDB Nightly Transcripts" — 9 PM daily, 5 h Whisper window via `nightly_transcripts.cmd`, then auto-commits and pushes gains | your machine |
+| Dashboard auto-start | Windows scheduled task "IFE ReviewDB Dashboard" launches `serve.py` (hidden) at every logon | host machine / VM |
+| Nightly transcript grind | Windows scheduled task "IFE ReviewDB Nightly Transcripts" — 9 PM daily via `nightly_transcripts.cmd`: `git pull`, 5 h Whisper window (`MAX_RUNTIME_MIN=300`), translation pass, then auto-commits and pushes to `origin` (rebases and retries if CI pushed meanwhile). Script is path-independent: runs from its own directory and uses `python` from PATH (`IFE_PYTHON` overrides). | host machine / VM |
 | Daily chapter gather | 13:30 UTC (6:30 AM PT) daily (`daily_chapters.yml`), commits chapters to git | GitHub Actions (cloud) |
 | Manual crawl | "Crawl" button in the dashboard → `/api/ife-seed` (365-day lookback) | your machine |
 | Seed crawl | automatic on start only if the database has < 50 reviews | your machine |
 
 The cloud and local crawls are independent — they sync only through git (`git pull` to receive CI's data, `git push` to publish local work). Dedupe-by-URL resolves overlaps.
 
-**Cloud requirement:** the GitHub repo needs Actions secrets `YOUTUBE_API_KEY` and (for transcript workflows) `YOUTUBE_COOKIES_B64`. When moving to the team repo, re-add these under Settings → Secrets and variables → Actions.
+**Cloud requirement:** the GitHub repo needs Actions secrets `YOUTUBE_API_KEY` and (for the manual `backfill_transcripts.yml` workflow) `YOUTUBE_COOKIES_B64`, under Settings → Secrets and variables → Actions. `YOUTUBE_API_KEY` is confirmed configured on eviesraveaerospace/ifereviewdatabase — the daily crawl has been committing successfully. `YOUTUBE_COOKIES_B64` is unverified there; the cloud transcript workflow last succeeded July 31, and cookies expire, so re-export before dispatching it.
 
 ## 6. The dashboard
 
@@ -97,15 +101,22 @@ python serve.py        # dashboard up at http://<your-ip>:5000
 ```
 Everything else (daily crawl thread) starts automatically with it.
 
-### On a fresh machine
+### On a fresh machine / the VM
 ```
 git clone https://github.com/eviesraveaerospace/ifereviewdatabase.git
 cd ifereviewdatabase
-pip install -r requirements.txt
-# create .env with YOUTUBE_API_KEY=... and optionally ANTHROPIC_API_KEY=...
+pip install -r requirements.txt      # requirements-lite.txt if Whisper is not needed
+copy .env.example .env               # fill in YOUTUBE_API_KEY, YOUTUBE_COOKIES_B64, optionally ANTHROPIC_API_KEY
 python serve.py
 ```
 The clone includes the full parsed database — no re-crawling needed.
+
+For the nightly grind the host also needs **ffmpeg on PATH** (Whisper audio decoding), git credentials that can push to `origin`, and `add_firewall_rule.ps1` run once if teammates should reach the dashboard. Then register the two scheduled tasks from the repo directory:
+```
+schtasks /Create /TN "IFE ReviewDB Dashboard" /SC ONLOGON /TR "\"%CD%\serve.py\"" /F
+schtasks /Create /TN "IFE ReviewDB Nightly Transcripts" /SC DAILY /ST 21:00 /TR "\"%CD%\nightly_transcripts.cmd\"" /F
+```
+(For the dashboard task, point `/TR` at `pythonw.exe serve.py` if you want it hidden.) Smoke-test the grind before trusting the schedule: `set MAX_RUNTIME_MIN=5` then run `nightly_transcripts.cmd` and read `nightly_transcripts_log.txt` — it should show `Using YOUTUBE_COOKIES_B64` (or local browser cookies), a few `YT-OK` / `WH-OK` lines, and a push.
 
 ### Keeping data in sync
 ```
@@ -113,12 +124,14 @@ git pull    # before doing anything — CI commits daily at 3 AM UTC
 git push    # after local crawls/edits, so the repo (and teammates) get them
 ```
 
-### Unfinished work / next steps (as of July 30, 2026)
-1. **603 videos still need transcripts** — as of July 31, YouTube fully IP-blocks anonymous transcript requests from the office machine (every attempt fails immediately). Rerun `python backfill_transcripts.py` only with `YOUTUBE_COOKIES_B64` set (base64 of a cookies.txt exported from a signed-in browser), or dispatch the `backfill_transcripts.yml` workflow on GitHub if its cookie secret is still valid. Stop the dashboard first or accept checkpoint clobber risk on concurrent manual edits.
-2. **System tags are sparse on purpose** (107 explicit of 1,249) — use the dashboard's ✎ editor to confirm systems video-by-video; manual tags are protected from automation.
-3. **Share link blocked for teammates** — machine-side firewall is verified fine; suspect VPN/subnet/AP-isolation between clients. Teammate diagnostic: `Test-NetConnection <host-ip> -Port 5000`. Long-term fix: internal VM (discussion with IT in progress).
-4. **YouTube API compliance review** — final notice July 30; respond within 7 business days with `compliance_sample_report.html` (regenerate anytime with `python generate_compliance_report.py`; kept out of git deliberately).
-5. **Team repo Actions secrets** not yet configured (see section 5).
+### Unfinished work / next steps (as of September 22, 2026)
+1. **Move the nightly grind to the VM.** The office-machine scheduled tasks are retired; `nightly_transcripts.cmd` and `run_crawl.bat` are now path-independent. Follow "On a fresh machine / the VM" above, export fresh YouTube cookies into `.env`, and smoke-test with a short `MAX_RUNTIME_MIN` before enabling the 9 PM task. The last nightly commit landed September 10.
+2. **6,079 videos still need transcripts** (of 7,400). The cloud crawl now adds hundreds of videos a day and cookies-free transcript fetches are IP-blocked, so only the nightly Whisper window with cookies makes progress (the last two 5 h runs, Sep 1 and Sep 10, gained 79 and 157 transcripts). Consider `WHISPER_MODEL=tiny` on a slow VM, or dispatching `backfill_transcripts.yml` in parallel once its cookie secret is refreshed.
+3. **Translation coverage.** 86 non-English transcripts are translated; 34 are flagged `garbage`. Argos language packs are only used when installed on the host (`argospm install translate-<lang>_en`); otherwise Google Translate is used, which is rate-limited and occasionally fails mid-run — the pass is idempotent, just rerun `python translate_captions.py`.
+4. **System tags are sparse on purpose** (192 explicit of 7,443, 2 manual) — use the dashboard's ✎ editor to confirm systems video-by-video; manual tags are protected from automation.
+5. **Share link for teammates** — once the dashboard runs on the VM this replaces the office-machine link that VPN/AP isolation blocked. Teammate diagnostic if it still fails: `Test-NetConnection <vm-ip> -Port 5000`.
+6. **`YOUTUBE_COOKIES_B64` Actions secret** on the primary repo is unverified (see section 5). `YOUTUBE_API_KEY` is confirmed working.
+7. **Retired repo** eviebngo/IFE-Review-Crawler still exists; nothing pushes to it anymore. Archive it on GitHub when convenient so nobody clones a stale copy.
 
 ### Maintenance scripts (all idempotent unless noted)
 | Script | Purpose |
@@ -129,6 +142,6 @@ git push    # after local crawls/edits, so the repo (and teammates) get them
 | `gather_channel_stats.py` / `backfill_channels.py` | Refresh reviewer channel info |
 | `gather_chapters.py` / `gather_comments.py` | Enrich videos with chapters / public comments |
 | `regather_captions.py` / `merge_transcripts.py` | Caption maintenance |
-| `translate_captions.py` | Translate non-English titles, captions, and comments to English |
+| `translate_captions.py` | Translate non-English transcripts (full text, Argos → Google fallback), titles, captions, and comments to English; flag Whisper-noise transcripts |
 | `purge_spam.py` | Remove known-spam content (destructive — review before running) |
 | `generate_compliance_report.py` | Build the YouTube API compliance sample report |
