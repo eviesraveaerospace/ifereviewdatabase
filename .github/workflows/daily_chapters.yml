@@ -8,7 +8,7 @@ on:
 jobs:
   chapters:
     # Scheduled runs only on the canonical repo, where the API secrets live.
-    if: github.repository == 'eviebngo/IFE-Review-Crawler' || github.event_name == 'workflow_dispatch'
+    if: github.repository == 'eviesraveaerospace/ifereviewdatabase' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:

@@ -12,7 +12,7 @@ A self-hosted competitive-intelligence tool for airline in-flight entertainment 
 
 - **Dashboard:** Flask app ([app.py](app.py)) + single-page UI ([templates/index.html](templates/index.html))
 - **Launcher:** `python serve.py` → binds `0.0.0.0:5000` so teammates on the office network can open `http://<your-ip>:5000/`
-- **Repos:** https://github.com/eviesraveaerospace/ifereviewdatabase (team) · https://github.com/eviebngo/IFE-Review-Crawler (original)
+- **Repos:** https://github.com/eviesraveaerospace/ifereviewdatabase (primary; runs the daily GitHub Actions crawl) · https://github.com/eviebngo/IFE-Review-Crawler (original, retired Sep 2026)
 
 ## 2. Where the data lives
 

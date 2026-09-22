@@ -9,7 +9,7 @@ jobs:
   crawl:
     # Scheduled crawls run only on the canonical repo, where the API secrets
     # live — prevents nightly failure emails from secretless forks/mirrors.
-    if: github.repository == 'eviebngo/IFE-Review-Crawler' || github.event_name == 'workflow_dispatch'
+    if: github.repository == 'eviesraveaerospace/ifereviewdatabase' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       contents: write       # needed to push the updated cache back
