@@ -43,12 +43,17 @@ else
     git commit -q -m "data: nightly transcript backfill (VM)" >> "$LOG" 2>&1
     if ! git push origin main >> "$LOG" 2>&1; then
         log "push rejected; rebasing onto origin/main and retrying"
-        if git pull --rebase origin main >> "$LOG" 2>&1 && git push origin main >> "$LOG" 2>&1; then
-            log "push succeeded after rebase"
-        else
-            git rebase --abort >> "$LOG" 2>&1
-            log "PUSH FAILED - local commit kept; resolve manually"
+        if ! git pull --rebase origin main >> "$LOG" 2>&1; then
+            # Two writers to one JSON (cloud crawl + this box): merge the cache by
+            # URL instead of giving up, then continue the rebase.
+            if "$PY" resolve_cache_conflict.py >> "$LOG" 2>&1 && GIT_EDITOR=true git rebase --continue >> "$LOG" 2>&1; then
+                log "cache conflict merged by URL"
+            else
+                git rebase --abort >> "$LOG" 2>&1
+                log "PUSH FAILED - local commit kept; resolve manually"
+            fi
         fi
+        if git push origin main >> "$LOG" 2>&1; then log "push succeeded after rebase"; fi
     fi
 fi
 

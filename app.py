@@ -64,6 +64,10 @@ def _run_auto_discovery():
 
             _crawl_status["last_added"] = len(new_results)
             _crawl_status["last_run"] = datetime.now().isoformat()
+            if crawler.quota_exhausted:
+                _crawl_status["error"] = f"YouTube quota exhausted after {crawler.api_calls} calls: {crawler.api_error}"
+            elif crawler.api_error:
+                _crawl_status["error"] = crawler.api_error
         except Exception as e:
             _crawl_status["error"] = str(e)
         finally:
@@ -109,7 +113,16 @@ def _initial_seed():
 if not os.environ.get("WERKZEUG_RUN_MAIN") == "false":
     _purge_tier3_articles()
     threading.Thread(target=_initial_seed, daemon=True).start()
-    start_background_crawler()
+    # The in-process crawl is opt-in (LOCAL_CRAWL=1). It used to start on every
+    # boot, so each gunicorn restart burned ~8,500 of the key's 10,000 daily
+    # search units and starved the scheduled cloud crawl, which is now the
+    # canonical discovery path (GitHub Actions, daily). Laptops running
+    # serve.py without CI can still turn it on.
+    if os.environ.get("LOCAL_CRAWL") == "1":
+        start_background_crawler()
+    else:
+        _crawl_status["error"] = None
+        _crawl_status["next_run"] = "disabled (LOCAL_CRAWL != 1; discovery runs in the daily cloud crawl)"
 
 
 # ── Routes ────────────────────────────────────────────────────────────────────

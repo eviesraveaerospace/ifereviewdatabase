@@ -36,7 +36,8 @@ def main():
     existing = {r["url"] for r in data_manager.data.get("reviews", [])}
     before = len(existing)
 
-    days_lookback = int(os.environ.get("DAYS_LOOKBACK", "14"))
+    # 30 days (was 14): one missed week no longer loses videos for good.
+    days_lookback = int(os.environ.get("DAYS_LOOKBACK", "30"))
     crawler = IFECrawler(verify_ssl=False, api_key=api_key)
     results = crawler.auto_discover(existing_urls=existing, max_results=2000, days_lookback=days_lookback)
 
@@ -48,7 +49,10 @@ def main():
         msg = f"Added {len(results)} new results (total: {after}, was: {before})"
     else:
         msg = "No new results found"
-
+    if crawler.quota_exhausted:
+        msg += f"  ** YOUTUBE QUOTA EXHAUSTED after {crawler.api_calls} API calls — results are incomplete ({crawler.api_error}) **"
+    elif crawler.api_error:
+        msg += f"  (last API error: {crawler.api_error})"
     logging.info(msg)
     print(f"[{datetime.now():%Y-%m-%d %H:%M:%S}] {msg}")
 

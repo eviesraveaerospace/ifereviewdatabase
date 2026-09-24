@@ -20,3 +20,4 @@ compliance_sample_report.html
 
 # exported press-article images (each host exports its own)
 static/article_images/
+.query_offset_curated

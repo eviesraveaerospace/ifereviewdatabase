@@ -1,6 +1,7 @@
 import re
 import json
 import time
+import sys
 import requests
 import urllib.parse
 from pathlib import Path
@@ -568,6 +569,7 @@ KNOWN_IFE_CHANNELS: dict = {
     # Verified channel IDs — each costs 100 API units/day
     # To verify: channels?part=snippet&id=UC... (1 unit, batch up to 50)
     "Million Miles Marc":       "UCGZI_9g_4mWWZbTvO1N9Y4Q",  # verified ✓
+    "Gabe Leigh":               "UCOCP76uwOn6PbT5jQ5U_ECw",  # cabin reviews, e.g. Icelandair Saga (Sep 2026)
     "Chris Films Things":       "UCIIotzUXweA445T6h8fBXRQ",  # verified ✓
     "theplanesguy":             "UClm9qlyx-E68Q3gGuaBj-SQ",  # verified ✓
     "From the Wing":            "UCOBUoOstpv-yCHZk2B77gXw",  # verified ✓
@@ -881,6 +883,24 @@ class IFECrawler:
         self.results: List[dict] = []
         self.session = requests.Session()
         self.session.headers.update(self.HEADERS)
+        # Last YouTube API failure (message) and whether the daily search quota
+        # is gone. Before these existed a dead key looked exactly like "no new
+        # videos" — every API error was swallowed as an empty result.
+        self.api_error: Optional[str] = None
+        self.quota_exhausted: bool = False
+        self.api_calls: int = 0
+
+    def _note_api_error(self, resp, exc, what: str):
+        msg = ""
+        try:
+            msg = resp.json().get("error", {}).get("message", "") if resp is not None else ""
+        except Exception:
+            pass
+        msg = msg or (str(exc)[:200] if exc else "unknown error")
+        self.api_error = f"{what}: {msg}"
+        if "quota" in msg.lower():
+            self.quota_exhausted = True
+        print(f"[youtube-api] {self.api_error}", file=sys.stderr)
 
     # ── Public API ────────────────────────────────────────────────────────────
 
@@ -890,6 +910,7 @@ class IFECrawler:
     # Reserve at least this many slots for the rotating generated queries so the
     # broad airline net always advances, even though curated queries take priority.
     GENERATED_MIN = 30
+    _ROTATE_CURATED_FILE = Path(__file__).parent / ".query_offset_curated"
     _ROTATE_FILE = Path(__file__).parent / ".query_offset"
 
     def _select_queries(self) -> List[str]:
@@ -899,7 +920,23 @@ class IFECrawler:
         curated_all = YOUTUBE_QUERIES[:_CURATED_QUERY_COUNT]
         generated = YOUTUBE_QUERIES[_CURATED_QUERY_COUNT:]
         gen_slots = min(self.GENERATED_MIN, len(generated))
-        curated = curated_all[:max(0, self.QUERY_BUDGET - gen_slots)]
+        cur_slots = max(0, self.QUERY_BUDGET - gen_slots)
+        if len(curated_all) > cur_slots:
+            # More curated queries than slots: rotate through them (own offset file)
+            # so every curated query runs every ceil(n/slots) crawls, instead of the
+            # tail of the list never running at all.
+            try:
+                coff = int(self._ROTATE_CURATED_FILE.read_text().strip())
+            except Exception:
+                coff = 0
+            coff %= len(curated_all)
+            curated = [curated_all[(coff + i) % len(curated_all)] for i in range(cur_slots)]
+            try:
+                self._ROTATE_CURATED_FILE.write_text(str((coff + cur_slots) % len(curated_all)))
+            except Exception:
+                pass
+        else:
+            curated = curated_all
         budget = max(0, self.QUERY_BUDGET - len(curated))
         if not generated or budget <= 0:
             return curated
@@ -937,6 +974,10 @@ class IFECrawler:
             all_ids: List[str] = []
             seen_ids: set = set()
             for query in queries:
+                if self.quota_exhausted:
+                    print(f"[youtube-api] daily search quota exhausted — stopping after {self.api_calls} calls; "
+                          f"{len(all_ids)} candidates so far", file=sys.stderr)
+                    break
                 ids = self._yt_search_api(query, limit=50, published_after=published_after)
                 for vid_id in ids:
                     if vid_id not in seen_ids:
@@ -1080,7 +1121,9 @@ class IFECrawler:
             params["publishedAfter"] = published_after
         if "#shorts" in query.lower():
             params["videoDuration"] = "short"   # under 4 min: the Shorts/reels bucket
+        resp = None
         try:
+            self.api_calls += 1
             resp = self.session.get(
                 "https://www.googleapis.com/youtube/v3/search",
                 params=params,
@@ -1093,7 +1136,8 @@ class IFECrawler:
                 for item in resp.json().get("items", [])
                 if item.get("id", {}).get("videoId")
             ]
-        except Exception:
+        except Exception as exc:
+            self._note_api_error(resp, exc, f"search {query!r}")
             return []
 
     def _yt_search_channel(self, channel_id: str, limit: int = 50, published_after: str = None) -> List[str]:
@@ -1136,7 +1180,8 @@ class IFECrawler:
                 if not page_token:
                     break
             return ids
-        except Exception:
+        except Exception as exc:
+            self._note_api_error(None, exc, f"channel {channel_id}")
             return ids
 
     def _yt_fetch_details(self, video_ids: List[str]) -> Dict[str, dict]:
@@ -1158,8 +1203,8 @@ class IFECrawler:
                 resp.raise_for_status()
                 for item in resp.json().get("items", []):
                     details[item["id"]] = item
-            except Exception:
-                pass
+            except Exception as exc:
+                self._note_api_error(None, exc, "videos.list")
         return details
 
     # Broader "is this a flight/cabin review" gate — accepts any video whose

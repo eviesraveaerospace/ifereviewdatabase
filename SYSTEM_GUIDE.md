@@ -145,3 +145,12 @@ git push    # after local crawls/edits, so the repo (and teammates) get them
 | `translate_captions.py` | Translate non-English transcripts (full text, Argos → Google fallback), titles, captions, and comments to English; flag Whisper-noise transcripts |
 | `purge_spam.py` | Remove known-spam content (destructive — review before running) |
 | `generate_compliance_report.py` | Build the YouTube API compliance sample report |
+
+## Discovery changes — September 24, 2026
+
+- **Cloud crawl is the canonical discovery path.** The in-process crawl in `app.py` is now opt-in (`LOCAL_CRAWL=1`); it used to start on every gunicorn boot and each start burned ~8,500 of the key's 10,000 daily search units, starving the scheduled crawl. Symptom was invisible: API errors were swallowed as "no results".
+- **API errors are surfaced.** `IFECrawler.api_error` / `quota_exhausted` / `api_calls`; the query loop stops when the quota is gone; `daily_crawl.py` prints `** YOUTUBE QUOTA EXHAUSTED **` in its log line and `/api/crawl` shows it under `crawl.error`.
+- **Every curated query now runs.** With 90 curated queries and 55 curated slots, positions 56–90 never ran; the curated list now rotates too (`.query_offset_curated`), so each runs at least every other crawl.
+- **Lookback 14 → 30 days** in `daily_crawl.py`. The workflow was skipped Aug 5–Sep 21 (repository guard pointed at the retired repo); a 60-day backfill was dispatched to recover that window.
+- **Two writers, one JSON:** the VM nightly script commits/pushes, and on a cache conflict runs `resolve_cache_conflict.py` (union by URL, richer copy wins) and continues the rebase.
+- Trusted channels: added Gabe Leigh.
