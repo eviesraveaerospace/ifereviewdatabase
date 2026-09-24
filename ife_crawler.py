@@ -715,6 +715,11 @@ YOUTUBE_QUERIES = [
     "Iceland Air review",
     "Iceland Air flight review",
     "Icelandair review #shorts",
+    # Shorts / reels: airline reviews in vertical format ("#shorts" in a query
+    # also switches the API search to videoDuration=short, see _yt_search_api)
+    "airline review #shorts", "business class review #shorts", "economy class review #shorts",
+    "inflight entertainment #shorts", "seatback screen #shorts", "flight review #shorts",
+    "first class review #shorts", "premium economy review #shorts",
     "Air India inflight entertainment review",
     "Oman Air inflight entertainment review",
     "STARLUX Airlines inflight entertainment review",
@@ -810,6 +815,8 @@ _AIRLINE_QUERY_TEMPLATES = [
     "{a} business class review screen",
     # generic — gate accepts any flight review now, so search for them too
     "{a} trip report",
+    # vertical reels of the same thing
+    "{a} review #shorts",
 ]
 # Aircraft-type queries (an IFE system usually ships per fleet type).
 _AIRCRAFT_QUERIES = [
@@ -1071,6 +1078,8 @@ class IFECrawler:
         }
         if published_after:
             params["publishedAfter"] = published_after
+        if "#shorts" in query.lower():
+            params["videoDuration"] = "short"   # under 4 min: the Shorts/reels bucket
         try:
             resp = self.session.get(
                 "https://www.googleapis.com/youtube/v3/search",

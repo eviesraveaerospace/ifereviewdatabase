@@ -250,8 +250,12 @@ def main():
     reviews = data.get("reviews", [])
     targets = [
         r for r in reviews
-        if "youtube.com/watch?v=" in r.get("url", "") and not r.get("transcript_available")
+        if ("youtube.com/watch?v=" in r.get("url", "") or "/shorts/" in r.get("url", ""))
+        and not r.get("transcript_available")
     ]
+    # Shorts are under 3 minutes, so a whole night of them transcribes hundreds of
+    # reels; do them before the long-form backlog.
+    targets.sort(key=lambda r: not (r.get("is_short") or "/shorts/" in r.get("url", "")))
     print(f"Videos without transcript: {len(targets)}")
 
     # Set up cookies (bypasses IP block on GitHub Actions datacenter IPs)

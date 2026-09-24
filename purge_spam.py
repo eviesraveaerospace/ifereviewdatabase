@@ -3,6 +3,8 @@ import json
 import re
 import sys
 
+import ife_crawler as _ic
+
 sys.stdout.reconfigure(encoding="utf-8")
 
 BAD_TITLE_SUBSTRINGS = [
@@ -77,7 +79,9 @@ def _is_spam(title):
     if len(re.findall(r'#\w+', title)) >= 4:
         return True
     tl = title.lower()
-    return "#shorts" in tl or "#short " in tl or "| shorts" in tl
+    tagged = "#shorts" in tl or "#short " in tl or "| shorts" in tl
+    # airline-review Shorts are kept (same rule as the crawler's _is_spam_video)
+    return tagged and not _ic._is_airline_review_title(title)
 
 
 # Hotel/resort/land-lodging content with no aviation context at all
