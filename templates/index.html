@@ -253,7 +253,7 @@ svg{display:block}
 .tag.short{background:#eef2ff;border-color:#c7d2fe;color:#3730a3}
 .article-body{padding:4px 20px 18px;font-size:14px;line-height:1.7;color:var(--ink2)}.article-body p{margin:0 0 12px}.article-body h3{font-size:15px;margin:18px 0 8px;color:var(--ink)}.article-body p.ife{background:#fff7e6;border-left:3px solid #e0a800;padding:8px 12px;border-radius:0 6px 6px 0;color:var(--ink)}.article-body mark{background:#ffe08a;color:inherit;padding:0 2px;border-radius:2px}.article-body .ab-h{font-size:10px;font-weight:700;letter-spacing:.14em;color:#9a8f76;margin:14px 0 8px}.article-body .ab-empty{font-size:12.5px;color:var(--gray)}.mside.short .cap-all{font-size:12px;color:var(--ink2);line-height:1.6;white-space:pre-wrap}
 .mhead{aspect-ratio:21/9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#fff}
-.mhead.article{aspect-ratio:21/8;background:#fbfaf6;border-bottom:1px solid var(--line);color:#6b6250}
+.mmain.art{max-width:860px;margin:0 auto}.art-top{padding:18px 20px 0;border-bottom:1px solid var(--line)}.art-src{display:flex;align-items:center;gap:10px;font-size:11.5px;color:#6b6250}.art-src .kick{font-size:10px;font-weight:700;letter-spacing:.14em;color:#9a8f76;border:1px solid #e3dac2;background:#fff;padding:3px 8px;border-radius:4px}.art-src .dom{font-weight:600;color:#4a4436}.mtitle.art{padding:10px 0 6px;font-size:19px}.mact.art{margin:0 0 14px}.article-body .ab-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:14px 0 10px}.article-body .ab-bar .ab-h{margin:0}.ab-tog{display:inline-flex;border:1px solid var(--line2);border-radius:8px;overflow:hidden}.ab-t{font:600 11px var(--f);padding:5px 10px;background:#fff;border:0;color:var(--ink2);cursor:pointer}.ab-t.on{background:var(--ink);color:#fff}.article-body h3.ife{color:#7a5a00}.mhead.article{aspect-ratio:21/8;background:#fbfaf6;border-bottom:1px solid var(--line);color:#6b6250}
 .mhead.article .kick{font-size:10px;font-weight:700;letter-spacing:.14em;color:#9a8f76;border:1px solid #e3dac2;background:#fff;padding:3px 8px;border-radius:4px}
 .mtitle{font-size:16px;font-weight:700;padding:16px 20px 6px;line-height:1.4}
 .mtitle-orig{display:block;font-size:11px;color:var(--gray);font-weight:400;margin-top:3px}.mtitle-orig em{font-style:normal;opacity:.7}
@@ -1212,17 +1212,41 @@ async function openReviewByUrl(url,startSec){
   openModal(0,[r]);
   if(startSec!=null){const f=$('ytF'),vid=ytId(url);if(f&&vid)f.src='https://www.youtube.com/embed/'+vid+'?start='+startSec+'&autoplay=1';}
 }
-const IFE_HL_RE=/(in-?\s?flight entertainment|inflight entertainment|\bIFE\b|\bIFEC\b|seat-?back(?: screen| display)?|entertainment system|entertainment screen)/gi;
+const IFE_HL_RE=/(in-?\s?flight entertainment(?: (?:and|&) connectivity)?|inflight entertainment|\bIFEC?\b|seat-?back(?: screens?| displays?| monitors?| tvs?)?|entertainment (?:system|screen|library|options?|selection|offering|content|choices)|touch-?screens?|personal (?:screens?|tvs?)|\bICE\b(?= system| entertainment)|noise-?cancell?ing headphones|headphones? jack|streaming entertainment|wireless (?:ife|entertainment|streaming)|(?:in-?flight|on-?board) wi-?fi|moving map|live tv|content library)/gi;
 const IFE_HL_TEST=new RegExp(IFE_HL_RE.source,'i');
+const ART_JUNK_RE=/^(copyright|©|all rights reserved|this site is owned|cookie|privacy policy|terms of (use|service)|subscribe|sign up|newsletter|advertisement|related:|read more:|share this|follow us|photo:|image:|credit:)/i;
 function isShortRow(r){return !!(r&&r.media_type==='video'&&(r.is_short||/\/shorts\//.test(r.url||'')));}
-// Article body: every paragraph, the ones that mention IFE highlighted and the phrase marked.
-function articleBodyHTML(r){
-  const paras=r.article_text||[];
-  if(!paras.length)return '<div class="article-body"><div class="ab-empty">The article text could not be fetched for inline display — use “Open article” to read it on the publisher’s site.</div></div>';
-  const n=paras.filter(t=>IFE_HL_TEST.test(t)).length;
-  return '<div class="article-body"><div class="ab-h">ARTICLE'+(n?' · '+n+' IFE paragraph'+(n>1?'s':'')+' highlighted':'')+'</div>'+
-    paras.map(t=>{const hit=IFE_HL_TEST.test(t);const h=esc(t).replace(IFE_HL_RE,'<mark>$1</mark>');
-      if(t.length<90&&!/[.!?]$/.test(t))return '<h3>'+h+'</h3>';return '<p'+(hit?' class="ife"':'')+'>'+h+'</p>';}).join('')+'</div>';
+// Parse article paragraphs into sections (heading + paragraphs) and flag the ones that talk about IFE.
+function parseArticleSections(paras){
+  const clean=(paras||[]).map(t=>String(t||'').trim()).filter(t=>t&&!ART_JUNK_RE.test(t)&&!/^\d{1,2}$/.test(t));
+  const secs=[];let cur={heading:null,paras:[]};
+  clean.forEach(t=>{
+    const isHead=t.length<90&&!/[.!?…]$/.test(t)&&t.split(/\s+/).length<=14;
+    if(isHead){if(cur.heading||cur.paras.length)secs.push(cur);cur={heading:t,paras:[]};}
+    else cur.paras.push(t);
+  });
+  if(cur.heading||cur.paras.length)secs.push(cur);
+  secs.forEach(sec=>{sec.hits=sec.paras.filter(t=>IFE_HL_TEST.test(t)).length;sec.ife=sec.hits>0||!!(sec.heading&&IFE_HL_TEST.test(sec.heading));});
+  return secs;
+}
+const hl=t=>esc(t).replace(IFE_HL_RE,'<mark>$1</mark>');
+// Article body: the article itself, with IFE sections highlighted and the phrases marked.
+function articleBodyHTML(r,ifeOnly){
+  const secs=parseArticleSections(r.article_text);
+  if(!secs.length)return '<div class="article-body"><div class="ab-empty">The article text could not be fetched for inline display — use “Open article” to read it on the publisher’s site.</div></div>';
+  const nIfe=secs.reduce((a,x)=>a+x.hits,0),nAll=secs.reduce((a,x)=>a+x.paras.length,0);
+  const shown=ifeOnly?secs.filter(x=>x.ife):secs;
+  const body=shown.map(sec=>{
+    const h=sec.heading?'<h3'+(sec.ife?' class="ife"':'')+'>'+(sec.ife?'✦ ':'')+hl(sec.heading)+'</h3>':'';
+    const ps=ifeOnly?sec.paras.filter(t=>IFE_HL_TEST.test(t)):sec.paras;
+    return h+ps.map(t=>'<p'+(IFE_HL_TEST.test(t)?' class="ife"':'')+'>'+hl(t)+'</p>').join('');
+  }).join('')||'<div class="ab-empty">No IFE mentions were found in this article.</div>';
+  return '<div class="article-body"><div class="ab-bar"><span class="ab-h">'+(nIfe?nIfe+' of '+nAll+' paragraphs mention IFE':'No IFE mentions found')+'</span>'+
+    (nIfe?'<span class="ab-tog"><button class="ab-t'+(ifeOnly?' on':'')+'" data-mode="ife">IFE only</button><button class="ab-t'+(!ifeOnly?' on':'')+'" data-mode="all">Full article</button></span>':'')+'</div>'+body+'</div>';
+}
+function wireArticleToggle(r){
+  const host=$('mArt');if(!host)return;
+  host.querySelectorAll('.ab-t').forEach(b=>b.addEventListener('click',()=>{S.artIfeOnly=b.dataset.mode==='ife';localStorage.setItem('rave-art-ife',S.artIfeOnly?'1':'0');host.innerHTML=articleBodyHTML(r,S.artIfeOnly);wireArticleToggle(r);}));
 }
 function openModal(idx,rows){
   $('mback').classList.remove('feat');
@@ -1231,18 +1255,27 @@ function openModal(idx,rows){
   const isShort=isShortRow(r),isArt=!isVid&&!isInternal;
   const channel=r.channel_title||r.source_name||'Creator';
   const sub=[channel,isVid&&fmtV(r.view_count)?fmtV(r.view_count)+' views':null,(isInternal&&r.internal_rating)?('★'.repeat(r.internal_rating)+'☆'.repeat(5-r.internal_rating)):null,r.year||null].filter(Boolean).join(' · ');
-  let main='<div class="mmain">';
+  let main='<div class="mmain'+(isArt?' art':'')+'">';
+  if(isArt){
+    // Article: a slim toolbar, then the article preview itself with IFE sections highlighted.
+    if(S.artIfeOnly==null)S.artIfeOnly=localStorage.getItem('rave-art-ife')==='1';
+    main+='<div class="art-top"><div class="art-src"><span class="kick">ARTICLE</span><span class="dom">'+esc(host(r.url))+'</span><span class="meta">'+esc([r.source_name||'Press',r.year||null].filter(Boolean).join(' · '))+'</span></div>'+
+      '<div class="mtitle art">'+esc(dispTitle(r))+'</div>'+
+      '<div class="mact art"><a class="mopen" href="'+esc(r.url||'#')+'" target="_blank" rel="noopener">Open article '+ic('ext',11)+'</a>'+
+      '<button class="mflag'+(isFlagged(r.url)?' on':'')+'" id="mFlag">'+ic('bookmark',15)+'<span>'+(isFlagged(r.url)?'Saved':'Bookmark')+'</span></button></div></div>'+
+      '<div id="mArt">'+articleBodyHTML(r,S.artIfeOnly)+'</div></div>';
+  } else {
   if(vid&&isShort)main+='<div class="mplayer-wrap short"><div class="mplayer short"><iframe id="ytF" src="https://www.youtube.com/embed/'+vid+'?autoplay=1" allow="autoplay;encrypted-media" allowfullscreen></iframe></div></div>';
   else if(vid)main+='<div class="mplayer"><iframe id="ytF" src="https://www.youtube.com/embed/'+vid+'?autoplay=1" allow="autoplay;encrypted-media" allowfullscreen></iframe></div>';
-  else if(isInternal)main+='<div class="mhead" style="background:var(--ink)"><span style="font-size:26px">'+esc(ini(r.internal_author||'T'))+'</span><span style="font-size:12px">Internal team review</span></div>';
-  else main+='<div class="mhead article"><span class="kick">ARTICLE</span><span style="font-size:17px;font-weight:600;color:#4a4436">'+esc(host(r.url))+'</span><span style="font-size:11.5px">'+esc(r.source_name||'Press')+' · written review</span></div>';
+  else main+='<div class="mhead" style="background:var(--ink)"><span style="font-size:26px">'+esc(ini(r.internal_author||'T'))+'</span><span style="font-size:12px">Internal team review</span></div>';
   main+='<div class="mtitle">'+esc(dispTitle(r))+(r.title_en?'<span class="mtitle-orig">'+esc(r.title)+(r.title_lang?' <em>('+esc(String(r.title_lang).toUpperCase())+')</em>':'')+'</span>':'')+'</div><div class="mmeta">'+esc(sub)+'</div>'+
-    '<div class="mact">'+(isInternal?'':'<a class="mopen" href="'+esc(r.url||'#')+'" target="_blank" rel="noopener">'+(isVid?'Open on YouTube':'Open article')+' '+ic('ext',11)+'</a>')+
+    '<div class="mact">'+(isInternal?'':'<a class="mopen" href="'+esc(r.url||'#')+'" target="_blank" rel="noopener">Open on YouTube '+ic('ext',11)+'</a>')+
     '<button class="mflag'+(isFlagged(r.url)?' on':'')+'" id="mFlag">'+ic('bookmark',15)+'<span>'+(isFlagged(r.url)?'Saved':'Bookmark')+'</span></button></div>'+
-    (isArt?articleBodyHTML(r):'<div class="mchips" id="mChips">'+chipsHTML(r)+'</div>'+
-    '<div class="mphotos" id="mPhotos">'+photosHTML(r)+'</div>')+
+    '<div class="mchips" id="mChips">'+chipsHTML(r)+'</div>'+
+    '<div class="mphotos" id="mPhotos">'+photosHTML(r)+'</div>'+
     '<div class="mnotes"><div class="mn-h">Notes</div><div class="mn-list" id="mnList"></div><div class="mn-add"><input id="mnAuthor" class="mn-in" placeholder="Your name" maxlength="80"><textarea id="mnText" class="mn-ta" placeholder="Add a note for others to see…" maxlength="2000"></textarea><button class="mn-btn" id="mnAdd">Add note</button></div></div>'+
   '</div>';
+  }
   let side=isArt?'':'<div class="mside'+(isShort?' short':'')+'">';
   if(isArt){
     // Articles show the piece itself in the main column; nothing video-related on the side.
@@ -1283,6 +1316,7 @@ function openModal(idx,rows){
   $('mbody').innerHTML=main+side;$('mback').classList.add('show');document.body.style.overflow='hidden';
   const mf=$('mFlag');if(mf)mf.addEventListener('click',()=>{const on=toggleFlag(r);mf.classList.toggle('on',on);mf.querySelector('span').textContent=on?'Saved':'Bookmark';refreshFlagIcons();});
   $('mbody').querySelectorAll('.cap[data-s]').forEach(el=>el.addEventListener('click',()=>{const s=el.dataset.s,f=$('ytF');if(f&&s!=='')f.src='https://www.youtube.com/embed/'+vid+'?start='+s+'&autoplay=1';}));
+  if(isArt)wireArticleToggle(r);
   renderModalNotes(r.url);
   wireSysEdit(r);
   wirePhotos(r);
