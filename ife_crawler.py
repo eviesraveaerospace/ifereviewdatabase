@@ -115,9 +115,49 @@ _EXPLAINER_RE = re.compile(
 _BLOCKED_CHANNELS = {"the strange file"}
 
 
+def _iso_duration_seconds(duration_iso: str) -> Optional[int]:
+    """ISO 8601 duration (PT1H2M3S) → seconds; None if unparseable/empty."""
+    if not duration_iso:
+        return None
+    m = re.match(r'PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?', duration_iso)
+    if not m:
+        return None
+    h, mn, s = (int(x or 0) for x in m.groups())
+    return h * 3600 + mn * 60 + s
+
+
+# YouTube Shorts run up to 3 minutes; anything at or under that from a Shorts
+# URL/hashtag or duration is displayed vertically in the dashboard.
+SHORT_MAX_SECONDS = 180
+
+_SHORTS_TAG_RE = re.compile(r'#shorts?\b|\|\s*shorts\b', re.IGNORECASE)
+
+
+def _is_short(title: str, duration_seconds: Optional[int] = None, url: str = "") -> bool:
+    if "/shorts/" in (url or ""):
+        return True
+    if _SHORTS_TAG_RE.search(title or ""):
+        return True
+    return duration_seconds is not None and 0 < duration_seconds <= SHORT_MAX_SECONDS
+
+
+_REVIEW_SIGNAL_RE = re.compile(
+    r'\b(review|reviews|reviewed|class|flight|flying|flew|trip report|cabin|seat|seats'
+    r'|ife|entertainment|onboard|on board|inflight|in-flight)\b',
+    re.IGNORECASE,
+)
+
+
+def _is_airline_review_title(title: str) -> bool:
+    """A title that names a known airline AND reads like a review/flight report
+    ("My Iceland Air review #shorts") — lets genuine airline Shorts through."""
+    return bool(_keyword_hits(title, AIRLINE_KEYWORDS)) and bool(_REVIEW_SIGNAL_RE.search(title))
+
+
 def _is_spam_video(title: str, duration_iso: str = "", channel_title: str = "") -> bool:
-    """Return True for Shorts, viral spam, hotel/resort junk, hashtag floods,
-    aviation explainers/documentaries, or blocked channels."""
+    """Return True for viral spam, hotel/resort junk, hashtag floods, aviation
+    explainers/documentaries, blocked channels, and Shorts that are NOT airline
+    reviews (airline-review Shorts are kept and shown vertically)."""
     if channel_title and channel_title.strip().lower() in _BLOCKED_CHANNELS:
         return True
     if _EXPLAINER_RE.search(title):
@@ -125,18 +165,13 @@ def _is_spam_video(title: str, duration_iso: str = "", channel_title: str = "") 
     hashtags = re.findall(r'#\w+', title)
     if len(hashtags) >= 4:
         return True
-    tl = title.lower()
-    if "#shorts" in tl or "#short " in tl or "| shorts" in tl:
-        return True
     if _HOTEL_TITLE_RE.search(title) and not _AVIATION_CONTEXT_RE.search(title):
         return True
-    # ISO 8601 duration: PT23S = 23s, PT1M = 60s — reject under 90 seconds
-    if duration_iso:
-        m = re.match(r'PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?', duration_iso)
-        if m:
-            h, mn, s = (int(x or 0) for x in m.groups())
-            if h * 3600 + mn * 60 + s < 90:
-                return True
+    secs = _iso_duration_seconds(duration_iso)
+    tagged_short = bool(_SHORTS_TAG_RE.search(title))
+    too_short = secs is not None and secs < 90
+    if (tagged_short or too_short) and not _is_airline_review_title(title):
+        return True
     return False
 
 
@@ -292,6 +327,33 @@ def _article_quotes(raw_text: str, limit: int = 8):
             for _, pos, s, kws in top]
 
 
+_ARTICLE_BOILERPLATE_RE = re.compile(
+    r'^(share this|subscribe|sign up|read more|advertisement|related articles?|'
+    r'cookie|©|copyright|all rights reserved|follow us)', re.IGNORECASE)
+
+
+def _article_paragraphs(soup, max_paragraphs: int = 80, max_chars: int = 25000) -> List[str]:
+    """Readable body paragraphs of a press article, in order, for inline display.
+    Prefers the <article> element; skips nav/footer/script and short fragments."""
+    root = soup.find("article") or soup.find("main") or soup.body or soup
+    for tag in root.find_all(["script", "style", "nav", "footer", "aside", "form", "noscript"]):
+        tag.decompose()
+    out, total = [], 0
+    for el in root.find_all(["p", "h2", "h3", "li", "blockquote"]):
+        txt = re.sub(r'\s+', ' ', el.get_text(" ")).strip()
+        if len(txt) < 40 and el.name not in ("h2", "h3"):
+            continue
+        if not txt or _ARTICLE_BOILERPLATE_RE.search(txt):
+            continue
+        if out and out[-1] == txt:
+            continue
+        out.append(txt)
+        total += len(txt)
+        if len(out) >= max_paragraphs or total >= max_chars:
+            break
+    return out
+
+
 # ── Airlines & aircraft ───────────────────────────────────────────────────────
 AIRLINE_KEYWORDS = [
     "emirates", "qatar airways", "etihad", "lufthansa", "british airways",
@@ -323,10 +385,20 @@ AIRCRAFT_KEYWORDS = [
 # anime spam through the relevance gate.
 _KEYWORD_RE_CACHE: Dict[str, "re.Pattern"] = {}
 
+# Alternate spellings people use for a carrier. Matching any alias counts as a
+# hit for the canonical keyword, so tags, filters, search and the crawl gate all
+# see "Iceland Air" / "Iceland-Air" as Icelandair.
+AIRLINE_ALIASES: Dict[str, List[str]] = {
+    "icelandair": ["iceland air", "iceland-air", "icelandic air"],
+}
+
+
 def _keyword_re(kw: str) -> "re.Pattern":
     pat = _KEYWORD_RE_CACHE.get(kw)
     if pat is None:
-        pat = re.compile(r'(?<![\w-])' + re.escape(kw) + r'(?![\w-])', re.IGNORECASE)
+        variants = [kw] + AIRLINE_ALIASES.get(kw.lower(), [])
+        body = "|".join(re.escape(v) for v in variants)
+        pat = re.compile(r'(?<![\w-])(?:' + body + r')(?![\w-])', re.IGNORECASE)
         _KEYWORD_RE_CACHE[kw] = pat
     return pat
 
@@ -637,6 +709,12 @@ YOUTUBE_QUERIES = [
     "Korean Air inflight entertainment review",
     "Qantas inflight entertainment review",
     "Icelandair RAVE inflight entertainment",
+    "Icelandair review",
+    "Icelandair Saga class review",
+    "Icelandair economy class review",
+    "Iceland Air review",
+    "Iceland Air flight review",
+    "Icelandair review #shorts",
     "Air India inflight entertainment review",
     "Oman Air inflight entertainment review",
     "STARLUX Airlines inflight entertainment review",
@@ -1137,7 +1215,7 @@ class IFECrawler:
         try:
             year = int(published_at[:4])
         except (ValueError, IndexError):
-            year = self._year_from_text(title + " " + description) or 2025
+            year = self._year_from_text(title + " " + description)
 
         url = f"https://www.youtube.com/watch?v={video_id}"
         combined = (title + " " + description).lower()
@@ -1155,11 +1233,14 @@ class IFECrawler:
         guess = None if detected else infer_ife_system(airlines_m, aircraft_m)
 
         stats = item.get("statistics", {})
+        duration_seconds = _iso_duration_seconds(duration_iso)
         return {
             "url":                  url,
             "title":                title[:150],
             "year":                 year,
             "published_at":         published_at,
+            "duration_seconds":     duration_seconds,
+            "is_short":             _is_short(title, duration_seconds, url),
             "channel_title":        snippet.get("channelTitle", ""),
             "view_count":           int(stats.get("viewCount", 0) or 0),
             "like_count":           int(stats.get("likeCount", 0) or 0),
@@ -1257,7 +1338,10 @@ class IFECrawler:
                 return None
 
             combined = (title + " " + description).lower()
-            year = self._year_from_text(combined) or 2025
+            date_meta = (soup.find("meta", {"itemprop": "datePublished"})
+                         or soup.find("meta", {"itemprop": "uploadDate"}))
+            published_at = date_meta["content"].strip() if date_meta and date_meta.get("content") else ""
+            year = int(published_at[:4]) if published_at[:4].isdigit() else self._year_from_text(combined)
 
             trans_ok, excerpt, captions = False, None, []
             full_transcript = ""
@@ -1274,6 +1358,8 @@ class IFECrawler:
                 "url":                  url,
                 "title":                title[:150],
                 "year":                 year,
+                "published_at":         published_at,
+                "is_short":             _is_short(title, None, url),
                 "channel_title":        channel_title,
                 "ife_system":           detected,
                 "ife_system_inferred":  False,
@@ -1494,7 +1580,7 @@ class IFECrawler:
 
             raw_text   = soup.get_text(separator=" ")
             text       = raw_text.lower()
-            year       = self._year_from_meta(soup) or self._year_from_text(text) or 2025
+            year       = self._year_from_meta(soup) or self._year_from_text(text)
             airlines_m = self._mentions(text, AIRLINE_KEYWORDS)
             aircraft_m = self._mentions(text, AIRCRAFT_KEYWORDS)
             detected   = self._detect_system(text)
@@ -1515,6 +1601,7 @@ class IFECrawler:
                 "transcript_available": False,
                 "transcript_excerpt":   _article_excerpt(raw_text),
                 "article_quotes":       _article_quotes(raw_text),
+                "article_text":         _article_paragraphs(soup),
                 "captions":             [],
                 "source_tier":          tier,
                 "source_name":        TIER_LABELS[tier],

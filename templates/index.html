@@ -249,6 +249,9 @@ svg{display:block}
 .mbody{display:flex;flex-wrap:wrap}
 .mmain{flex:1 1 900px;min-width:0}
 .mplayer{aspect-ratio:16/9;background:#000;max-height:80vh}.mplayer iframe{width:100%;height:100%;border:none}
+.mplayer-wrap.short{background:#000;display:flex;justify-content:center}.mplayer.short{aspect-ratio:9/16;height:min(80vh,720px);width:auto;max-width:100%;margin:0 auto}
+.tag.short{background:#eef2ff;border-color:#c7d2fe;color:#3730a3}
+.article-body{padding:4px 20px 18px;font-size:14px;line-height:1.7;color:var(--ink2)}.article-body p{margin:0 0 12px}.article-body h3{font-size:15px;margin:18px 0 8px;color:var(--ink)}.article-body p.ife{background:#fff7e6;border-left:3px solid #e0a800;padding:8px 12px;border-radius:0 6px 6px 0;color:var(--ink)}.article-body mark{background:#ffe08a;color:inherit;padding:0 2px;border-radius:2px}.article-body .ab-h{font-size:10px;font-weight:700;letter-spacing:.14em;color:#9a8f76;margin:14px 0 8px}.article-body .ab-empty{font-size:12.5px;color:var(--gray)}.mside.short .cap-all{font-size:12px;color:var(--ink2);line-height:1.6;white-space:pre-wrap}
 .mhead{aspect-ratio:21/9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#fff}
 .mhead.article{aspect-ratio:21/8;background:#fbfaf6;border-bottom:1px solid var(--line);color:#6b6250}
 .mhead.article .kick{font-size:10px;font-weight:700;letter-spacing:.14em;color:#9a8f76;border:1px solid #e3dac2;background:#fff;padding:3px 8px;border-radius:4px}
@@ -776,7 +779,7 @@ function recentItem(r){
   const thumb=vid?'<div class="rthumb"><img src="https://i.ytimg.com/vi/'+vid+'/mqdefault.jpg" loading="lazy" onerror="this.remove()">'+(r.transcript_available?'<span class="cc">CC</span>':'')+'</div>':(photo?'<div class="rthumb"><img src="'+esc(photo)+'" loading="lazy" onerror="this.remove()">'+(isArt?'<span class="artbadge">ARTICLE</span>':'')+'</div>':(isArt?'<div class="rthumb doc">'+docSvg+'<span class="dom">'+esc(host(r.url))+'</span></div>':'<div class="rthumb art">'+esc(r.media_type==='internal'?ini(r.internal_author||r.channel_title||'T'):((host(r.url)[0]||'?').toUpperCase()))+'</div>'));
   const nc=(S.notes&&S.notes[r.url]&&S.notes[r.url].length)||0;
   const hasIfeChap=(r.chapters||[]).some(c=>c.ife);
-  const chips=(isArt?'<span class="tag article">Article</span>':'')+(r.media_type==='internal'?'<span class="tag internal">Internal'+(r.internal_rating?' · '+'★'.repeat(r.internal_rating):'')+'</span>':'')+(nc?'<span class="tag note">'+nc+' note'+(nc>1?'s':'')+'</span>':'')+(hasIfeChap?'<span class="tag chap">✦ IFE chapter</span>':'')+(r.ife_system?'<span class="tag">'+esc(r.ife_system)+'</span>':'')+(air?'<span class="tag soft">'+esc(air)+'</span>':'');
+  const chips=(isArt?'<span class="tag article">Article</span>':'')+(isShortRow(r)?'<span class="tag short">Short</span>':'')+(r.media_type==='internal'?'<span class="tag internal">Internal'+(r.internal_rating?' · '+'★'.repeat(r.internal_rating):'')+'</span>':'')+(nc?'<span class="tag note">'+nc+' note'+(nc>1?'s':'')+'</span>':'')+(hasIfeChap?'<span class="tag chap">✦ IFE chapter</span>':'')+(r.ife_system?'<span class="tag">'+esc(r.ife_system)+'</span>':'')+(air?'<span class="tag soft">'+esc(air)+'</span>':'');
   const sub=(isArt?[host(r.url),r.source_name||'Press',r.year]:[r.channel_title||r.source_name||'Creator',views,r.year]).filter(Boolean).join(' · ');
   el.innerHTML=thumb+'<div class="rb">'+
     '<div class="rtop"><div class="rtt"'+(r.title_en?' title="Original: '+esc(r.title)+'"':'')+'>'+esc(dispTitle(r))+'</div>'+
@@ -1209,35 +1212,54 @@ async function openReviewByUrl(url,startSec){
   openModal(0,[r]);
   if(startSec!=null){const f=$('ytF'),vid=ytId(url);if(f&&vid)f.src='https://www.youtube.com/embed/'+vid+'?start='+startSec+'&autoplay=1';}
 }
+const IFE_HL_RE=/(in-?\s?flight entertainment|inflight entertainment|\bIFE\b|\bIFEC\b|seat-?back(?: screen| display)?|entertainment system|entertainment screen)/gi;
+const IFE_HL_TEST=new RegExp(IFE_HL_RE.source,'i');
+function isShortRow(r){return !!(r&&r.media_type==='video'&&(r.is_short||/\/shorts\//.test(r.url||'')));}
+// Article body: every paragraph, the ones that mention IFE highlighted and the phrase marked.
+function articleBodyHTML(r){
+  const paras=r.article_text||[];
+  if(!paras.length)return '<div class="article-body"><div class="ab-empty">The article text could not be fetched for inline display — use “Open article” to read it on the publisher’s site.</div></div>';
+  const n=paras.filter(t=>IFE_HL_TEST.test(t)).length;
+  return '<div class="article-body"><div class="ab-h">ARTICLE'+(n?' · '+n+' IFE paragraph'+(n>1?'s':'')+' highlighted':'')+'</div>'+
+    paras.map(t=>{const hit=IFE_HL_TEST.test(t);const h=esc(t).replace(IFE_HL_RE,'<mark>$1</mark>');
+      if(t.length<90&&!/[.!?]$/.test(t))return '<h3>'+h+'</h3>';return '<p'+(hit?' class="ife"':'')+'>'+h+'</p>';}).join('')+'</div>';
+}
 function openModal(idx,rows){
   $('mback').classList.remove('feat');
   S.mRows=rows||S.reviews;S.mIdx=idx;const r=S.mRows[idx];if(!r)return;
   const isVid=r.media_type==='video',isInternal=r.media_type==='internal',vid=isVid?ytId(r.url):null;
+  const isShort=isShortRow(r),isArt=!isVid&&!isInternal;
   const channel=r.channel_title||r.source_name||'Creator';
   const sub=[channel,isVid&&fmtV(r.view_count)?fmtV(r.view_count)+' views':null,(isInternal&&r.internal_rating)?('★'.repeat(r.internal_rating)+'☆'.repeat(5-r.internal_rating)):null,r.year||null].filter(Boolean).join(' · ');
   let main='<div class="mmain">';
-  if(vid)main+='<div class="mplayer"><iframe id="ytF" src="https://www.youtube.com/embed/'+vid+'?autoplay=1" allow="autoplay;encrypted-media" allowfullscreen></iframe></div>';
+  if(vid&&isShort)main+='<div class="mplayer-wrap short"><div class="mplayer short"><iframe id="ytF" src="https://www.youtube.com/embed/'+vid+'?autoplay=1" allow="autoplay;encrypted-media" allowfullscreen></iframe></div></div>';
+  else if(vid)main+='<div class="mplayer"><iframe id="ytF" src="https://www.youtube.com/embed/'+vid+'?autoplay=1" allow="autoplay;encrypted-media" allowfullscreen></iframe></div>';
   else if(isInternal)main+='<div class="mhead" style="background:var(--ink)"><span style="font-size:26px">'+esc(ini(r.internal_author||'T'))+'</span><span style="font-size:12px">Internal team review</span></div>';
-  else main+='<div class="mhead article"><span class="kick">ARTICLE</span><span style="font-size:17px;font-weight:600;color:#4a4436">'+esc(host(r.url))+'</span><span style="font-size:11.5px">'+esc(r.source_name||'Press')+' · written review — no video</span></div>';
+  else main+='<div class="mhead article"><span class="kick">ARTICLE</span><span style="font-size:17px;font-weight:600;color:#4a4436">'+esc(host(r.url))+'</span><span style="font-size:11.5px">'+esc(r.source_name||'Press')+' · written review</span></div>';
   main+='<div class="mtitle">'+esc(dispTitle(r))+(r.title_en?'<span class="mtitle-orig">'+esc(r.title)+(r.title_lang?' <em>('+esc(String(r.title_lang).toUpperCase())+')</em>':'')+'</span>':'')+'</div><div class="mmeta">'+esc(sub)+'</div>'+
     '<div class="mact">'+(isInternal?'':'<a class="mopen" href="'+esc(r.url||'#')+'" target="_blank" rel="noopener">'+(isVid?'Open on YouTube':'Open article')+' '+ic('ext',11)+'</a>')+
     '<button class="mflag'+(isFlagged(r.url)?' on':'')+'" id="mFlag">'+ic('bookmark',15)+'<span>'+(isFlagged(r.url)?'Saved':'Bookmark')+'</span></button></div>'+
-    '<div class="mchips" id="mChips">'+chipsHTML(r)+'</div>'+
-    '<div class="mphotos" id="mPhotos">'+photosHTML(r)+'</div>'+
+    (isArt?articleBodyHTML(r):'<div class="mchips" id="mChips">'+chipsHTML(r)+'</div>'+
+    '<div class="mphotos" id="mPhotos">'+photosHTML(r)+'</div>')+
     '<div class="mnotes"><div class="mn-h">Notes</div><div class="mn-list" id="mnList"></div><div class="mn-add"><input id="mnAuthor" class="mn-in" placeholder="Your name" maxlength="80"><textarea id="mnText" class="mn-ta" placeholder="Add a note for others to see…" maxlength="2000"></textarea><button class="mn-btn" id="mnAdd">Add note</button></div></div>'+
   '</div>';
-  let side='<div class="mside">';
-  if(isInternal){
+  let side=isArt?'':'<div class="mside'+(isShort?' short':'')+'">';
+  if(isArt){
+    // Articles show the piece itself in the main column; nothing video-related on the side.
+  } else if(isShort){
+    // Shorts: the clip as-is, plus its chapters and the whole transcript (not just IFE moments).
+    const chaps=r.chapters||[];
+    side+='<div class="sh">Chapters'+(chaps.some(c=>c.ife)?' <span class="ife-key">✦ IFE</span>':'')+'</div>';
+    if(chaps.length)side+=chaps.map(ch=>'<div class="cap chap'+(ch.ife?' ife':'')+'" data-s="'+(ch.sec!=null?ch.sec:'')+'"><span class="cts">'+esc(ch.t||'')+'</span><span>'+(ch.ife?'✦ ':'')+esc(ch.title)+'</span></div>').join('');
+    else side+='<div class="t11">No chapters on this Short.</div>';
+    side+='<div class="sh" style="margin-top:16px">Transcript</div>';
+    const caps=r.captions||[];
+    if(caps.length)side+=caps.map(c=>{const en=c.text_en&&c.lang&&c.lang!=='en';const main=en?c.text_en:c.text;const orig=en?'<span class="cap-orig">'+esc(c.text)+' <em>('+esc((c.lang||'').toUpperCase())+')</em></span>':'';return '<div class="cap" data-s="'+(c.start_seconds!=null?c.start_seconds:'')+'"><span class="cts">'+esc(c.timestamp||'')+'</span><span>'+esc(main)+orig+'</span></div>';}).join('');
+    else if(r.transcript_full_en||r.transcript_full||r.transcript_excerpt)side+='<div class="cap-all">'+esc(r.transcript_full_en||r.transcript_full||r.transcript_excerpt)+'</div>';
+    else side+='<div class="t11">No transcript is available for this Short yet.</div>';
+  } else if(isInternal){
     side+='<div class="sh">Review'+(r.internal_author?' — '+esc(r.internal_author):'')+'</div>';
     side+='<div style="font-size:12.5px;color:var(--ink2);line-height:1.65;white-space:pre-wrap">'+esc(r.internal_text||r.transcript_excerpt||'')+'</div>';
-  } else if(!isVid){
-    // Articles: keyword-matched strong quotes, full read in a new tab.
-    const aq=r.article_quotes||[];
-    side+='<div class="sh">Strong quotes</div>';
-    if(aq.length)side+=aq.map(q=>'<div class="cap aq"><span>“'+esc(q.text)+'”'+((q.kws&&q.kws.length)?'<span class="aq-kws">'+q.kws.map(k=>'<span class="gtag soft">'+esc(k)+'</span>').join('')+'</span>':'')+'</span></div>').join('');
-    else if(r.transcript_excerpt)side+='<div class="cap aq"><span>“'+esc(r.transcript_excerpt)+'”</span></div>';
-    else side+='<div class="t11">No IFE-relevant quotes were extracted from this article.</div>';
-    side+='<div class="t11" style="margin-top:12px">Use “Open article” for the full piece.</div>';
   } else {
   const chaps=r.chapters||[];
   if(chaps.length){
@@ -1257,7 +1279,7 @@ function openModal(idx,rows){
   else if(r.transcript_excerpt)side+='<div style="font-size:12px;color:var(--ink2);line-height:1.6">'+esc(r.transcript_excerpt)+'</div>';
   else side+='<div class="t11">No IFE-specific moments were extracted from this transcript.</div>';
   }
-  side+='</div>';
+  if(!isArt)side+='</div>';
   $('mbody').innerHTML=main+side;$('mback').classList.add('show');document.body.style.overflow='hidden';
   const mf=$('mFlag');if(mf)mf.addEventListener('click',()=>{const on=toggleFlag(r);mf.classList.toggle('on',on);mf.querySelector('span').textContent=on?'Saved':'Bookmark';refreshFlagIcons();});
   $('mbody').querySelectorAll('.cap[data-s]').forEach(el=>el.addEventListener('click',()=>{const s=el.dataset.s,f=$('ytF');if(f&&s!=='')f.src='https://www.youtube.com/embed/'+vid+'?start='+s+'&autoplay=1';}));
