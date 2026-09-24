@@ -1405,6 +1405,86 @@ def _map_forms_headers(headers):
     return m
 
 
+# ── "Airline IFE Market Research Database.xlsx" (team screenshot catalogue) ──
+# One row per airline/airframe/seat-class visit: reviewer email, Online/Employee,
+# year, airline, airframe, seat class, IFE supplier + product, a Tags cell, then up
+# to ~28 pairs of (Screenshot<n> SharePoint link, Tags<n>). No free text, so the
+# generic Forms mapper mistakes "Online or Employee Review" for the review text
+# and drops every row as too short. This path maps the sheet properly and keeps
+# each screenshot as an image (external link) with its own screen tag.
+def _is_screenshot_db(headers):
+    hl = [str(h or "").strip().lower() for h in headers]
+    return "airframe" in hl and any(h.startswith("screenshot") for h in hl)
+
+
+def _load_tag_map(wb):
+    """Old tag -> New Master Tag from the 'New tags' sheet, if present."""
+    try:
+        ws = wb["New tags"]
+    except KeyError:
+        return {}
+    out = {}
+    for row in ws.iter_rows(min_row=2, values_only=True):
+        if row and row[0] and len(row) > 1 and row[1]:
+            out[str(row[0]).strip().lower()] = str(row[1]).strip()
+    return out
+
+
+def _import_screenshot_db(rows, headers, tag_map):
+    hl = [str(h or "").strip().lower() for h in headers]
+    def col(name):
+        return hl.index(name) if name in hl else None
+    c_email, c_src, c_year = col("name/email"), col("online or employee review"), col("review date")
+    c_air, c_frame, c_seat = col("airline"), col("airframe"), col("seat class")
+    c_sup, c_prod, c_tags = col("auxiliary ife supplier"), col("auxiliary ife product"), col("tags")
+    shot_pairs = []          # (screenshot col, tags col) in sheet order
+    for i, h in enumerate(hl):
+        if h.startswith("screenshot"):
+            nxt = i + 1 if i + 1 < len(hl) and hl[i + 1].startswith("tag") else None
+            shot_pairs.append((i, nxt))
+
+    def norm_tag(t):
+        t = str(t or "").strip()
+        return tag_map.get(t.lower(), t) if t else ""
+
+    def cell(row, i):
+        return row[i] if i is not None and i < len(row) and row[i] not in (None, "") else None
+
+    recs = []
+    for row in rows[1:]:
+        airline = str(cell(row, c_air) or "").strip()
+        if not airline:
+            continue
+        email = str(cell(row, c_email) or "").strip()
+        author = email.split("@")[0].replace(".", " ").title() if email else ""
+        source = str(cell(row, c_src) or "").strip() or "Employee"
+        frame = str(cell(row, c_frame) or "").strip()
+        seat = str(cell(row, c_seat) or "").strip()
+        system = " ".join(x for x in (str(cell(row, c_sup) or "").strip(), str(cell(row, c_prod) or "").strip()) if x)
+        row_tags = [norm_tag(t) for t in str(cell(row, c_tags) or "").split(",") if t.strip()]
+        images = []
+        for sc, tc in shot_pairs:
+            link = cell(row, sc)
+            if not link or not str(link).startswith("http"):
+                continue
+            tag = norm_tag(cell(row, tc)) if tc is not None else ""
+            images.append({"src": str(link).strip(), "external": True, "alt": tag or "Screenshot",
+                           "caption": tag, "tags": [tag] if tag else [], "airline": airline,
+                           "airline_source": "sheet", "ife_system": system or None})
+        screen_tags = sorted({t for t in row_tags + [im["caption"] for im in images] if t})
+        title = " · ".join(x for x in (airline, frame, seat, system) if x)
+        text = (f"{source} IFE review of {airline}" + (f" {frame}" if frame else "") +
+                (f" ({seat})" if seat else "") + (f" on {system}" if system else "") +
+                (f". Screens captured: {', '.join(screen_tags)}." if screen_tags else ".") +
+                (f" {len(images)} screenshot{'s' if len(images) != 1 else ''} on SharePoint." if images else ""))
+        rec = _make_internal_review(title=title, text=text, airline=airline, aircraft=frame, system=system,
+                                    rating=None, author=author, date_val=cell(row, c_year))
+        rec.update({"images": images, "screen_tags": screen_tags, "screen_tag_source": "manual",
+                    "seat_class": seat or None, "internal_source": source, "internal_email": email or None})
+        recs.append(rec)
+    return recs
+
+
 @app.route("/api/import-forms", methods=["POST"])
 def import_forms():
     """Import an MS Forms .xlsx export. Without commit=1 returns a mapped
@@ -1420,6 +1500,22 @@ def import_forms():
         if len(rows) < 2:
             return jsonify({"status": "error", "error": "the sheet has no data rows"}), 400
         headers = list(rows[0])
+        if _is_screenshot_db(headers):
+            recs = _import_screenshot_db(rows, headers, _load_tag_map(wb))
+            if request.args.get("commit") != "1":
+                prev = [{"title": r["title"], "airline": (r["airlines_mentioned"][:1] or [{}])[0].get("keyword", ""),
+                         "system": r["ife_system"] or "", "author": r["internal_author"], "year": r["year"],
+                         "rating": None, "text": r["internal_text"][:120]} for r in recs[:8]]
+                return jsonify({"status": "success", "preview": prev, "total": len(recs),
+                                "mapping": {"layout": "IFE screenshot database", "screenshots": str(sum(len(r["images"]) for r in recs)),
+                                            "author": "Name/Email", "system": "Auxiliary IFE supplier + product",
+                                            "aircraft": "Airframe", "tags": "Tags + per-screenshot tags"}})
+            data_manager.reload_from_disk()
+            have = {r.get("url") for r in data_manager.data.get("reviews", [])}
+            new = [r for r in recs if r["url"] not in have]
+            data_manager.data["reviews"].extend(new)
+            data_manager.save_cache()
+            return jsonify({"status": "success", "added": len(new), "skipped": len(recs) - len(new)})
         m = _map_forms_headers(headers)
         if "text" not in m:
             # fall back to the unmapped column with the longest average text
