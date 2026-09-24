@@ -132,6 +132,101 @@ def index():
     return render_template("index.html", can_edit=_request_is_local())
 
 
+# ── Article preview: the publisher's page, as-is, with IFE passages marked ──
+_PREVIEW_CACHE: dict = {}          # url -> (fetched_at, html)
+_PREVIEW_TTL = 6 * 3600
+_PREVIEW_HL_RE = re.compile(
+    r"(in-?\s?flight entertainment(?: (?:and|&) connectivity)?|inflight entertainment|\bIFEC?\b"
+    r"|seat-?back(?: screens?| displays?| monitors?| tvs?)?"
+    r"|entertainment (?:system|screen|library|options?|selection|offering|content|choices)"
+    r"|touch-?screens?|personal (?:screens?|tvs?)|\bICE\b(?= system| entertainment)"
+    r"|noise-?cancell?ing headphones|streaming entertainment|wireless (?:ife|entertainment|streaming)"
+    r"|(?:in-?flight|on-?board) wi-?fi|moving map|live tv|content library)", re.I)
+_PREVIEW_BLOCKS = {"p", "li", "h1", "h2", "h3", "h4", "h5", "blockquote", "td", "dd", "figcaption", "div", "section"}
+_PREVIEW_CSS = """
+mark.ife-hl{background:#ffe08a!important;color:inherit!important;padding:0 2px;border-radius:2px}
+.ife-hl-block{background:#fff7e6!important;box-shadow:-4px 0 0 #e0a800,0 0 0 6px #fff7e6!important;border-radius:2px;scroll-margin-top:24px}
+"""
+
+
+def _build_article_preview(url: str) -> str:
+    from bs4 import BeautifulSoup, NavigableString
+    import requests
+    resp = requests.get(url, headers=IFECrawler.HEADERS, timeout=15, verify=False, allow_redirects=True)
+    resp.raise_for_status()
+    if resp.encoding is None or resp.encoding.lower() == "iso-8859-1":
+        resp.encoding = resp.apparent_encoding
+    soup = BeautifulSoup(resp.text, "html.parser")
+
+    for t in soup.find_all(["script", "noscript", "iframe", "object", "embed"]):
+        t.decompose()
+    for tag in soup.find_all(True):
+        for attr in [k for k in tag.attrs if k.lower().startswith("on")]:
+            del tag.attrs[attr]
+    # Lazy-loaded images never get their real src without JS — promote data-* attributes.
+    for img in soup.find_all("img"):
+        for k in ("data-src", "data-lazy-src", "data-original", "data-url"):
+            if img.get(k) and not (img.get("src") or "").startswith("http"):
+                img["src"] = img[k]; break
+        if img.get("data-srcset") and not img.get("srcset"):
+            img["srcset"] = img["data-srcset"]
+        img.attrs.pop("loading", None)
+
+    body = soup.body or soup
+    hits = 0
+    for node in list(body.find_all(string=True)):
+        parent = node.parent
+        if parent is None or parent.name in ("style", "script", "title", "textarea", "mark"):
+            continue
+        text = str(node)
+        if not _PREVIEW_HL_RE.search(text):
+            continue
+        wrap = soup.new_tag("span")
+        wrap["class"] = "ife-hl-wrap"
+        pos = 0
+        for m in _PREVIEW_HL_RE.finditer(text):
+            if m.start() > pos:
+                wrap.append(NavigableString(text[pos:m.start()]))
+            mk = soup.new_tag("mark"); mk["class"] = "ife-hl"; mk.string = m.group(0)
+            wrap.append(mk); pos = m.end()
+        if pos < len(text):
+            wrap.append(NavigableString(text[pos:]))
+        node.replace_with(wrap)
+        block = wrap.find_parent(lambda t: t.name in _PREVIEW_BLOCKS)
+        if block is not None and "ife-hl-block" not in (block.get("class") or []):
+            block["class"] = (block.get("class") or []) + ["ife-hl-block"]
+            hits += 1
+            block["id"] = f"ife-hl-{hits}"
+
+    head = soup.head
+    if head is None:
+        head = soup.new_tag("head"); soup.insert(0, head)
+    base = soup.new_tag("base", href=resp.url, target="_blank"); head.insert(0, base)
+    meta = soup.new_tag("meta"); meta["name"] = "ife-preview"; meta["content"] = str(hits); head.append(meta)
+    style = soup.new_tag("style"); style.string = _PREVIEW_CSS; head.append(style)
+    return str(soup)
+
+
+@app.route("/article-preview")
+def article_preview():
+    url = (request.args.get("url") or "").strip()
+    known = any(r.get("url") == url for r in data_manager.data.get("reviews", []))
+    if not known or not url.startswith(("http://", "https://")):
+        return Response("Unknown article", status=404, mimetype="text/plain")
+    hit = _PREVIEW_CACHE.get(url)
+    if hit and time.time() - hit[0] < _PREVIEW_TTL:
+        html = hit[1]
+    else:
+        try:
+            html = _build_article_preview(url)
+        except Exception as e:  # noqa: BLE001
+            return Response(f"Preview unavailable: {e}", status=502, mimetype="text/plain")
+        _PREVIEW_CACHE[url] = (time.time(), html)
+    return Response(html, mimetype="text/html",
+                    headers={"Content-Security-Policy": "script-src 'none'; frame-ancestors 'self'",
+                             "X-Frame-Options": "SAMEORIGIN"})
+
+
 @app.route("/api/ife-reviews")
 def get_ife_reviews():
     """Paginated full review list."""
