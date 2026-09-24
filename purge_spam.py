@@ -140,6 +140,7 @@ for r in data["reviews"]:
 
     bad = (
         _is_spam(title)
+        or _ic._is_spam_video(title, "", r.get("channel_title") or "")
         or _JUNK_RE.search(title)
         or _is_offtopic(title)
         or any(s.lower() in title.lower() for s in BAD_TITLE_SUBSTRINGS)

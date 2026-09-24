@@ -93,8 +93,35 @@ _AVIATION_CONTEXT_RE = re.compile(
 )
 
 
-def _is_spam_video(title: str, duration_iso: str = "") -> bool:
-    """Return True for Shorts, viral spam, hotel/resort junk, or hashtag floods."""
+# Documentary / explainer titles ("Why Aviation Safety Is Better Than You
+# Think", "1 in 5.6 Million", "Why planes crash") name aviation but are not
+# flight, cabin, or IFE reviews. High-precision phrases only — never a bare
+# "safety" or "aviation".
+_EXPLAINER_RE = re.compile(
+    r'\baviation\s+safety\b'
+    r'|\b1\s+in\s+\d[\d,.]*\s*(?:million|billion)\b'
+    r'|\bwhy\b.*\b(?:is|are)\s+(?:better|safer|worse)\s+than\s+you\s+think\b'
+    r"|\b(?:why|how)\s+(?:do\s+)?(?:planes|airplanes|aircraft|jets)\s+(?:crash|fly|stay|don'?t|never)\b"
+    r'|\bplane\s+crash(?:es)?\b'
+    r'|\bair\s+disasters?\b'
+    r'|\bmayday\b'
+    r'|\bblack\s+box\b'
+    r'|\brise\s+and\s+fall\s+of\b'
+    r'|\b(?:history|story)\s+of\s+(?:the\s+)?(?:boeing|airbus|a3\d{2}|7\d7)\b',
+    re.IGNORECASE,
+)
+
+# Channels whose output is never IFE/airline-review content (lowercase, exact).
+_BLOCKED_CHANNELS = {"the strange file"}
+
+
+def _is_spam_video(title: str, duration_iso: str = "", channel_title: str = "") -> bool:
+    """Return True for Shorts, viral spam, hotel/resort junk, hashtag floods,
+    aviation explainers/documentaries, or blocked channels."""
+    if channel_title and channel_title.strip().lower() in _BLOCKED_CHANNELS:
+        return True
+    if _EXPLAINER_RE.search(title):
+        return True
     hashtags = re.findall(r'#\w+', title)
     if len(hashtags) >= 4:
         return True
@@ -1091,7 +1118,7 @@ class IFECrawler:
         description = snippet.get("description", "").strip()
 
         duration_iso = item.get("contentDetails", {}).get("duration", "")
-        if _is_spam_video(title, duration_iso):
+        if _is_spam_video(title, duration_iso, snippet.get("channelTitle", "")):
             return None
 
         title_match = self._has_ife_keyword(title)
@@ -1226,7 +1253,7 @@ class IFECrawler:
                 # nearly always cover the IFE even without an explicit keyword.
                 if not self._is_aviation_review(title):
                     return None
-            if _is_spam_video(title):
+            if _is_spam_video(title, channel_title=channel_title):
                 return None
 
             combined = (title + " " + description).lower()
