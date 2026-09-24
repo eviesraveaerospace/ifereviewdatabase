@@ -1179,12 +1179,23 @@ class IFECrawler:
     # aren't in AIRLINE_KEYWORDS. Case-sensitive on purpose — proper nouns only,
     # so "air conditioner" or "fresh air" never match.
     _AIR_CARRIER_RE = re.compile(r'\b[Aa][Ii][Rr]\s+[A-Z]|\b[A-Z][a-zA-Z]+\s+[Aa][Ii][Rr]\b')
+    # "Air <Word>" that is not an airline: sneakers, gadgets, military and events. These are
+    # blanked before the carrier pattern runs so "Air Jordan 6" or "Air Force general" cannot
+    # pass the gate on their own (real Air Force One flight videos still pass via "flight",
+    # "onboard", trusted channels, etc.).
+    _AIR_NOT_CARRIER_RE = re.compile(
+        r'\b(?:nike\s+)?air\s+(?:jordans?|max|force|pods?|fryers?|purifiers?|conditioners?|coolers?|'
+        r'tags?|buds?|hostess|shows?|raids?|quality|traffic|combat|guitar|compressors?|'
+        r'mattress|bnb|drums?|rifles?|guns?|hockey|track|bags?|bikes?|filters?|pumps?|'
+        r'strikes?|defen[cs]e|power|marshal|chief|cadets?)\b|\bjordans?\b|\bsneakers?\b|\bkicks\b',
+        re.IGNORECASE)
 
     def _is_aviation_review(self, text: str) -> bool:
         t = text.lower()
         if _keyword_hits(t, AIRLINE_KEYWORDS) or _keyword_hits(t, AIRCRAFT_KEYWORDS):
             return True
-        if self._AVIATION_GENERIC_RE.search(text) or self._AIR_CARRIER_RE.search(text):
+        stripped = self._AIR_NOT_CARRIER_RE.sub(" ", text)
+        if self._AVIATION_GENERIC_RE.search(stripped) or self._AIR_CARRIER_RE.search(stripped):
             return True
         return any(k in t for k in self._AVIATION_REVIEW_TERMS)
 
