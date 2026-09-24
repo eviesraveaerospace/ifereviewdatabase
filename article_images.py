@@ -187,8 +187,20 @@ class SystemRegistry:
             key = af.upper().replace(" ", "").replace("-", "")
             for rk, rv in reg.items():
                 if rk.upper().replace(" ", "").replace("-", "").startswith(key):
-                    return f"{rv.get('vendor', '')} {rv.get('system', '')}".strip() or None
+                    return short_system(rv.get("vendor", ""), rv.get("system", ""))
         return AIRLINE_IFE_LOOKUP.get(airline_kw)
+
+
+def short_system(vendor: str, system: str):
+    """Chip-sized system name. Registry entries carry research notes in the system field
+    ('eX3 (KrisWorld) on long-haul/ULR; Thales AVANT on regional subfleet'); keep the
+    leading product name only, and the vendor's first word (Panasonic, Thales, Safran)."""
+    name = re.split(r"\s*[;(/]|\s+on\s+|\s+\(", system or "", maxsplit=1)[0].strip(" -")
+    vend = (vendor or "").split()[0] if vendor else ""
+    if vend and name.lower().startswith(vend.lower()):
+        vend = ""
+    out = f"{vend} {name}".strip()
+    return out or None
 
 
 class FullTagger:
