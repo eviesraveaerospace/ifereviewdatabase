@@ -161,7 +161,7 @@ def _is_spam_video(title: str, duration_iso: str = "", channel_title: str = "") 
     reviews (airline-review Shorts are kept and shown vertically)."""
     if channel_title and channel_title.strip().lower() in _BLOCKED_CHANNELS:
         return True
-    if _EXPLAINER_RE.search(title):
+    if _EXPLAINER_RE.search(title) and not _is_trusted_channel(channel_title):
         return True
     hashtags = re.findall(r'#\w+', title)
     if len(hashtags) >= 4:
@@ -232,7 +232,7 @@ _HOBBY_SIM_RE = re.compile(
     r'|\bflight\s+(?:school|training|lessons?)\b|\bstudent\s+pilot\b|\bppl\b'
     r'|\bplane\s*spotting\b|\bspotting\b|\bspotters?\b|\barrivals\b|\bdepartures\b'
     r'|\btakes?\s+off\s+from\b|\btake-?off\s+(?:and|&)\s+landing\b|\blanding\s+at\b|\bscenic\s+landing\b'
-    r'|\bdiecast\b|\bdie-cast\b|\b1:[2-5]00\b|\bunboxing\b|\bcockpit\s+(?:full\s+flight|view|magic|video|footage|only)\b|\bfrom\s+the\s+cockpit\b|\batc\b|\bapproach\s+at\b'
+    r'|\bdiecast\b|\bdie-cast\b|\b1:[2-5]00\b|\bunboxing\b|\bcockpit\s+(?:full\s+flight|view|magic|video|footage|only)\b|\bfrom\s+the\s+cockpit\b|\b(?:live|with)\s+atc\b|\bapproach\s+at\b'
     r'|\baerodrome\b|\bairfield\b|\bair\s+legend\b|\bstarship\b|\bnavy\b|\bbombers?\b|\bufo\b',
     re.IGNORECASE,
 )

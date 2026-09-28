@@ -113,6 +113,11 @@ def _video_fails_gate(r):
     channel = (r.get("channel_title") or "").strip().lower()
     if _ic._is_trusted_channel(channel) or r.get("ife_system"):
         return False
+    # A video the crawler tagged as IFE-system content whose title is about the
+    # screen/entertainment itself ("The Screen that Ruined American") stays even
+    # without an airline keyword in the title.
+    if (r.get("ife_features") or {}).get("entertainment_system") and re.search(r"\bscreens?\b|\bentertainment\b|\bife\b", title, re.I):
+        return False
     # Strong IFE keyword ("inflight entertainment", a named system…) always passes.
     if _gate._has_ife_keyword(title, skip_broad=True):
         return False
