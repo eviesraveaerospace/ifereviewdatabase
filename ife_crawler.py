@@ -176,6 +176,158 @@ def _is_spam_video(title: str, duration_iso: str = "", channel_title: str = "") 
     return False
 
 
+# ── News / incident filter ────────────────────────────────────────────────────
+# The aviation-review fallback gate accepts any title with an airline, aircraft,
+# or generic aviation word ("plane", "flight"). That let broadcast news through:
+# "Two flight students killed in Sask. plane crash | CTV Your Morning" names no
+# IFE term but says "flight" and "plane". Crash, incident, and headline coverage
+# is never an IFE review, so reject it unless the title carries an explicit IFE
+# keyword (a news channel can still publish a genuine IFE segment).
+_NEWS_TITLE_RE = re.compile(
+    r'\bcrash(?:es|ed|ing)?\b'
+    r'|\bkilled\b|\bdead\b|\bdeadliest\b|\bdeath\s+toll\b|\bfatal(?:ity|ities)?\b|\bvictims?\b'
+    r'|\bemergency\s+landing\b|\bmayday\b|\bhijack\w*\b'
+    r'|\bcollid\w*\b|\bcollisions?\b|\bnear[- ]miss\b'
+    r'|\bincidents?\b|\baccidents?\b|\bwreckage\b|\bblack\s+box\b'
+    r'|\bprobes?\b|\binvestigat\w*\b|\bntsb\b|\baaib\b|\bdgca\b'
+    r'|\b(?:flight|plane|engine|cabin)\s+fire\b|\bcatch(?:es)?\s+fire\b|\bon\s+fire\b'
+    r'|\bmissing\s+(?:plane|aircraft|jet|flight)\b|\bsearch\s+and\s+rescue\b'
+    r'|\bbreaking\b|\bheadlines?\b|\blive\s+tv\b|\b24x7\b'
+    r'|\b(?:dope|drug)\s+tests?\b|\bcover(?:ed|s)?[- ]up\b|\bdownplay\w*\b'
+    r'|\bworld\s+news\b|\bhindi\s+news\b|\bnews\b',
+    re.IGNORECASE,
+)
+
+# Broadcast / newspaper channels. Word-boundaried proper nouns only, so a
+# reviewer channel like "Simple Flying" or "Airline Videos Live" never matches.
+_NEWS_CHANNEL_RE = re.compile(
+    r'\bnews\b|\bnewsx?\d*\b|\bheadlines\b'
+    r'|\bndtv\b|\bcnn\b|\bbbc\b|\bctv\b|\bcbc\b|\babc\b|\bnbc\b|\bcbs\b|\bfox\b|\bitv\b'
+    r'|\bwion\b|\bgeo\b|\bdunya\b|\bary\b|\bindia\s+today\b|\btimes\s+now\b'
+    r'|\brepublic\s+(?:tv|world|bharat)\b'
+    r'|\baaj\s+tak\b|\bzee\b|\btv9\b|\bsumantv\b|\bjagran\b|\bal\s+jazeera\b'
+    r'|\breuters\b|\bbloomberg\b|\bdw\b|\bfrance\s+24\b|\beuronews\b|\bnhk\b|\bcna\b'
+    r'|\bchannel\s+news\s+asia\b|\bglobal\s+news\b|\b[79]news\b|\bnews18\b|\bnews\s+nation\b'
+    r'|\bhindustan\s+times\b|\bthe\s+hindu\b|\blivemint\b',
+    re.IGNORECASE,
+)
+
+
+def _is_news_broadcast(title: str, channel_title: str = "") -> bool:
+    """True for crash/incident/headline coverage or videos from a news broadcaster."""
+    if _NEWS_TITLE_RE.search(title):
+        return True
+    return bool(channel_title and _NEWS_CHANNEL_RE.search(channel_title))
+
+
+# Drones, RC, flight simulators, general aviation, and air sports. "We Make
+# Drones Fly | Touchscreen Fail..." passed on "fly" and even tagged a feature.
+_HOBBY_SIM_RE = re.compile(
+    r'\bdrones?\b|\bquadcopters?\b|\bfpv\b|\brc\s+(?:plane|jet|aircraft|airplane|heli\w*)\b'
+    r'|\bmodel\s+(?:plane|aircraft|airplane)s?\b|\bpaper\s+(?:plane|airplane)s?\b'
+    r'|\bflight\s*sim(?:ulator)?s?\b|\bmsfs\b|\bfs20(?:20|24)\b|\bx-?plane\s*\d*\b|\bvatsim\b'
+    r'|\binibuilds\b|\bpmdg\b|\bfenix\b|\bflightfactor\b|\bjust\s*flight\b|\bsimulat\w*|\brfs\b'
+    r'|\bkites?\b|\bskydiv\w*|\bparaglid\w*|\bhang\s+glid\w*|\bballoon\w*'
+    r'|\bhelicopters?\b|\bcessna\b|\bpiper\b|\baerobatic\w*'
+    r'|\bflight\s+(?:school|training|lessons?)\b|\bstudent\s+pilot\b|\bppl\b'
+    r'|\bplane\s*spotting\b|\bspotting\b|\bspotters?\b|\barrivals\b|\bdepartures\b'
+    r'|\btakes?\s+off\s+from\b|\btake-?off\s+(?:and|&)\s+landing\b|\blanding\s+at\b|\bscenic\s+landing\b'
+    r'|\bdiecast\b|\bdie-cast\b|\b1:[2-5]00\b|\bunboxing\b|\bcockpit\s+(?:full\s+flight|view|magic|video|footage|only)\b|\bfrom\s+the\s+cockpit\b|\batc\b|\bapproach\s+at\b'
+    r'|\baerodrome\b|\bairfield\b|\bair\s+legend\b|\bstarship\b|\bnavy\b|\bbombers?\b|\bufo\b',
+    re.IGNORECASE,
+)
+
+# AI-narrated "revenge story" videos. The genre's tell is an em-dash cliffhanger
+# ("—Then Learned He Owned the Airline", "—So I Left Her A Letter And Flew To
+# Maui") or a relative doing something dramatic. Plain "my mom" / "my parents"
+# is NOT enough — creators fly family to first class all the time.
+# The cliffhanger dash is the strongest tell, but real vlogs use it too
+# ("Flying Qatar Airways to VIETNAM — Then We Got STRANDED!"). Story videos
+# never name a real carrier, so this pattern only counts when no airline
+# keyword appears in the title (see _is_offtopic_video).
+_STORY_DASH_RE = re.compile(r'[—–]\s*(?:then|so)\b', re.IGNORECASE)
+_STORY_TITLE_RE = re.compile(
+    r'\bthen\s+(?:learned|realized|realised|regretted|discovered|found\s+out|this\s+happened)\b'
+    r'|\bmy\s+(?:daughter|son|wife|husband|ex[- ]?wife|ex[- ]?husband|mother[- ]in[- ]law'
+    r'|father[- ]in[- ]law|in[- ]laws|stepmom|stepdad|sister|brother|niece|nephew|family)\s+'
+    r'(?:sent|texted|told|said|left|kicked|refused|demanded|forgot|abandoned|banned|uninvited'
+    r'|humiliated|mocked|laughed|cheated|lied|screamed|stole|showed\s+up|tried|called\s+me)\b'
+    r'|\brevenge\s+on\b|\bkarma\b|\bhumiliated\b|\bdisowned\b|\binheritance\b'
+    r'|\bcheating\s+(?:wife|husband|stor\w+)\b|\bnobody\s+escaped\b'
+    r'|\breddit\b|\br/\w+|\bmanhwa\b|\bmanga\b|\banime\b|\b(?:manhwa|anime|manga)\s+recap\b'
+    r'|\blevel\s+up\b|\bwebtoon\b',
+    re.IGNORECASE,
+)
+_STORY_CHANNEL_RE = re.compile(
+    r'\brevenge\b|\bretribution\b|\bcheating\s+stor\w+|\bmanhwa\b|\breddit\b'
+    r'|\bstories?\s+(?:true|hub|time)\b|\btrue\s+stories\b|\bvoices\s+true\b|\bat\s+midnight\b',
+    re.IGNORECASE,
+)
+
+
+# Aviation documentaries, explainers, dramas, and sponsorship spill-over.
+# "Why The Airbus A380 Failed (The $18 Billion Engineering Miracle)" entered on
+# the aircraft keyword alone. Deliberately narrow: "X vs Y", "Ranked", "Top 10",
+# "What happened to…" and "…DISASTER?" are how real reviewers title reviews.
+_DOC_TITLE_RE = re.compile(
+    r"\bwhy\s+[\w\s'’\-]{0,40}?\b(?:failed|flopped|was\s+(?:cancell?ed|retired|discontinued|a\s+(?:failure|flop)))\b"
+    r'|\brise\s+(?:and|&)\s+fall\b|\bengineering\s+(?:miracle|marvel|masterpiece|failure|blunder)\b'
+    r'|\$\s?\d[\d.,]*\s*(?:billion|trillion)\s+(?:engineering|mistake|failure|miracle|gamble|bet|blunder|plane|aircraft|jet|program|project)\b'
+    r'|\b(?:billion|trillion)[- ]dollar\b'
+    r'|\bexplained\b|\bexplainer\b|\bdocumentary\b|\bhistory\s+of\b|\bevolution\s+of\b|\bstory\s+of\s+the\b'
+    r'|\bfull\s+movie\b|\bshort\s+drama\b|\bdrama\s+(?:explained|episode|series|movie)\b'
+    r'|\bmovie\s+(?:review|facts|explained|recap)\b|\bnetflix\b|\bfilm\s+review\b'
+    r'|^\s*highlights\b|\bhighlights\s*\||\bpre-?season\b|\bmatchday\b|\bfull\s+match\b|\(\d{1,2}\s*-\s*\d{1,2}\)'
+    r'|\bcredit\s+cards?\b|\bcents\s+per\s+point\b|\bmiles\s+(?:really\s+)?worth\b|\bprivilege\s+deal\b'
+    r'|\bceo\b|\bappoints?\b|\brevenue\b|\bsalary\b|\bprofits?\b|\bcase\s+study\b|\beconomics\s+of\b'
+    r'|\bmargin\b|\byield\s+management\b|\broute\s+expansion\b|\bnew\s+(?:direct\s+)?(?:flights?|routes?)\s+to\b'
+    r'|\bpodcast\b|\bquiz\b|\bcareer\b|\blearn\s+aviation\b|\btechnical\b'
+    r'|\bconstruction\b|\bdevelopment\s+update\b|\breal\s+estate\b|\bproperty\b|\bphase\s+\d\b'
+    r'|\bjail\b|\bstaycation\b|\besim\b|\bdummy\s+ticket\b|\bticket\s+price\b'
+    r'|\bsafety\s+(?:instruction|video|briefing|demo)\b|\bair\s+hostess\b|\bbodycam\b|\bpolice\b|\bentitled\b'
+    r'|\bcomedy\b|\bhistory\s+for\s+sleep\b|\bappellant\b|\brespondent\b|\bcourt\b'
+    r'|\blive\s*:|\blive\s+(?:tv|stream)\b|\bheadlines?\b|\beilmeldung\b|\bbreaking\b',
+    re.IGNORECASE,
+)
+_DOC_CHANNEL_RE = re.compile(
+    r'\bexplain\w*\b|\bdrama\b|\bmovies?\b|\bjet\s+vault\b|\bmustard\b|\bwendover\b'
+    r'|\breal\s+engineering\b|\bmegaprojects\b|\bmentour\b|\bcoby\s+explanes\b|\baerospace,?\s+casually\b'
+    r'|\b(?:arsenal|chelsea|real\s+madrid|paris\s+saint-germain|psg|ac\s+milan|benfica|hamburger\s+sv|olympique)\b',
+    re.IGNORECASE,
+)
+
+
+def _is_offtopic_video(title: str, channel_title: str = "") -> bool:
+    """News, hobby/sim, story-narration, or documentary content that only looks aviation-related."""
+    if _is_news_broadcast(title, channel_title):
+        return True
+    if _HOBBY_SIM_RE.search(title):
+        return True
+    if _STORY_TITLE_RE.search(title):
+        return True
+    if _STORY_DASH_RE.search(title) and not _keyword_hits(title.lower(), AIRLINE_KEYWORDS):
+        return True
+    if _DOC_TITLE_RE.search(title):
+        return True
+    if channel_title and (_STORY_CHANNEL_RE.search(channel_title) or _DOC_CHANNEL_RE.search(channel_title)):
+        return True
+    return False
+
+
+def _is_trusted_channel(channel_title: str) -> bool:
+    """Known reviewer channels bypass the off-topic filter (see KNOWN_IFE_CHANNELS)."""
+    if not channel_title:
+        return False
+    name = channel_title.strip().lower()
+    if name in _TRUSTED_ALIASES:
+        return True
+    return any(name == n.lower().replace(" (official)", "") for n in KNOWN_IFE_CHANNELS)
+
+
+# Channel titles as YouTube reports them when they differ from KNOWN_IFE_CHANNELS.
+_TRUSTED_ALIASES = {"dennisbunnik travels", "the window seat", "thewindowseat"}
+
+
 # Broad keywords that are only valid when they appear in the TITLE — not descriptions.
 # Descriptions of AI drama, movie reviews, etc. also contain these words.
 _IFE_TITLE_ONLY_KEYWORDS = {
@@ -403,8 +555,44 @@ def _keyword_re(kw: str) -> "re.Pattern":
         _KEYWORD_RE_CACHE[kw] = pat
     return pat
 
+# Phrases that contain an airline name but aren't about the airline. Stripped
+# before keyword matching so "United Arab Emirates", "Etihad Town" real estate,
+# or the "Okavango Delta" don't register as carriers.
+_LOOKALIKE_RE = re.compile(
+    r"\bunited\s+arab\s+emirates\b|\betihad\s+(?:town|stadium|arena|campus|rail)\b"
+    r"|\bemirates\s+(?:stadium|cup|fa\s+cup|old\s+trafford|palace|towers?|hills?|mall)\b"
+    r"|\b(?:okavango|mississippi|nile|mekong|niger|ganges|pearl\s+river)\s+delta\b"
+    r"|\bdelta\s+(?:variant|force|wave|river|region|state|junction|blues|8|9|dental|faucet)\b"
+    r"|\bswiss\s+(?:army|alps|franc|cheese|chocolate|watch|made|roll|ball|bank|guard)\b"
+    r"|\b(?:next|every|sea|ground|entry|high|low|top|any|each|new|another)\s+level\b"
+    r"|\blevel\s+(?:up|\d+|of|headed|playing\s+field)\b"
+    r"|\bsouthwest\s+(?:asia|florida|england|china|of|monsoon|airlines?\s+cargo)\b"
+    r"|\bAna\s+[A-Z][a-z]+\b",                       # a person: "Ana Quinn" (ANA the airline is upper-case)
+)
+
+# Single-word carrier names that are also ordinary words or names. They only
+# count when the text has other aviation context, or the name is written in
+# capitals the way the airline styles it (ANA, JAL, LEVEL).
+_AMBIGUOUS_AIRLINES = {"ana", "jal", "delta", "southwest", "swiss", "level", "condor", "allegiant"}
+_CABIN_CONTEXT_RE = re.compile(
+    r"\b(?:class|cabin|seats?|suites?|premium\s+select|comfort\+|delta\s+one|main\s+cabin|first|business"
+    r"|trip\s*report|review|onboard|on\s+board|flew|flying|fly|flight|plane|aircraft|jet|route|hours?\s+(?:to|in|on|from)"
+    r"|lounge|upgrade|legroom|meal|crew|boarding|landing|takeoff|airport|a3\d{2}|7\d7|max|neo|dreamliner)\b",
+    re.IGNORECASE,
+)
+
 def _keyword_hits(text: str, keywords: List[str]) -> List[str]:
-    return [kw for kw in keywords if _keyword_re(kw).search(text)]
+    scrubbed = _LOOKALIKE_RE.sub(" ", text)
+    hits = []
+    for kw in keywords:
+        if not _keyword_re(kw).search(scrubbed):
+            continue
+        if kw in _AMBIGUOUS_AIRLINES:
+            styled = re.search(r"\b" + kw.upper() + r"\b", scrubbed) if kw in ("ana", "jal", "level") else None
+            if not styled and not _AVIATION_CONTEXT_RE.search(scrubbed) and not _CABIN_CONTEXT_RE.search(scrubbed):
+                continue
+        hits.append(kw)
+    return hits
 
 
 # ── Structured spec extraction ────────────────────────────────────────────────
@@ -1233,20 +1421,21 @@ class IFECrawler:
     # aren't in AIRLINE_KEYWORDS. Case-sensitive on purpose — proper nouns only,
     # so "air conditioner" or "fresh air" never match.
     _AIR_CARRIER_RE = re.compile(r'\b[Aa][Ii][Rr]\s+[A-Z]|\b[A-Z][a-zA-Z]+\s+[Aa][Ii][Rr]\b')
-    # "Air <Word>" that is not an airline: sneakers, gadgets, military and events. These are
-    # blanked before the carrier pattern runs so "Air Jordan 6" or "Air Force general" cannot
-    # pass the gate on their own (real Air Force One flight videos still pass via "flight",
-    # "onboard", trusted channels, etc.).
+    # "Air <Word>" that is not an airline: sneakers, gadgets, military, sports and
+    # events. Blanked before the generic/carrier patterns run so "Air Jordan 6",
+    # "Air Force general" or "Air Bud" cannot pass the gate on their own (real Air
+    # Force One flight videos still pass via "flight", "onboard", trusted channels).
     _AIR_NOT_CARRIER_RE = re.compile(
-        r'\b(?:nike\s+)?air\s+(?:jordans?|max|force|pods?|fryers?|purifiers?|conditioners?|coolers?|'
-        r'tags?|buds?|hostess|shows?|raids?|quality|traffic|combat|guitar|compressors?|'
-        r'mattress|bnb|drums?|rifles?|guns?|hockey|track|bags?|bikes?|filters?|pumps?|'
-        r'strikes?|defen[cs]e|power|marshal|chief|cadets?)\b|\bjordans?\b|\bsneakers?\b|\bkicks\b',
+        r'\b(?:nike\s+)?air\s*(?:jordans?|max|force|pods?|fryers?|purifiers?|conditioners?|conditioning'
+        r'|coolers?|tags?|buds?|play|drop|hostess|shows?|raids?|quality|traffic|combat|guitar|dance'
+        r'|compressors?|mattress(?:es)?|bnb|drums?|rifles?|guns?|hockey|track|bags?|bikes?|filters?'
+        r'|pumps?|pollution|soft|war|legend|strikes?|defen[cs]e|power|marshal|chief|cadets?)\b'
+        r'|\bjordans?\b|\bsneakers?\b|\bkicks\b|\bhot\s+air\b|\bairpods\b',
         re.IGNORECASE)
 
     def _is_aviation_review(self, text: str) -> bool:
         t = text.lower()
-        if _keyword_hits(t, AIRLINE_KEYWORDS) or _keyword_hits(t, AIRCRAFT_KEYWORDS):
+        if _keyword_hits(text, AIRLINE_KEYWORDS) or _keyword_hits(text, AIRCRAFT_KEYWORDS):
             return True
         stripped = self._AIR_NOT_CARRIER_RE.sub(" ", text)
         if self._AVIATION_GENERIC_RE.search(stripped) or self._AIR_CARRIER_RE.search(stripped):
@@ -1275,6 +1464,15 @@ class IFECrawler:
             # "cabin", "on board", or an airline-name lookalike.
             if not self._is_aviation_review(title):
                 return None
+
+        # Off-topic content (news, drones/flight-sim, story narration) rides in
+        # on generic words like "flight" or "flew", sometimes alongside a broad
+        # keyword such as "flight review". Only a strong IFE keyword or a
+        # trusted reviewer channel overrides.
+        channel_title = snippet.get("channelTitle", "")
+        strong = self._has_ife_keyword(title, skip_broad=True) or desc_match
+        if not trusted and not strong and _is_offtopic_video(title, channel_title):
+            return None
 
         published_at = snippet.get("publishedAt", "")
         try:
@@ -1399,6 +1597,11 @@ class IFECrawler:
                 # nearly always cover the IFE even without an explicit keyword.
                 if not self._is_aviation_review(title):
                     return None
+            strong = (self._has_ife_keyword(title, skip_broad=True)
+                      or self._has_ife_keyword(description, skip_broad=True))
+            if (not _is_trusted_channel(channel_title) and not strong
+                    and _is_offtopic_video(title, channel_title)):
+                return None
             if _is_spam_video(title, channel_title=channel_title):
                 return None
 

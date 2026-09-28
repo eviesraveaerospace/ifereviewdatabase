@@ -111,12 +111,19 @@ def _video_fails_gate(r):
         return False
     title = r.get("title", "")
     channel = (r.get("channel_title") or "").strip().lower()
-    return not (
-        channel in _TRUSTED_CHANNELS
-        or _gate._has_ife_keyword(title)
-        or _gate._is_aviation_review(title)
-        or bool(r.get("ife_system"))
-    )
+    if _ic._is_trusted_channel(channel) or r.get("ife_system"):
+        return False
+    # Strong IFE keyword ("inflight entertainment", a named system…) always passes.
+    if _gate._has_ife_keyword(title, skip_broad=True):
+        return False
+    # Same rule as the crawler: news/incident coverage, drones & flight sims,
+    # and AI story narration are off-topic even when a broad keyword like
+    # "flight review" or a word like "flew" is present.
+    if _ic._is_offtopic_video(title, channel):
+        return True
+    if _gate._has_ife_keyword(title):
+        return False
+    return not _gate._is_aviation_review(title)
 
 
 def _press_has_ife_content(r):

@@ -499,7 +499,8 @@ const P={
   pencil:'<path d="M17 3a2.83 2.83 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>',
 };
 function ic(n,s){s=s||16;return '<svg viewBox="0 0 24 24" width="'+s+'" height="'+s+'" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+(P[n]||'')+'</svg>';}
-const NAV=[['Dashboard','dots'],['Reviews','rev'],['Statistics','stats'],['Compare','compare'],['Ask AI','chat']];
+// Ask AI tab hidden until ANTHROPIC_API_KEY is configured — re-add ['Ask AI','chat'] to restore it.
+const NAV=[['Dashboard','dots'],['Reviews','rev'],['Statistics','stats'],['Compare','compare']];
 const FEAT_LABELS={entertainment_system:'IFE System',connectivity:'In-flight WiFi',wifi:'In-flight WiFi','4k_display':'4K HDR Display',bluetooth_audio:'Bluetooth Audio',content:'Content Library',quality:'Display Quality',seat:'Seat Comfort',usb_power:'USB Power',watch_party:'Watch Party',seat_chat:'Seat-to-Seat Chat',search:'Content Search',tail_camera:'Tail Camera',moving_map:'Moving Map'};
 const FEAT_IC={entertainment_system:'tv',connectivity:'wifi',wifi:'wifi','4k_display':'tv',bluetooth_audio:'bt',content:'play',quality:'tv',seat:'tv',usb_power:'tv',watch_party:'users',seat_chat:'chat',search:'search',tail_camera:'cam',moving_map:'globe'};
 
