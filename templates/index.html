@@ -1216,7 +1216,7 @@ async function openReviewByUrl(url,startSec){
 }
 const IFE_HL_RE=/(in-?\s?flight entertainment(?: (?:and|&) connectivity)?|inflight entertainment|\bIFEC?\b|seat-?back(?: screens?| displays?| monitors?| tvs?)?|entertainment (?:system|screen|library|options?|selection|offering|content|choices)|touch-?screens?|personal (?:screens?|tvs?)|\bICE\b(?= system| entertainment)|noise-?cancell?ing headphones|headphones? jack|streaming entertainment|wireless (?:ife|entertainment|streaming)|(?:in-?flight|on-?board) wi-?fi|moving map|live tv|content library)/gi;
 const IFE_HL_TEST=new RegExp(IFE_HL_RE.source,'i');
-const ART_JUNK_RE=/^(copyright|©|all rights reserved|this site is owned|cookie|privacy policy|terms of (use|service)|subscribe|sign up|newsletter|advertisement|related:|read more:|share this|follow us|photo:|image:|credit:)/i;
+const ART_JUNK_RE=/^(copyright|©|all rights reserved|this site is owned|by logging into your account|contact us\s+-|powered by (vbulletin|xenforo)|all times are gmt|cookie|privacy policy|terms of (use|service)|subscribe|sign up|newsletter|advertisement|related:|read more:|share this|follow us|photo:|image:|credit:)/i;
 function isShortRow(r){return !!(r&&r.media_type==='video'&&(r.is_short||/\/shorts\//.test(r.url||'')));}
 // Parse article paragraphs into sections (heading + paragraphs) and flag the ones that talk about IFE.
 function parseArticleSections(paras){
@@ -1248,7 +1248,10 @@ function articleBodyHTML(r,ifeOnly){
 }
 function wireArticleFrame(r){
   const f=$('artFrame');if(!f)return;
-  const fallback=()=>{const host=f.parentElement;if(!host)return;host.innerHTML='<div class="ab-empty" style="padding:12px 20px 4px">The publisher’s page could not be embedded — showing the saved text instead.</div>'+articleBodyHTML(r,false);};
+  const fallback=()=>{const wrap=f.parentElement;if(!wrap)return;
+    // One message, not two stacked: when there's no saved text either, say so once and point at the publisher.
+    if(!parseArticleSections(r.article_text).length){wrap.innerHTML='<div class="article-body"><div class="ab-empty">'+esc(host(r.url))+' blocks automated readers, so the page can’t be shown here and no text was saved — use “Open article” to read it on the publisher’s site.</div></div>';return;}
+    wrap.innerHTML='<div class="ab-empty" style="padding:12px 20px 4px">The publisher’s page could not be embedded — showing the saved text instead.</div>'+articleBodyHTML(r,false);};
   f.addEventListener('load',()=>{let doc=null;try{doc=f.contentDocument;}catch(e){}if(!(doc&&doc.querySelector('meta[name="ife-preview"]')))fallback();});
   f.addEventListener('error',fallback);
 }

@@ -115,6 +115,15 @@ _EXPLAINER_RE = re.compile(
 # Channels whose output is never IFE/airline-review content (lowercase, exact).
 _BLOCKED_CHANNELS = {"the strange file"}
 
+# Serialized web-novel / short-drama promos (Chinese, Korean, dubbed) — the
+# genre markers appear in the channel name or the description hashtag wall.
+_SHORT_DRAMA_RE = re.compile(
+    r'short\s*drama|shortdrama|#?(?:c|k)-?drama\b|chinese\s*drama|korean\s*drama|dramabox|reelshort'
+    r'|短[剧劇]|爽[剧劇]|甜[剧劇]|[剧劇]场|劇場|霸[总總]|追妻火葬场|全集短',
+    re.IGNORECASE,
+)
+_DESC_HASHTAG_FLOOD = 15
+
 
 def _iso_duration_seconds(duration_iso: str) -> Optional[int]:
     """ISO 8601 duration (PT1H2M3S) → seconds; None if unparseable/empty."""
@@ -155,16 +164,25 @@ def _is_airline_review_title(title: str) -> bool:
     return bool(_keyword_hits(title, AIRLINE_KEYWORDS)) and bool(_REVIEW_SIGNAL_RE.search(title))
 
 
-def _is_spam_video(title: str, duration_iso: str = "", channel_title: str = "") -> bool:
+def _is_spam_video(title: str, duration_iso: str = "", channel_title: str = "",
+                   description: str = "") -> bool:
     """Return True for viral spam, hotel/resort junk, hashtag floods, aviation
     explainers/documentaries, blocked channels, and Shorts that are NOT airline
     reviews (airline-review Shorts are kept and shown vertically)."""
     if channel_title and channel_title.strip().lower() in _BLOCKED_CHANNELS:
         return True
+    if channel_title and _SHORT_DRAMA_RE.search(channel_title):
+        return True
     if _EXPLAINER_RE.search(title) and not _is_trusted_channel(channel_title):
         return True
     hashtags = re.findall(r'#\w+', title)
     if len(hashtags) >= 4:
+        return True
+    # Short-drama / clip-farm uploads carry a wall of unrelated hashtags in the
+    # description (60+ on one Chinese-drama promo). No genuine review does.
+    if description and len(re.findall(r'#\w+', description)) >= _DESC_HASHTAG_FLOOD:
+        return True
+    if description and _SHORT_DRAMA_RE.search(description) and not _is_trusted_channel(channel_title):
         return True
     if _HOTEL_TITLE_RE.search(title) and not _AVIATION_CONTEXT_RE.search(title):
         return True
@@ -482,12 +500,46 @@ def _article_quotes(raw_text: str, limit: int = 8):
 
 _ARTICLE_BOILERPLATE_RE = re.compile(
     r'^(share this|subscribe|sign up|read more|advertisement|related articles?|'
-    r'cookie|©|copyright|all rights reserved|follow us)', re.IGNORECASE)
+    r'cookie|©|copyright|all rights reserved|follow us|'
+    # forum footers / login banners (vBulletin, XenForo)
+    r'this site is owned|by logging into your account|contact us\s+-|'
+    r'powered by (vbulletin|xenforo)|all times are gmt|you may not post)', re.IGNORECASE)
+
+# Forum software puts each post's body in a div, not <p> tags — vBulletin
+# (FlyerTalk, Airliners.net), XenForo, phpBB, Discourse.
+_FORUM_POST_SELECTORS = [
+    "[id^=post_message_]", ".postcontent", ".post_message",   # vBulletin
+    ".message-body .bbWrapper", ".bbWrapper",                  # XenForo
+    ".postbody .content",                                      # phpBB
+    ".cooked", ".post-content", ".comment-body",               # Discourse / generic
+]
+
+
+def _forum_post_paragraphs(soup) -> List[str]:
+    """Each forum post as one or more paragraphs (split on <br> runs), in thread order."""
+    for sel in _FORUM_POST_SELECTORS:
+        posts = soup.select(sel)
+        if not posts:
+            continue
+        out: List[str] = []
+        for post in posts:
+            for q in post.select("blockquote, .bbcode_container, .quote, .bbCodeBlock"):
+                q.decompose()  # quoted replies would repeat text already shown
+            for br in post.find_all("br"):
+                br.replace_with("\n")
+            for chunk in re.split(r'\n\s*\n+', post.get_text("\n")):
+                txt = re.sub(r'\s+', ' ', chunk).strip()
+                if len(txt) >= 20 and not _ARTICLE_BOILERPLATE_RE.search(txt) and txt not in out:
+                    out.append(txt)
+        if out:
+            return out
+    return []
 
 
 def _article_paragraphs(soup, max_paragraphs: int = 80, max_chars: int = 25000) -> List[str]:
     """Readable body paragraphs of a press article, in order, for inline display.
-    Prefers the <article> element; skips nav/footer/script and short fragments."""
+    Prefers the <article> element; skips nav/footer/script and short fragments.
+    Forum threads (no <p>-structured body) fall back to per-post extraction."""
     root = soup.find("article") or soup.find("main") or soup.body or soup
     for tag in root.find_all(["script", "style", "nav", "footer", "aside", "form", "noscript"]):
         tag.decompose()
@@ -504,6 +556,11 @@ def _article_paragraphs(soup, max_paragraphs: int = 80, max_chars: int = 25000) 
         total += len(txt)
         if len(out) >= max_paragraphs or total >= max_chars:
             break
+    # Headings alone (or nothing) means the body wasn't in <p> tags — try forum posts.
+    if not any(len(t) >= 80 for t in out):
+        forum = _forum_post_paragraphs(root)
+        if forum:
+            return forum[:max_paragraphs]
     return out
 
 
@@ -551,7 +608,9 @@ def _keyword_re(kw: str) -> "re.Pattern":
     if pat is None:
         variants = [kw] + AIRLINE_ALIASES.get(kw.lower(), [])
         body = "|".join(re.escape(v) for v in variants)
-        pat = re.compile(r'(?<![\w-])(?:' + body + r')(?![\w-])', re.IGNORECASE)
+        # ASCII-only boundary: Python's \w includes CJK, which made "JAL台北→名古屋"
+        # miss the JAL keyword while still protecting "banana" / "wife".
+        pat = re.compile(r'(?<![A-Za-z0-9-])(?:' + body + r')(?![A-Za-z0-9-])', re.IGNORECASE)
         _KEYWORD_RE_CACHE[kw] = pat
     return pat
 
@@ -588,7 +647,7 @@ def _keyword_hits(text: str, keywords: List[str]) -> List[str]:
         if not _keyword_re(kw).search(scrubbed):
             continue
         if kw in _AMBIGUOUS_AIRLINES:
-            styled = re.search(r"\b" + kw.upper() + r"\b", scrubbed) if kw in ("ana", "jal", "level") else None
+            styled = re.search(r"(?<![A-Za-z0-9])" + kw.upper() + r"(?![A-Za-z0-9])", scrubbed) if kw in ("ana", "jal", "level") else None
             if not styled and not _AVIATION_CONTEXT_RE.search(scrubbed) and not _CABIN_CONTEXT_RE.search(scrubbed):
                 continue
         hits.append(kw)
@@ -1450,7 +1509,7 @@ class IFECrawler:
         description = snippet.get("description", "").strip()
 
         duration_iso = item.get("contentDetails", {}).get("duration", "")
-        if _is_spam_video(title, duration_iso, snippet.get("channelTitle", "")):
+        if _is_spam_video(title, duration_iso, snippet.get("channelTitle", ""), description):
             return None
 
         title_match = self._has_ife_keyword(title)
@@ -1602,7 +1661,7 @@ class IFECrawler:
             if (not _is_trusted_channel(channel_title) and not strong
                     and _is_offtopic_video(title, channel_title)):
                 return None
-            if _is_spam_video(title, channel_title=channel_title):
+            if _is_spam_video(title, channel_title=channel_title, description=description):
                 return None
 
             combined = (title + " " + description).lower()
@@ -1880,11 +1939,13 @@ class IFECrawler:
     # ── Text helpers ──────────────────────────────────────────────────────────
 
     def _has_ife_keyword(self, text: str, skip_broad: bool = False) -> bool:
+        # Word-boundaried: plain substring matching let "ifec" fire inside the
+        # hashtag "#husbandwifecomedy" and admitted a Chinese short-drama promo.
         t = text.lower()
         for kw in IFE_TITLE_KEYWORDS:
             if skip_broad and kw in _IFE_TITLE_ONLY_KEYWORDS:
                 continue
-            if kw in t:
+            if _keyword_re(kw).search(t):
                 return True
         return bool(_IFE_WORD_RE.search(t))
 
@@ -1913,6 +1974,9 @@ class IFECrawler:
         return None
 
     def _year_from_text(self, text: str) -> Optional[int]:
+        # Drop copyright footers first — "© 2026 Internet Brands" on an old
+        # forum thread otherwise dates the thread to this year.
+        text = re.sub(r'(?:©|\(c\)|copyright)\s*(?:19|20)\d\d(?:\s*[-–]\s*(?:19|20)?\d\d)?', ' ', text, flags=re.I)
         # Prefer most recent year found
         for y in ["2026", "2025", "2024", "2023", "2022"]:
             if y in text:
