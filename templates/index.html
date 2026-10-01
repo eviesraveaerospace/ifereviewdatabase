@@ -276,6 +276,12 @@ svg{display:block}
 .cap-orig{display:block;margin-top:3px;font-size:11px;color:var(--gray);font-style:normal}.cap-orig em{font-style:normal;opacity:.7}
 .cap.aq{cursor:default}.cap.aq:hover{background:none}
 .aq-kws{display:block;margin-top:6px}
+.admin-only{display:none!important}body.admin .admin-only{display:inline-flex!important}
+.tag.chap.ok{border-color:#3f9a5a;color:#1e6b36;background:#eaf7ee}
+.mdel{border-color:#e6b4b4;color:#a12b2b}.mdel:hover{background:#fff3f3}
+.tag .tagx{border:0;background:transparent;color:inherit;font-size:13px;line-height:1;margin-left:4px;padding:0 2px;cursor:pointer;opacity:.7}.tag .tagx:hover{opacity:1;color:#a12b2b}
+.mdelf{cursor:pointer;font-family:var(--f);color:#a12b2b!important;border-color:#e6b4b4!important}
+.vchaps{display:flex;flex-wrap:wrap;gap:6px;padding:8px 20px 0}.vchap{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line2);background:#fff;border-radius:7px;padding:3px 8px;font:500 11.5px var(--f);color:var(--ink2);cursor:pointer}.vchap:hover{border-color:var(--red)}.vchap .cts{font-size:11px;font-weight:600;color:var(--red)}
 .cap.chap{border-radius:7px}.cap.scr.on{background:#fff;box-shadow:inset 3px 0 0 var(--red)}.scr-n{font-style:normal;color:var(--gray);font-weight:600;font-size:11px}
 .cap.chap.ife{background:#fff5f4}
 .cap.chap.ife span:last-child{color:var(--red);font-weight:600}
@@ -591,6 +597,7 @@ function restoreURL(){
   if(p.get('a'))S.cmpA=p.get('a');
   if(p.get('b'))S.cmpB=p.get('b');
   if(p.get('open'))S.deepOpen=p.get('open');   // ?open=<review url>: open that popup once the list is in
+  if(p.get('admin')!=null){if(p.get('admin')==='off')localStorage.removeItem('rave-admin');else localStorage.setItem('rave-admin',p.get('admin'));}
   return p.get('tab');
 }
 
@@ -598,6 +605,7 @@ const $=id=>document.getElementById(id);
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function cap(s){return (s||'').replace(/\b\w/g,c=>c.toUpperCase());}
 function fmtN(n){return (n||0).toLocaleString();}
+function fmtSec(s){s=Math.max(0,Math.round(s||0));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return (h?h+':'+String(m).padStart(2,'0'):m)+':'+String(x).padStart(2,'0');}
 function fmtV(n){if(!n)return null;if(n>=1e6)return (n/1e6).toFixed(1).replace(/\.0$/,'')+'M';if(n>=1e3)return (n/1e3).toFixed(1).replace(/\.0$/,'')+'K';return String(n);}
 function ini(s){const w=(s||'').trim().split(/\s+/).filter(Boolean);return ((w[0]||'?')[0]+(w[1]?w[1][0]:'')).toUpperCase();}
 function host(u){try{return new URL(u||'').hostname.replace(/^www\./,'');}catch{return '';}}
@@ -1286,7 +1294,7 @@ function mediaList(r,o){
   if(o.vid)m.push({type:'video'});
   else if(o.isArt)m.push({type:'article'});
   else if(!(r.images||[]).length&&!(r.photos||[]).length)m.push({type:'head'});
-  (r.images||[]).forEach(im=>m.push({type:'image',src:im.local||im.src,fallback:null,alt:im.alt||'',caption:im.caption||'',airline:im.airline,airlineSrc:im.airline_source,system:im.ife_system,tags:im.tags,visual:im.used_visual,external:!!im.external,video:!!im.video,poster:im.poster||null}));
+  (r.images||[]).forEach(im=>m.push({type:'image',src:im.local||im.src,origSrc:im.src,chapters:im.chapters||[],verified:im.tags_verified||[],fallback:null,alt:im.alt||'',caption:im.caption||'',airline:im.airline,airlineSrc:im.airline_source,system:im.ife_system,tags:im.tags,visual:im.used_visual,external:!!im.external,video:!!im.video,poster:im.poster||null}));
   (r.photos||[]).forEach(p=>m.push({type:'image',src:p,alt:'',caption:'',tags:[],uploaded:true}));
   return m;
 }
@@ -1299,15 +1307,17 @@ function slideHTML(r,o,it){
   if(it.type==='head')return '<div class="mhead" style="background:var(--ink)"><span style="font-size:26px">'+esc(ini(r.internal_author||'T'))+'</span><span style="font-size:12px">Internal team review</span></div>';
   const fromArt=it.airlineSrc==='article';
   const chips=[it.airline?'<span class="tag soft"'+(fromArt?' title="Inferred from the article, not the image" style="border-style:dashed"':'')+'>'+esc(it.airline)+(fromArt?' ?':'')+'</span>':'',it.system?'<span class="tag">'+esc(it.system)+'</span>':'']
-    .concat((it.tags||[]).map(t=>'<span class="tag chap">'+esc(t)+'</span>')).join('')+
-    (it.tags&&!it.tags.length&&!it.uploaded?'<span class="tag note">No screen tags</span>':'');
+    .concat((it.tags||[]).map(t=>{const v=(it.verified||[]).some(x=>x.toLowerCase()===t.toLowerCase());return '<span class="tag chap'+(v?' ok':'')+'"'+(v?' title="Sheet tag and OCR agree"':'')+'>'+(v?'✓ ':'')+esc(t)+'<button class="tagx admin-only" data-tag="'+esc(t)+'" title="Admin: remove this tag">×</button></span>';})).join('')+
+    (it.tags&&!it.tags.length&&!it.uploaded?'<span class="tag note">No screen tags</span>':'')+
+    (it.type==='image'&&!it.external?'<button class="tag note mdelf admin-only" title="Admin: remove this file from the review">✕ remove file</button>':'');
+  const vchaps=(it.chapters||[]).length?'<div class="vchaps">'+it.chapters.map(c=>'<button class="vchap" data-sec="'+c.sec+'" title="Jump to '+esc(c.t)+'"><span class="cts">'+esc(c.t)+'</span>'+esc(c.title)+'</button>').join('')+'</div>':'';
   const text=it.caption||it.alt;
   if(it.external){let hostN='';try{hostN=new URL(it.src).hostname;}catch(e){}
     return '<div class="mslide ext"><div class="ext-card">'+ic('doc',28)+'<div class="ext-t">'+esc(it.caption||'Screenshot')+'</div><div class="t11">Stored on '+esc(hostN||'an external site')+' — sign-in required, so it can’t be shown here.</div>'+
       '<a class="mopen" href="'+esc(it.src)+'" target="_blank" rel="noopener">Open screenshot '+ic('ext',11)+'</a></div></div>'+
       '<div class="mcap">'+chips+'</div>';}
   if(it.video)return '<div class="mslide img"><video controls preload="metadata" playsinline src="'+esc(it.src)+'"'+(it.poster?' poster="'+esc(it.poster)+'"':'')+'></video></div>'+
-    '<div class="mcap">'+chips+(text?'<span class="mcap-t">'+esc(text)+'</span>':'')+'</div>';
+    '<div class="mcap">'+chips+(text?'<span class="mcap-t">'+esc(text)+'</span>':'')+'</div>'+vchaps;
   return '<div class="mslide img"><img src="'+esc(it.src)+'" alt="'+esc(it.alt)+'"'+(it.fallback?' data-fb="'+esc(it.fallback)+'" onerror="if(this.dataset.fb){this.src=this.dataset.fb;this.dataset.fb=\'\';}"':'')+'></div>'+
     '<div class="mcap">'+(chips||(it.uploaded?'<span class="tag note">Uploaded photo</span>':'<span class="tag note">Not tagged yet</span>'))+(text?'<span class="mcap-t">'+esc(text)+'</span>':'')+'</div>';
 }
@@ -1323,10 +1333,14 @@ function initStage(r,o){
     if(it.type==='article')wireArticleFrame(r);
     const p=$('mPrev'),n=$('mNext');if(p)p.addEventListener('click',()=>go(i-1));if(n)n.addEventListener('click',()=>go(i+1));
     host.querySelectorAll('.mdot').forEach(d=>d.addEventListener('click',()=>go(+d.dataset.k)));
+    host.querySelectorAll('.vchap').forEach(b=>b.addEventListener('click',()=>seek(+b.dataset.sec)));
+    host.querySelectorAll('.tagx').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();deleteTag(r,it,b.dataset.tag,i);}));
+    const df=host.querySelector('.mdelf');if(df)df.addEventListener('click',()=>deleteMedia(r,it,Math.max(0,i-1)));
   };
+  const seek=sec=>{const v=host.querySelector('video');if(!v)return;const run=()=>{try{v.currentTime=sec;v.play().catch(()=>{});}catch(e){}};if(v.readyState>=1)run();else v.addEventListener('loadedmetadata',run,{once:true});};
   const go=k=>{if(!m.length)return;i=(k+m.length)%m.length;render();};
   host.addEventListener('ended',e=>{if(e.target&&e.target.tagName==='VIDEO'){if(i<m.length-1)go(i+1);else stepReview(1);}},true);
-  S.stageGo=go;S.stageRefresh=()=>{const fresh=mediaList(r,o);m.length=0;fresh.forEach(x=>m.push(x));if(i>=m.length)i=0;render();};
+  S.stageGo=go;S.stageSeek=(k,sec)=>{go(k);if(sec!=null)seek(sec);};S.stageRefresh=()=>{const fresh=mediaList(r,o);m.length=0;fresh.forEach(x=>m.push(x));if(i>=m.length)i=0;render();};
   S.stageKeys=e=>{if(!$('mback').classList.contains('show')||m.length<2)return;const t=e.target&&e.target.tagName;if(t==='INPUT'||t==='TEXTAREA')return;if(e.key==='ArrowRight'){go(i+1);e.preventDefault();}else if(e.key==='ArrowLeft'){go(i-1);e.preventDefault();}};
   render();
 }
@@ -1354,7 +1368,8 @@ function openModal(idx,rows){
   main+='<div id="mStage" class="mstage"></div>';
   main+='<div class="mtitle">'+esc(dispTitle(r))+(r.title_en?'<span class="mtitle-orig">'+esc(r.title)+(r.title_lang?' <em>('+esc(String(r.title_lang).toUpperCase())+')</em>':'')+'</span>':'')+'</div><div class="mmeta">'+esc(sub)+'</div>'+
     '<div class="mact">'+(isInternal?'':'<a class="mopen" href="'+esc(r.url||'#')+'" target="_blank" rel="noopener">Open on YouTube '+ic('ext',11)+'</a>')+
-    '<button class="mflag'+(isFlagged(r.url)?' on':'')+'" id="mFlag">'+ic('bookmark',15)+'<span>'+(isFlagged(r.url)?'Saved':'Bookmark')+'</span></button></div>'+
+    '<button class="mflag'+(isFlagged(r.url)?' on':'')+'" id="mFlag">'+ic('bookmark',15)+'<span>'+(isFlagged(r.url)?'Saved':'Bookmark')+'</span></button>'+
+    '<button class="mflag mdel admin-only" id="mDel" title="Admin: delete this review">✕ Delete review</button></div>'+
     '<div class="mchips" id="mChips">'+chipsHTML(r)+'</div>'+
     '<div class="mphotos" id="mPhotos">'+photosHTML(r)+'</div>'+
     '<div class="mnotes"><div class="mn-h">Notes</div><div class="mn-list" id="mnList"></div><div class="mn-add"><input id="mnAuthor" class="mn-in" placeholder="Your name" maxlength="80"><textarea id="mnText" class="mn-ta" placeholder="Add a note for others to see…" maxlength="2000"></textarea><button class="mn-btn" id="mnAdd">Add note</button></div></div>'+
@@ -1384,12 +1399,17 @@ function openModal(idx,rows){
     // Screens index: one row per screen tag, like video chapters. Clicking jumps the
     // stage to the first file carrying that tag; clicking again cycles to the next one.
     const files=mediaList(r,{isInternal:true});
-    const byTag={};
-    files.forEach((f,k)=>{if(f.type!=='image')return;(f.tags||[]).forEach(t=>{(byTag[t]=byTag[t]||{ks:[],vid:false}).ks.push(k);if(f.video)byTag[t].vid=true;});});
-    const tags=Object.keys(byTag).sort((a,b)=>byTag[a].ks[0]-byTag[b].ks[0]);
+    // entries: {k: slide, sec: seconds into a recording or null}; grouped by tag (case-insensitive)
+    const byTag={},label={};
+    const add=(t,k,sec)=>{const key=t.toLowerCase();label[key]=label[key]||t;(byTag[key]=byTag[key]||[]).push({k,sec});};
+    files.forEach((f,k)=>{if(f.type!=='image')return;
+      if((f.chapters||[]).length)f.chapters.forEach(c=>(c.tags||[]).forEach(t=>add(t,k,c.sec)));
+      else (f.tags||[]).forEach(t=>add(t,k,null));});
+    const tags=Object.keys(byTag).sort((a,b)=>byTag[a][0].k-byTag[b][0].k||(byTag[a][0].sec||0)-(byTag[b][0].sec||0));
     if(tags.length){
       side+='<div class="sh">Screens <span class="ife-key">'+files.filter(f=>f.type==='image').length+' files</span></div>';
-      side+=tags.map(t=>{const g=byTag[t];return '<div class="cap chap ife scr" data-ks="'+g.ks.join(',')+'" title="Jump to this screen"><span class="cts">'+(g.vid?'▶ ':'')+'#'+(g.ks[0]+1)+'</span><span>✦ '+esc(t)+(g.ks.length>1?' <em class="scr-n">× '+g.ks.length+'</em>':'')+'</span></div>';}).join('');
+      side+=tags.map(key=>{const es=byTag[key],e0=es[0],vid=es.some(e=>e.sec!=null);
+        return '<div class="cap chap ife scr" data-es="'+es.map(e=>e.k+':'+(e.sec==null?'':e.sec)).join(',')+'" title="Jump to this screen"><span class="cts">'+(vid?'▶ ':'')+'#'+(e0.k+1)+(e0.sec!=null?' '+fmtSec(e0.sec):'')+'</span><span>✦ '+esc(label[key])+(es.length>1?' <em class="scr-n">× '+es.length+'</em>':'')+'</span></div>';}).join('');
     }
     side+='<div class="sh"'+(tags.length?' style="margin-top:14px"':'')+'>Review'+(r.internal_author?' — '+esc(r.internal_author):'')+'</div>';
     side+='<div style="font-size:12.5px;color:var(--ink2);line-height:1.65;white-space:pre-wrap">'+esc(r.internal_text||r.transcript_excerpt||'')+'</div>';
@@ -1415,13 +1435,16 @@ function openModal(idx,rows){
   if(!isArt)side+='</div>';
   $('mbody').innerHTML=main+side;$('mback').classList.add('show');document.body.style.overflow='hidden';
   renderModalNav();
-  S.onSlide=i=>{document.querySelectorAll('.cap.scr').forEach(el=>el.classList.toggle('on',el.dataset.ks.split(',').map(Number).includes(i)));};
+  const parseEs=el=>el.dataset.es.split(',').map(x=>{const [k,s]=x.split(':');return {k:+k,sec:s===''?null:+s};});
+  S.onSlide=i=>{document.querySelectorAll('.cap.scr').forEach(el=>el.classList.toggle('on',parseEs(el).some(e=>e.k===i)));};
   initStage(r,{vid,isShort,isInternal,isArt});
   document.querySelectorAll('.cap.scr').forEach(el=>el.addEventListener('click',()=>{
-    const ks=el.dataset.ks.split(',').map(Number),cur=S.stageIdx!=null?S.stageIdx:-1;
-    const next=ks.find(k=>k>cur);S.stageGo(next!=null?next:ks[0]);
+    const es=parseEs(el),cur=S.stageIdx!=null?S.stageIdx:-1,n=(el._n||0);el._n=n+1;
+    // first click: first occurrence; repeated clicks cycle through the rest
+    const e=es[n%es.length];S.stageSeek(e.k,e.sec);
     const st=$('mStage');if(st)st.scrollIntoView({block:'nearest',behavior:'smooth'});
   }));
+  const md=$('mDel');if(md)md.addEventListener('click',()=>deleteReview(r));
   const mf=$('mFlag');if(mf)mf.addEventListener('click',()=>{const on=toggleFlag(r);mf.classList.toggle('on',on);mf.querySelector('span').textContent=on?'Saved':'Bookmark';refreshFlagIcons();});
   // Timestamp -> the video on YouTube at that second (new tab). Clicking the line text seeks the popup player.
   $('mbody').querySelectorAll('.cap[data-s]').forEach(el=>{const s=el.dataset.s;if(s==='')return;
@@ -1462,6 +1485,39 @@ function stepReview(d){
   openModal(k,S.mRows);
   const m=document.querySelector('.modal');if(m)m.scrollTop=0;$('mback').scrollTop=0;
   return true;
+}
+/* ── Admin (delete) ── token from ?admin=<token>, kept in localStorage, sent as X-Admin-Token */
+function adminHeaders(){const t=localStorage.getItem('rave-admin');return t?{'X-Admin-Token':t}:{};}
+async function checkAdmin(){
+  if(!localStorage.getItem('rave-admin')){S.admin=false;return;}
+  try{const d=await(await fetch('/api/admin-check',{headers:adminHeaders()})).json();S.admin=!!d.admin;}catch(e){S.admin=false;}
+  if(S.admin){document.body.classList.add('admin');if(new URLSearchParams(location.search).get('admin'))toast('Admin mode on — delete controls enabled.');}
+  else if(localStorage.getItem('rave-admin')){toast('Admin token not accepted.');localStorage.removeItem('rave-admin');}
+}
+async function adminPost(path,body){
+  const d=await(await fetch(path,{method:'POST',headers:Object.assign({'Content-Type':'application/json'},adminHeaders()),body:JSON.stringify(body)})).json();
+  if(d.status!=='success')throw new Error(d.error||'failed');return d;
+}
+async function deleteReview(r){
+  if(!confirm('Delete this review and all its files?\n\n'+(r.title||r.url)))return;
+  try{await adminPost('/api/review-delete',{url:r.url});}catch(e){toast('Delete failed: '+e.message);return;}
+  closeModal();S.reviews=S.reviews.filter(x=>x.url!==r.url);S.mRows=(S.mRows||[]).filter(x=>x.url!==r.url);S.agg=null;
+  toast('Review deleted.');if(TAB==='Reviews')refreshReviews();else setTab(TAB);
+}
+async function deleteMedia(r,it,slide){
+  if(!confirm('Remove this '+(it.video?'recording':'photo')+' from the review?'))return;
+  try{const d=await adminPost('/api/review-media-delete',{url:r.url,src:it.uploaded?it.src:(it.origSrc||it.src)});r.images=d.images;r.photos=d.photos;}
+  catch(e){toast('Delete failed: '+e.message);return;}
+  toast('File removed.');reopenModal(r,slide);
+}
+async function deleteTag(r,it,tag,slide){
+  try{const d=await adminPost('/api/review-tag-delete',{url:r.url,src:it.origSrc||it.src,tag});r.images=d.images;}
+  catch(e){toast('Delete failed: '+e.message);return;}
+  toast('Tag "'+tag+'" removed.');reopenModal(r,slide);
+}
+function reopenModal(r,slide){
+  const k=(S.mRows||[]).indexOf(r);if(k<0)return;
+  openModal(k,S.mRows);if(S.stageGo&&slide!=null)S.stageGo(slide);
 }
 function closeModal(){$('mback').classList.remove('show');$('mback').classList.remove('feat');document.body.style.overflow='';const f=$('ytF');if(f)f.src='';}
 
@@ -1504,6 +1560,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     if($('mback').classList.contains('show')&&e.shiftKey&&(e.key==='ArrowRight'||e.key==='ArrowLeft')){const t=e.target&&e.target.tagName;if(t!=='INPUT'&&t!=='TEXTAREA'){stepReview(e.key==='ArrowRight'?1:-1);e.preventDefault();return;}}
     if(S.stageKeys)S.stageKeys(e);if(e.key==='Escape'){if($('chat').classList.contains('show'))closeChat();else if($('mback').classList.contains('show'))closeModal();else if(!$('alertPanel').classList.contains('hide'))$('alertPanel').classList.add('hide');}});
   const startTab=restoreURL()||'Dashboard';
+  checkAdmin();
   Promise.all([loadNotes(),loadFlags()]).then(()=>{ setTab(startTab); refreshAlerts(); });
 });
 </script>

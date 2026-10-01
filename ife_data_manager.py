@@ -121,10 +121,20 @@ class IFEDataManager:
         with open(self.cache_file, "w", encoding="utf-8") as f:
             json.dump(self.data, f, indent=2, ensure_ascii=False)
 
+    def known_urls(self):
+        """URLs the crawler must not add again: everything cached plus
+        reviews an admin deleted from the dashboard."""
+        urls = {r.get("url") for r in self.data.get("reviews", [])}
+        urls.update(self.data.get("deleted_urls") or [])
+        return urls
+
     def reload_from_disk(self):
         """Re-read cache from disk (called before every API response)."""
         self.data = self.load_cache()
         self._backfill_fields()
+        deleted = set(self.data.get("deleted_urls") or [])
+        if deleted:
+            self.data["reviews"] = [r for r in self.data.get("reviews", []) if r.get("url") not in deleted]
         # Exclude Tier 3 sources — only known press (T1) and creators (T2)
         self.data["reviews"] = [
             r for r in self.data.get("reviews", [])

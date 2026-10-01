@@ -33,8 +33,8 @@ def main():
 
     data_manager = IFEDataManager()
     data_manager.reload_from_disk()
-    existing = {r["url"] for r in data_manager.data.get("reviews", [])}
-    before = len(existing)
+    existing = data_manager.known_urls()
+    before = len(data_manager.data.get("reviews", []))
 
     # 30 days (was 14): one missed week no longer loses videos for good.
     days_lookback = int(os.environ.get("DAYS_LOOKBACK", "30"))

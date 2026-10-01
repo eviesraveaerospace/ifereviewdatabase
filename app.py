@@ -53,7 +53,7 @@ def _run_auto_discovery():
         _crawl_status["error"] = None
         try:
             data_manager.reload_from_disk()
-            existing = {r["url"] for r in data_manager.data.get("reviews", [])}
+            existing = data_manager.known_urls()
 
             crawler = IFECrawler(verify_ssl=False, api_key=os.environ.get("YOUTUBE_API_KEY", ""))
             new_results = crawler.auto_discover(existing_urls=existing, max_results=500, days_lookback=7)
@@ -98,7 +98,7 @@ def _initial_seed():
     data_manager.reload_from_disk()
     if len(data_manager.data.get("reviews", [])) < 50:
         try:
-            existing = {r["url"] for r in data_manager.data.get("reviews", [])}
+            existing = data_manager.known_urls()
             crawler  = IFECrawler(verify_ssl=False, api_key=os.environ.get("YOUTUBE_API_KEY", ""))
             results  = crawler.auto_discover(existing_urls=existing, max_results=500, days_lookback=365)
             if results:
@@ -378,7 +378,7 @@ def ife_seed():
     def _run():
         try:
             data_manager.reload_from_disk()
-            existing = {r["url"] for r in data_manager.data.get("reviews", [])}
+            existing = data_manager.known_urls()
             crawler  = IFECrawler(verify_ssl=False, api_key=os.environ.get("YOUTUBE_API_KEY", ""))
             results  = crawler.auto_discover(existing_urls=existing, max_results=500, days_lookback=365)
             if results:
@@ -1621,6 +1621,143 @@ def add_review_photos():
         return jsonify({"status": "success", "added": len(saved), "photos": rev.get("photos", [])})
     except Exception as e:
         return jsonify({"status": "error", "error": str(e)}), 500
+
+
+# ── Admin: delete reviews, files and tags ─────────────────────────────────────
+# Only the holder of ADMIN_TOKEN (.env) can delete. The dashboard unlocks with
+# ?admin=<token> once, keeps the token in localStorage and sends it as
+# X-Admin-Token. Without ADMIN_TOKEN set, nothing can be deleted at all.
+
+def _is_admin():
+    tok = os.environ.get("ADMIN_TOKEN", "").strip()
+    return bool(tok) and request.headers.get("X-Admin-Token", "") == tok
+
+
+def _admin_only():
+    if not _is_admin():
+        return jsonify({"status": "error", "error": "admin only"}), 403
+    return None
+
+
+def _find_review(url):
+    data_manager.reload_from_disk()
+    return next((r for r in data_manager.data.get("reviews", []) if r.get("url") == url), None)
+
+
+def _unlink_local(web_path):
+    """Remove a /static/uploads/... file (and its poster) from disk, if present."""
+    if not web_path or not str(web_path).startswith("/static/uploads/"):
+        return
+    p = Path(__file__).parent / str(web_path).lstrip("/")
+    for q in (p, p.with_suffix(".poster.jpg")):
+        try:
+            if q.exists():
+                q.unlink()
+        except OSError:
+            pass
+
+
+def _recount_screen_tags(rev):
+    tags = sorted({t for it in rev.get("images") or [] for t in (it.get("tags") or [])})
+    if tags or "screen_tags" in rev:
+        rev["screen_tags"] = tags
+
+
+@app.route("/api/admin-check")
+def admin_check():
+    return jsonify({"status": "success", "admin": _is_admin()})
+
+
+@app.route("/api/review-delete", methods=["POST"])
+def review_delete():
+    err = _admin_only()
+    if err:
+        return err
+    url = ((request.get_json(silent=True) or {}).get("url") or "").strip()
+    rev = _find_review(url)
+    if not rev:
+        return jsonify({"status": "error", "error": "review not found"}), 404
+    for it in rev.get("images") or []:
+        _unlink_local(it.get("local"))
+    for p in rev.get("photos") or []:
+        _unlink_local(p)
+    data_manager.data["reviews"] = [r for r in data_manager.data["reviews"] if r.get("url") != url]
+    deleted = data_manager.data.setdefault("deleted_urls", [])
+    if url not in deleted:
+        deleted.append(url)
+    data_manager.save_cache()
+    return jsonify({"status": "success"})
+
+
+@app.route("/api/review-media-delete", methods=["POST"])
+def review_media_delete():
+    """Remove one attached file (images[] item by src, or an uploaded photo by path)."""
+    err = _admin_only()
+    if err:
+        return err
+    b = request.get_json(silent=True) or {}
+    url, src = (b.get("url") or "").strip(), (b.get("src") or "").strip()
+    rev = _find_review(url)
+    if not rev or not src:
+        return jsonify({"status": "error", "error": "review or file not found"}), 404
+    removed = False
+    keep = []
+    for it in rev.get("images") or []:
+        if not removed and (it.get("src") == src or it.get("local") == src):
+            _unlink_local(it.get("local"))
+            removed = True
+            continue
+        keep.append(it)
+    rev["images"] = keep
+    if not removed and src in (rev.get("photos") or []):
+        rev["photos"] = [p for p in rev["photos"] if p != src]
+        _unlink_local(src)
+        removed = True
+    if not removed:
+        return jsonify({"status": "error", "error": "file not found"}), 404
+    _recount_screen_tags(rev)
+    data_manager.save_cache()
+    return jsonify({"status": "success", "images": rev.get("images") or [], "photos": rev.get("photos") or []})
+
+
+@app.route("/api/review-tag-delete", methods=["POST"])
+def review_tag_delete():
+    """Remove a screen tag from one file (sheet tag, OCR tag and recording chapters alike)."""
+    err = _admin_only()
+    if err:
+        return err
+    b = request.get_json(silent=True) or {}
+    url, src, tag = (b.get("url") or "").strip(), (b.get("src") or "").strip(), (b.get("tag") or "").strip()
+    rev = _find_review(url)
+    if not rev or not tag:
+        return jsonify({"status": "error", "error": "review or tag not found"}), 404
+    low = tag.lower()
+    hit = False
+    for it in rev.get("images") or []:
+        if it.get("src") != src and it.get("local") != src:
+            continue
+        for k in ("tags", "tags_sheet", "ocr_tags"):
+            if k in it and any(t.lower() == low for t in it[k] or []):
+                it[k] = [t for t in it[k] if t.lower() != low]
+                hit = True
+        if it.get("chapters"):
+            chaps = []
+            for c in it["chapters"]:
+                if any(t.lower() == low for t in c.get("tags") or []):
+                    hit = True
+                    c["tags"] = [t for t in c["tags"] if t.lower() != low]
+                    c["title"] = " · ".join(c["tags"])
+                if c.get("tags"):
+                    chaps.append(c)
+            it["chapters"] = chaps
+        it.setdefault("tags_removed", [])
+        if tag not in it["tags_removed"]:
+            it["tags_removed"].append(tag)   # so a re-run of the tagger doesn't put it back
+    if not hit:
+        return jsonify({"status": "error", "error": "tag not on that file"}), 404
+    _recount_screen_tags(rev)
+    data_manager.save_cache()
+    return jsonify({"status": "success", "images": rev.get("images") or []})
 
 
 # ── Saved videos (persisted to flags.json, keyed by review URL) ────────────────

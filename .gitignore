@@ -26,3 +26,5 @@ static/article_images/
 cookies_sharepoint.txt
 static/uploads/internal/orig/
 static/uploads/internal/*.mp4
+.admin_token.txt
+tag_internal_log.txt
