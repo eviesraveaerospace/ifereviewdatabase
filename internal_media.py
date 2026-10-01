@@ -207,6 +207,12 @@ def _index_tree(sess, site: str, path: str, depth: int = 0, out=None) -> dict:
     return out
 
 
+def _fuzzy_key(filename: str) -> str:
+    stem = Path(filename).stem.lower()
+    stem = stem.replace("auxiliary", "").replace("hyrbid", "hybrid")
+    return re.sub(r"[^a-z0-9]+", "", stem)
+
+
 def _resolve_by_name(sess, moved_path: str) -> str | None:
     """The moved tree was also re-foldered ("First" → "First Class", "B777-300er" →
     "Boeing 777-300ER"), so when the mapped path 404s, find the file by name under
@@ -222,6 +228,12 @@ def _resolve_by_name(sess, moved_path: str) -> str | None:
             print(f"    indexing {scope.split('/')[-1]}…")
             _FILE_INDEX[scope] = _index_tree(sess, site, scope)
         hits = _FILE_INDEX[scope].get(base) or []
+        if not hits:
+            # Renames since the sheet was written: "Hybrid Auxiliary IFE (Map).png" →
+            # "Hybrid IFE (Map).png", .jpg ↔ .jpeg/.webp, typo fixes in spacing/case.
+            want = _fuzzy_key(base)
+            hits = [p for ps in _FILE_INDEX[scope].values() for p in ps
+                    if _fuzzy_key(p.rsplit("/", 1)[-1]) == want and p not in _CLAIMED]
         if len(hits) > 1:  # prefer the one sharing the old class folder (Economy/Business/First)
             cls = tail.split("/")[1].lower() if tail.count("/") >= 2 else ""
             pref = [h for h in hits if cls and cls in h.lower()]
@@ -231,15 +243,59 @@ def _resolve_by_name(sess, moved_path: str) -> str | None:
     return None
 
 
-def _fetch_with_cookies(link: str, sess: requests.Session):
+_CLAIMED: set[str] = set()   # files already matched by tag this run, so two "Flight Info" links get Flight Info2/3
+_LAST_RESOLVED: dict = {}    # server-relative path of the file the last cookie fetch actually returned
+_IMG_EXTS = {".jpg", ".jpeg", ".png", ".webp", ".heic"}
+
+
+def _norm(s: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "", s.lower())
+
+
+def _resolve_by_hint(sess, moved_path: str, hint: str | None) -> str | None:
+    """Camera-named photos (PXL_2024…jpg) were renamed after the tag they show
+    ("Relax Mode.jpg", "Flight Info2.jpg"). When the filename is gone, pick an
+    unclaimed image in the same airline/airframe folder whose name matches the tag."""
+    if not hint or NEW_ROOT not in moved_path:
+        return None
+    site = "https://zodiacii.sharepoint.com/sites/RAVESoftwareProducts"
+    tail = moved_path.split(NEW_ROOT + "/", 1)[1]
+    parts = tail.split("/")
+    airline = parts[0]
+    airframe = _norm(parts[2]) if len(parts) >= 4 else ""
+    scope = NEW_ROOT + "/" + airline
+    if scope not in _FILE_INDEX:
+        _FILE_INDEX[scope] = _index_tree(sess, site, scope)
+    want = _norm(hint.split(",")[0])      # "Concerts, Live Events, …" → first tag
+    if not want or want in ("gui", "screenshot"):
+        return None
+    cands = []
+    for paths in _FILE_INDEX[scope].values():
+        for p in paths:
+            if Path(p).suffix.lower() not in _IMG_EXTS or p in _CLAIMED:
+                continue
+            if airframe and airframe not in _norm(p.rsplit("/", 2)[0]):
+                continue
+            stem = _norm(Path(p).stem)
+            if stem == want or re.fullmatch(re.escape(want) + r"\d*(?:\(\d+\))?", stem):
+                cands.append((0 if stem == want else 1, p))
+    if not cands:
+        return None
+    cands.sort()
+    _CLAIMED.add(cands[0][1])
+    return cands[0][1]
+
+
+def _fetch_with_cookies(link: str, sess: requests.Session, hint: str | None = None):
     """→ (bytes, ext) via the browser session; None if SharePoint answered with a page instead."""
     from urllib.parse import quote, unquote, urlsplit
     urls = _direct_file_urls(link) or [link + ("&" if "?" in link else "?") + "download=1"]
     moved = next((unquote(urlsplit(u).path) for u in urls if NEW_ROOT in unquote(u)), None)
     if moved:
-        found = _resolve_by_name(sess, moved)
+        found = _resolve_by_name(sess, moved) or _resolve_by_hint(sess, moved, hint)
         if found:
             urls.append("https://zodiacii.sharepoint.com" + quote(found))
+    _LAST_RESOLVED.clear()
     last = None
     for url in urls:
         r = sess.get(url, timeout=300, allow_redirects=True)
@@ -249,6 +305,7 @@ def _fetch_with_cookies(link: str, sess: requests.Session):
             return None
         if r.status_code == 200 and not ctype.startswith("text/html"):
             ext = _EXT_BY_MIME.get(ctype) or Path(url.split("?")[0]).suffix.lower() or mimetypes.guess_extension(ctype) or ".bin"
+            _LAST_RESOLVED["path"] = unquote(urlsplit(url).path)   # which SharePoint file this really was
             return r.content, ext
         last = (r.status_code, ctype or "no type")
     print(f"    rejected ({last[0]}, {last[1]}): file not found at any known path")
@@ -320,7 +377,7 @@ def derive(orig: Path, key: str) -> dict | None:
     return {"local": web + jpg.name, "video": False, "poster": None}
 
 
-def fetch_one(link: str, auth) -> dict | None:
+def fetch_one(link: str, auth, hint: str | None = None) -> dict | None:
     """Download a link's file, keep the original under orig/, and return the web
     derivative: {"local": ..., "video": bool, "poster": ...} or None.
     `auth` is a Graph bearer token (str) or a cookie-carrying requests.Session."""
@@ -331,12 +388,15 @@ def fetch_one(link: str, auth) -> dict | None:
     if existing:
         return derive(existing[0], key)
     if isinstance(auth, requests.Session):
-        got = _fetch_with_cookies(link, auth)
+        got = _fetch_with_cookies(link, auth, hint)
         if not got:
             return None
         orig = ORIG_DIR / (key + got[1])
         orig.write_bytes(got[0])
-        return derive(orig, key)
+        res = derive(orig, key)
+        if res and _LAST_RESOLVED.get("path"):
+            res["sp_path"] = _LAST_RESOLVED["path"]
+        return res
     h = {"Authorization": f"Bearer {auth}"}
     meta = requests.get(f"{GRAPH}/shares/{_share_id(link)}/driveItem", headers=h, timeout=30)
     if meta.status_code != 200:
@@ -364,13 +424,15 @@ def localize_images(images, token, verbose=True) -> int:
     for im in images or []:
         if not im.get("external") or im.get("local") or not is_sharepoint(im.get("src")):
             continue
-        got = fetch_one(im["src"], token)
+        got = fetch_one(im["src"], token, hint=im.get("caption") or im.get("alt"))
         if got:
             local = got["local"]
             im["local"] = local
             im["video"] = got["video"]
             if got["poster"]:
                 im["poster"] = got["poster"]
+            if got.get("sp_path"):
+                im["sp_path"] = got["sp_path"]
             im["external"] = False
             im["origin"] = "sharepoint"
             n += 1
@@ -379,8 +441,74 @@ def localize_images(images, token, verbose=True) -> int:
     return n
 
 
+def _review_folders(rec) -> set[str]:
+    """Airline/airframe folders (under NEW_ROOT) that this review's links point into."""
+    from urllib.parse import unquote, urlsplit
+    out = set()
+    for im in rec.get("images") or []:
+        if im.get("sp_path"):
+            out.add(im["sp_path"].rsplit("/", 1)[0])
+            continue
+        for u in _direct_file_urls(im.get("src") or ""):
+            p = unquote(urlsplit(u).path)
+            if NEW_ROOT in p:
+                out.add(p.rsplit("/", 1)[0])
+    return out
+
+
+def attach_folder_videos(rec, sess, verbose=True) -> int:
+    """The sheet linked screenshots but not the PXL_*.mp4 recordings sitting next
+    to them. Add every video in the review's SharePoint folder(s) that isn't
+    already attached, as a new image entry (fetched + transcoded like the rest)."""
+    if not isinstance(sess, requests.Session):
+        return 0
+    site = "https://zodiacii.sharepoint.com/sites/RAVESoftwareProducts"
+    have = {im.get("sp_path") for im in rec.get("images") or [] if im.get("sp_path")}
+    added = 0
+    for folder in sorted(_review_folders(rec)):
+        airline = folder.split(NEW_ROOT + "/", 1)[1].split("/")[0] if NEW_ROOT + "/" in folder else None
+        if not airline:
+            continue
+        scope = NEW_ROOT + "/" + airline
+        if scope not in _FILE_INDEX:
+            _FILE_INDEX[scope] = _index_tree(sess, site, scope)
+        # the link's folder may itself be a stale name — take the matching airframe folder(s) in the index
+        segs = folder.split("/")
+        if re.fullmatch(r"(?:19|20)\d\d", segs[-1]):
+            segs = segs[:-1]
+        # match on class AND airframe (…/Economy/B737-8MAX/…): two reviews of the same
+        # airframe in different cabins must not both pick up one cabin's recordings
+        want_frame = _norm(segs[-1])
+        want_class = _norm(segs[-2]) if len(segs) >= 2 else ""
+        for paths in _FILE_INDEX[scope].values():
+            for p in paths:
+                if Path(p).suffix.lower() not in VIDEO_EXTS or p in have:
+                    continue
+                pdir = [_norm(x) for x in p.rsplit("/", 1)[0].split("/")]
+                if want_frame not in pdir or (want_class and want_class not in pdir):
+                    continue
+                from urllib.parse import quote
+                im = {"src": "https://zodiacii.sharepoint.com" + quote(p), "external": True,
+                      "alt": Path(p).stem, "caption": "Recording " + Path(p).stem.replace("PXL_", ""),
+                      "tags": [], "airline": (rec.get("airlines_mentioned") or [{}])[0].get("keyword", "").title() or None,
+                      "airline_source": "sheet", "ife_system": rec.get("ife_system"), "origin": "sharepoint-folder"}
+                got = fetch_one(im["src"], sess)
+                if got:
+                    im.update({"local": got["local"], "external": False, "video": got["video"], "sp_path": p})
+                    im.pop("tags", None); im["tags"] = []
+                    if got["poster"]:
+                        im["poster"] = got["poster"]
+                    rec.setdefault("images", []).append(im)
+                    have.add(p)
+                    added += 1
+                    if verbose:
+                        print(f"    ✓ video {Path(p).name}  → {got['local']}")
+    return added
+
+
 def localize_review(rec, token, verbose=True) -> int:
     n = localize_images(rec.get("images"), token, verbose)
+    n += attach_folder_videos(rec, token, verbose)
     if n and rec.get("internal_text"):
         rec["internal_text"] = rec["internal_text"].replace(" on SharePoint.", ".")
     return n
@@ -411,11 +539,12 @@ def main():
         return
 
     data = json.loads(CACHE.read_text(encoding="utf-8"))
+    # Every internal review with SharePoint media: still-external links get fetched,
+    # and each review's folder is scanned for recordings the sheet never linked.
     recs = [r for r in data.get("reviews", []) if r.get("media_type") == "internal"
-            and any(im.get("external") and not im.get("local") and is_sharepoint(im.get("src"))
-                    for im in r.get("images") or [])]
+            and any(is_sharepoint(im.get("src")) for im in r.get("images") or [])]
     total = sum(1 for r in recs for im in r["images"] if im.get("external") and not im.get("local"))
-    print(f"{len(recs)} internal reviews, {total} SharePoint images to fetch")
+    print(f"{len(recs)} internal reviews with SharePoint media, {total} images still to fetch")
     if a.dry_run or not recs:
         return
 
