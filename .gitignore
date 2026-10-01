@@ -21,3 +21,8 @@ compliance_sample_report.html
 # exported press-article images (each host exports its own)
 static/article_images/
 .query_offset_curated
+.msal_token_cache.json
+.msal_device_flow.json
+cookies_sharepoint.txt
+static/uploads/internal/orig/
+static/uploads/internal/*.mp4

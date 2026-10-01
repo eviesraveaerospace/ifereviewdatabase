@@ -96,7 +96,12 @@ def main():
             desc = item.get("snippet", {}).get("description", "")
             chaps = parse_chapters(desc)
             for r in by_id.get(item["id"], []):
+                # OCR-derived chapters (gather_short_chapters.py) stand in when the
+                # description has none — never wipe them with an empty list.
+                if not chaps and r.get("chapters_source") == "ocr":
+                    continue
                 r["chapters"] = chaps
+                r["chapters_source"] = "description" if chaps else None
                 if chaps:
                     with_ch += 1
                     if any(c["ife"] for c in chaps):

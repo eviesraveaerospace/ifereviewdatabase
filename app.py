@@ -1513,9 +1513,21 @@ def import_forms():
             data_manager.reload_from_disk()
             have = {r.get("url") for r in data_manager.data.get("reviews", [])}
             new = [r for r in recs if r["url"] not in have]
+            # Pull the SharePoint screenshots down so the dashboard shows the image,
+            # not a sign-in card. Needs a cached Graph token (python internal_media.py --login);
+            # without one the links stay external and internal_media.py can fetch them later.
+            fetched = 0
+            try:
+                import internal_media
+                tok = internal_media.get_auth(interactive=False)
+                if tok:
+                    fetched = sum(internal_media.localize_review(r, tok, verbose=False) for r in new)
+            except Exception as e:  # noqa: BLE001
+                app.logger.warning("internal media fetch skipped: %s", e)
             data_manager.data["reviews"].extend(new)
             data_manager.save_cache()
-            return jsonify({"status": "success", "added": len(new), "skipped": len(recs) - len(new)})
+            return jsonify({"status": "success", "added": len(new), "skipped": len(recs) - len(new),
+                            "media_fetched": fetched})
         m = _map_forms_headers(headers)
         if "text" not in m:
             # fall back to the unmapped column with the longest average text

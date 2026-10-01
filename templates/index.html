@@ -1217,6 +1217,7 @@ async function openReviewByUrl(url,startSec){
 const IFE_HL_RE=/(in-?\s?flight entertainment(?: (?:and|&) connectivity)?|inflight entertainment|\bIFEC?\b|seat-?back(?: screens?| displays?| monitors?| tvs?)?|entertainment (?:system|screen|library|options?|selection|offering|content|choices)|touch-?screens?|personal (?:screens?|tvs?)|\bICE\b(?= system| entertainment)|noise-?cancell?ing headphones|headphones? jack|streaming entertainment|wireless (?:ife|entertainment|streaming)|(?:in-?flight|on-?board) wi-?fi|moving map|live tv|content library)/gi;
 const IFE_HL_TEST=new RegExp(IFE_HL_RE.source,'i');
 const ART_JUNK_RE=/^(copyright|©|all rights reserved|this site is owned|by logging into your account|contact us\s+-|powered by (vbulletin|xenforo)|all times are gmt|cookie|privacy policy|terms of (use|service)|subscribe|sign up|newsletter|advertisement|related:|read more:|share this|follow us|photo:|image:|credit:)/i;
+function fmtSec(s){s=Math.round(s||0);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}
 function isShortRow(r){return !!(r&&r.media_type==='video'&&(r.is_short||/\/shorts\//.test(r.url||'')));}
 // Parse article paragraphs into sections (heading + paragraphs) and flag the ones that talk about IFE.
 function parseArticleSections(paras){
@@ -1261,7 +1262,7 @@ function mediaList(r,o){
   if(o.vid)m.push({type:'video'});
   else if(o.isArt)m.push({type:'article'});
   else m.push({type:'head'});
-  (r.images||[]).forEach(im=>m.push({type:'image',src:im.local||im.src,fallback:im.local?im.src:null,alt:im.alt||'',caption:im.caption||'',airline:im.airline,airlineSrc:im.airline_source,system:im.ife_system,tags:im.tags,visual:im.used_visual,external:!!im.external}));
+  (r.images||[]).forEach(im=>m.push({type:'image',src:im.local||im.src,fallback:im.local&&!im.video?im.src:null,alt:im.alt||'',caption:im.caption||'',airline:im.airline,airlineSrc:im.airline_source,system:im.ife_system,tags:im.tags,visual:im.used_visual,external:!!im.external,video:!!im.video,poster:im.poster||null}));
   (r.photos||[]).forEach(p=>m.push({type:'image',src:p,alt:'',caption:'',tags:[],uploaded:true}));
   return m;
 }
@@ -1281,6 +1282,8 @@ function slideHTML(r,o,it){
     return '<div class="mslide ext"><div class="ext-card">'+ic('doc',28)+'<div class="ext-t">'+esc(it.caption||'Screenshot')+'</div><div class="t11">Stored on '+esc(hostN||'an external site')+' — sign-in required, so it can’t be shown here.</div>'+
       '<a class="mopen" href="'+esc(it.src)+'" target="_blank" rel="noopener">Open screenshot '+ic('ext',11)+'</a></div></div>'+
       '<div class="mcap">'+chips+'</div>';}
+  if(it.video)return '<div class="mslide img"><video controls preload="metadata" playsinline src="'+esc(it.src)+'"'+(it.poster?' poster="'+esc(it.poster)+'"':'')+' style="max-width:100%;max-height:100%"></video></div>'+
+    '<div class="mcap">'+chips+(text?'<span class="mcap-t">'+esc(text)+'</span>':'')+'</div>';
   return '<div class="mslide img"><img src="'+esc(it.src)+'" alt="'+esc(it.alt)+'"'+(it.fallback?' data-fb="'+esc(it.fallback)+'" onerror="if(this.dataset.fb){this.src=this.dataset.fb;this.dataset.fb=\'\';}"':'')+'></div>'+
     '<div class="mcap">'+(chips||(it.uploaded?'<span class="tag note">Uploaded photo</span>':'<span class="tag note">Not tagged yet</span>'))+(text?'<span class="mcap-t">'+esc(text)+'</span>':'')+'</div>';
 }
@@ -1338,8 +1341,10 @@ function openModal(idx,rows){
     // Shorts: the clip as-is, plus its chapters and the whole transcript (not just IFE moments).
     const chaps=r.chapters||[];
     side+='<div class="sh">Chapters'+(chaps.some(c=>c.ife)?' <span class="ife-key">✦ IFE</span>':'')+'</div>';
-    if(chaps.length)side+=chaps.map(ch=>'<div class="cap chap'+(ch.ife?' ife':'')+'" data-s="'+(ch.sec!=null?ch.sec:'')+'"><span class="cts">'+esc(ch.t||'')+'</span><span>'+(ch.ife?'✦ ':'')+esc(ch.title)+'</span></div>').join('');
-    else side+='<div class="t11">No chapters on this Short.</div>';
+    if(chaps.length)side+=chaps.map(ch=>'<div class="cap chap'+(ch.ife?' ife':'')+'" data-s="'+(ch.sec!=null?ch.sec:'')+'"'+(ch.end!=null&&ch.end>ch.sec?' title="'+esc(ch.t)+'–'+esc(fmtSec(ch.end))+'"':'')+'><span class="cts">'+esc(ch.t||'')+'</span><span>'+(ch.ife?'✦ ':'')+esc(ch.title)+'</span></div>').join('');
+    else if(r.chapters_source==='ocr')side+='<div class="t11">No IFE screens were readable in this Short.</div>';
+    else side+='<div class="t11">No chapters yet — the OCR pass reads Shorts’ screens nightly.</div>';
+    if(chaps.length&&r.chapters_source==='ocr')side+='<div class="t11" style="margin-top:4px">Screens detected from on-screen text; ✦ marks recognised IFE screens.</div>';
     const caps=r.captions||[];
     const capRow=(c,star)=>{const en=c.text_en&&c.lang&&c.lang!=='en';const main=en?c.text_en:c.text;const ife=isIfeCap(main);const orig=en?'<span class="cap-orig">'+esc(c.text)+' <em>('+esc((c.lang||'').toUpperCase())+')</em></span>':'';return '<div class="cap'+(ife?' ife':'')+'" data-s="'+(c.start_seconds!=null?c.start_seconds:'')+'"><span class="cts">'+esc(c.timestamp||'')+'</span><span>'+((ife&&star)?'✦ ':'')+esc(main)+orig+'</span></div>';};
     const ifeCaps=caps.filter(c=>isIfeCap(c.text_en||c.text));
