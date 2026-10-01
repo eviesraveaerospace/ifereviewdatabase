@@ -248,6 +248,8 @@ svg{display:block}
 .mback,.chat-back{position:fixed;inset:0;background:rgba(13,13,13,.5);z-index:1000;display:none}
 .mback.show{display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
 .modal{background:#fff;border-radius:16px;max-width:1500px;width:95vw;margin:auto;overflow:hidden;position:relative;box-shadow:0 24px 70px rgba(0,0,0,.4)}
+.mnav{display:none;position:absolute;top:12px;right:54px;z-index:5;align-items:center;gap:4px;background:rgba(0,0,0,.7);border-radius:17px;padding:0 6px;height:34px;color:#fff;font-size:11px;font-weight:600}
+.mnav.show{display:flex}.mnav button{background:transparent;border:0;color:#fff;font-size:20px;line-height:1;width:26px;height:30px;cursor:pointer;border-radius:50%}.mnav button:hover{background:rgba(255,255,255,.2)}.mnav button:disabled{opacity:.3;cursor:default}.mnav .mnav-t{padding:0 4px;white-space:nowrap}
 .mx{position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.7);color:#fff;font-size:15px;z-index:5}
 .mbody{display:flex;flex-wrap:wrap}
 .mmain{flex:1 1 900px;min-width:0}
@@ -451,7 +453,7 @@ svg{display:block}
 </div>
 
 <div class="alert-panel hide" id="alertPanel"></div>
-<div class="mback" id="mback"><div class="modal"><button class="mx" id="mx">✕</button><div class="mbody" id="mbody"></div></div></div>
+<div class="mback" id="mback"><div class="modal"><button class="mx" id="mx">✕</button><div class="mnav" id="mnav"></div><div class="mbody" id="mbody"></div></div></div>
 <div class="chat-back" id="chatBack"></div>
 <aside class="chat" id="chat">
   <div class="chat-hd"><span class="ci">✦</span><div><div class="ct">Ask AI</div><div class="cs">Systems, features &amp; channels</div></div><button class="cx" id="chatX">✕</button></div>
@@ -1319,6 +1321,7 @@ function initStage(r,o){
     host.querySelectorAll('.mdot').forEach(d=>d.addEventListener('click',()=>go(+d.dataset.k)));
   };
   const go=k=>{if(!m.length)return;i=(k+m.length)%m.length;render();};
+  host.addEventListener('ended',e=>{if(e.target&&e.target.tagName==='VIDEO'){if(i<m.length-1)go(i+1);else stepReview(1);}},true);
   S.stageGo=go;S.stageRefresh=()=>{const fresh=mediaList(r,o);m.length=0;fresh.forEach(x=>m.push(x));if(i>=m.length)i=0;render();};
   S.stageKeys=e=>{if(!$('mback').classList.contains('show')||m.length<2)return;const t=e.target&&e.target.tagName;if(t==='INPUT'||t==='TEXTAREA')return;if(e.key==='ArrowRight'){go(i+1);e.preventDefault();}else if(e.key==='ArrowLeft'){go(i-1);e.preventDefault();}};
   render();
@@ -1397,6 +1400,7 @@ function openModal(idx,rows){
   }
   if(!isArt)side+='</div>';
   $('mbody').innerHTML=main+side;$('mback').classList.add('show');document.body.style.overflow='hidden';
+  renderModalNav();
   initStage(r,{vid,isShort,isInternal,isArt});
   const mf=$('mFlag');if(mf)mf.addEventListener('click',()=>{const on=toggleFlag(r);mf.classList.toggle('on',on);mf.querySelector('span').textContent=on?'Saved':'Bookmark';refreshFlagIcons();});
   // Timestamp -> the video on YouTube at that second (new tab). Clicking the line text seeks the popup player.
@@ -1420,6 +1424,24 @@ function openModal(idx,rows){
     }catch(e){toast('Network error.');}
     finally{addBtn.disabled=false;}
   });
+}
+/* Prev / next review inside the popup (same list the card came from).
+   Shift+←/→ also steps reviews; plain arrows step the media carousel. */
+function renderModalNav(){
+  const nav=$('mnav');if(!nav)return;
+  const n=(S.mRows||[]).length,i=S.mIdx;
+  if(n<2||i<0){nav.classList.remove('show');nav.innerHTML='';return;}
+  nav.innerHTML='<button id="mnavP" title="Previous review (Shift+←)"'+(i<=0?' disabled':'')+'>‹</button><span class="mnav-t">'+(i+1)+' / '+n+'</span><button id="mnavN" title="Next review (Shift+→)"'+(i>=n-1?' disabled':'')+'>›</button>';
+  nav.classList.add('show');
+  const p=$('mnavP'),x=$('mnavN');if(p)p.addEventListener('click',()=>stepReview(-1));if(x)x.addEventListener('click',()=>stepReview(1));
+}
+function stepReview(d){
+  const n=(S.mRows||[]).length,k=S.mIdx+d;
+  if(k<0||k>=n)return false;
+  const f=$('ytF');if(f)f.src='';
+  openModal(k,S.mRows);
+  const m=document.querySelector('.modal');if(m)m.scrollTop=0;$('mback').scrollTop=0;
+  return true;
 }
 function closeModal(){$('mback').classList.remove('show');$('mback').classList.remove('feat');document.body.style.overflow='';const f=$('ytF');if(f)f.src='';}
 
@@ -1458,7 +1480,9 @@ document.addEventListener('DOMContentLoaded',()=>{
   ci.addEventListener('input',()=>{ci.style.height='auto';ci.style.height=Math.min(ci.scrollHeight,120)+'px';});
   ci.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}});
   document.querySelectorAll('#chatSugg button').forEach(b=>b.addEventListener('click',()=>{ci.value=b.textContent;sendChat();}));
-  document.addEventListener('keydown',e=>{if(S.stageKeys)S.stageKeys(e);if(e.key==='Escape'){if($('chat').classList.contains('show'))closeChat();else if($('mback').classList.contains('show'))closeModal();else if(!$('alertPanel').classList.contains('hide'))$('alertPanel').classList.add('hide');}});
+  document.addEventListener('keydown',e=>{
+    if($('mback').classList.contains('show')&&e.shiftKey&&(e.key==='ArrowRight'||e.key==='ArrowLeft')){const t=e.target&&e.target.tagName;if(t!=='INPUT'&&t!=='TEXTAREA'){stepReview(e.key==='ArrowRight'?1:-1);e.preventDefault();return;}}
+    if(S.stageKeys)S.stageKeys(e);if(e.key==='Escape'){if($('chat').classList.contains('show'))closeChat();else if($('mback').classList.contains('show'))closeModal();else if(!$('alertPanel').classList.contains('hide'))$('alertPanel').classList.add('hide');}});
   const startTab=restoreURL()||'Dashboard';
   Promise.all([loadNotes(),loadFlags()]).then(()=>{ setTab(startTab); refreshAlerts(); });
 });
