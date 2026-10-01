@@ -605,6 +605,22 @@ const $=id=>document.getElementById(id);
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function cap(s){return (s||'').replace(/\b\w/g,c=>c.toUpperCase());}
 function fmtN(n){return (n||0).toLocaleString();}
+/* Clean jump points for a recording's OCR chapters (display only):
+   1. consecutive chapters whose tag sets overlap merge into the first one
+      ("Media Navigation" → "Media Navigation · Navigation Menu" is one screen);
+   2. blips under 4 s drop out, unless nothing longer exists in the recording. */
+function collapseChapters(chs){
+  const norm=c=>(c.tags&&c.tags.length?c.tags:[c.title]).map(t=>String(t).toLowerCase());
+  const out=[];
+  (chs||[]).forEach(c=>{
+    const tags=norm(c),last=out[out.length-1];
+    if(last&&last._tags.some(t=>tags.includes(t))){last.end=Math.max(last.end||last.sec,c.end||c.sec);last._tags=[...new Set(last._tags.concat(tags))];return;}
+    out.push(Object.assign({},c,{_tags:tags}));
+  });
+  const dur=c=>(c.end||c.sec)-c.sec;
+  const long=out.filter(c=>dur(c)>=4);
+  return long.length?long:out;
+}
 function fmtSec(s){s=Math.max(0,Math.round(s||0));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return (h?h+':'+String(m).padStart(2,'0'):m)+':'+String(x).padStart(2,'0');}
 function fmtV(n){if(!n)return null;if(n>=1e6)return (n/1e6).toFixed(1).replace(/\.0$/,'')+'M';if(n>=1e3)return (n/1e3).toFixed(1).replace(/\.0$/,'')+'K';return String(n);}
 function ini(s){const w=(s||'').trim().split(/\s+/).filter(Boolean);return ((w[0]||'?')[0]+(w[1]?w[1][0]:'')).toUpperCase();}
@@ -1249,7 +1265,6 @@ async function openReviewByUrl(url,startSec){
 const IFE_HL_RE=/(in-?\s?flight entertainment(?: (?:and|&) connectivity)?|inflight entertainment|\bIFEC?\b|seat-?back(?: screens?| displays?| monitors?| tvs?)?|entertainment (?:system|screen|library|options?|selection|offering|content|choices)|touch-?screens?|personal (?:screens?|tvs?)|\bICE\b(?= system| entertainment)|noise-?cancell?ing headphones|headphones? jack|streaming entertainment|wireless (?:ife|entertainment|streaming)|(?:in-?flight|on-?board) wi-?fi|moving map|live tv|content library)/gi;
 const IFE_HL_TEST=new RegExp(IFE_HL_RE.source,'i');
 const ART_JUNK_RE=/^(copyright|©|all rights reserved|this site is owned|by logging into your account|contact us\s+-|powered by (vbulletin|xenforo)|all times are gmt|cookie|privacy policy|terms of (use|service)|subscribe|sign up|newsletter|advertisement|related:|read more:|share this|follow us|photo:|image:|credit:)/i;
-function fmtSec(s){s=Math.round(s||0);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}
 function isShortRow(r){return !!(r&&r.media_type==='video'&&(r.is_short||/\/shorts\//.test(r.url||'')));}
 // Parse article paragraphs into sections (heading + paragraphs) and flag the ones that talk about IFE.
 function parseArticleSections(paras){
@@ -1310,7 +1325,7 @@ function slideHTML(r,o,it){
     .concat((it.tags||[]).map(t=>{const v=(it.verified||[]).some(x=>x.toLowerCase()===t.toLowerCase());return '<span class="tag chap'+(v?' ok':'')+'"'+(v?' title="Sheet tag and OCR agree"':'')+'>'+(v?'✓ ':'')+esc(t)+'<button class="tagx admin-only" data-tag="'+esc(t)+'" title="Admin: remove this tag">×</button></span>';})).join('')+
     (it.tags&&!it.tags.length&&!it.uploaded?'<span class="tag note">No screen tags</span>':'')+
     (it.type==='image'&&!it.external?'<button class="tag note mdelf admin-only" title="Admin: remove this file from the review">✕ remove file</button>':'');
-  const vchaps=(it.chapters||[]).length?'<div class="vchaps">'+it.chapters.map(c=>'<button class="vchap" data-sec="'+c.sec+'" title="Jump to '+esc(c.t)+'"><span class="cts">'+esc(c.t)+'</span>'+esc(c.title)+'</button>').join('')+'</div>':'';
+  const vchaps=(it.chapters||[]).length?'<div class="vchaps">'+collapseChapters(it.chapters).map(c=>'<button class="vchap" data-sec="'+c.sec+'" title="Jump to '+esc(c.t)+'"><span class="cts">'+esc(c.t)+'</span>'+esc(c.title)+'</button>').join('')+'</div>':'';
   const text=it.caption||it.alt;
   if(it.external){let hostN='';try{hostN=new URL(it.src).hostname;}catch(e){}
     return '<div class="mslide ext"><div class="ext-card">'+ic('doc',28)+'<div class="ext-t">'+esc(it.caption||'Screenshot')+'</div><div class="t11">Stored on '+esc(hostN||'an external site')+' — sign-in required, so it can’t be shown here.</div>'+
@@ -1417,7 +1432,7 @@ function openModal(idx,rows){
       side+='<div class="sh"'+(photos.length?' style="margin-top:14px"':'')+'>Recordings <span class="ife-key">'+recs.length+'</span></div>';
       recs.forEach(([f,k],n)=>{
         side+='<div class="cap chap scr rec" data-es="'+k+':" title="Open this recording"><span class="cts">▶ #'+(k+1)+'</span><span>Recording '+(n+1)+(f.caption?' · '+esc(f.caption):'')+'</span></div>';
-        side+=(f.chapters||[]).length?f.chapters.map(c=>'<div class="cap chap ife scr vch" data-es="'+k+':'+c.sec+'" title="Jump to '+esc(c.t)+'"><span class="cts">'+esc(c.t)+'</span><span>✦ '+esc(c.title)+'</span></div>').join('')
+        side+=(f.chapters||[]).length?collapseChapters(f.chapters).map(c=>'<div class="cap chap ife scr vch" data-es="'+k+':'+c.sec+'" title="Jump to '+esc(c.t)+'"><span class="cts">'+esc(c.t)+'</span><span>✦ '+esc(c.title)+'</span></div>').join('')
           :'<div class="t11" style="padding:0 6px 6px 36px">No screens detected yet.</div>';
       });
     }
