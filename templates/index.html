@@ -282,7 +282,7 @@ svg{display:block}
 .tag .tagx{border:0;background:transparent;color:inherit;font-size:13px;line-height:1;margin-left:4px;padding:0 2px;cursor:pointer;opacity:.7}.tag .tagx:hover{opacity:1;color:#a12b2b}
 .mdelf{cursor:pointer;font-family:var(--f);color:#a12b2b!important;border-color:#e6b4b4!important}
 .vchaps{display:flex;flex-wrap:wrap;gap:6px;padding:8px 20px 0}.vchap{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line2);background:#fff;border-radius:7px;padding:3px 8px;font:500 11.5px var(--f);color:var(--ink2);cursor:pointer}.vchap:hover{border-color:var(--red)}.vchap .cts{font-size:11px;font-weight:600;color:var(--red)}
-.cap.chap{border-radius:7px}.cap.scr.on{background:#fff;box-shadow:inset 3px 0 0 var(--red)}.scr-n{font-style:normal;color:var(--gray);font-weight:600;font-size:11px}
+.cap.chap{border-radius:7px}.cap.scr.vch{margin-left:22px}.cap.scr.rec{font-weight:600;color:var(--ink)}.cap.scr.on{background:#fff;box-shadow:inset 3px 0 0 var(--red)}.scr-n{font-style:normal;color:var(--gray);font-weight:600;font-size:11px}
 .cap.chap.ife{background:#fff5f4}
 .cap.chap.ife span:last-child{color:var(--red);font-weight:600}
 .ife-key{font-size:9px;color:var(--red);background:#fff5f4;border:1px solid #f0cdd1;border-radius:999px;padding:1px 6px;font-weight:600;margin-left:6px}
@@ -1399,17 +1399,27 @@ function openModal(idx,rows){
     // Screens index: one row per screen tag, like video chapters. Clicking jumps the
     // stage to the first file carrying that tag; clicking again cycles to the next one.
     const files=mediaList(r,{isInternal:true});
-    // entries: {k: slide, sec: seconds into a recording or null}; grouped by tag (case-insensitive)
+    // Photos: one row per screen tag (case-insensitive) → the photos carrying it.
     const byTag={},label={};
-    const add=(t,k,sec)=>{const key=t.toLowerCase();label[key]=label[key]||t;(byTag[key]=byTag[key]||[]).push({k,sec});};
-    files.forEach((f,k)=>{if(f.type!=='image')return;
-      if((f.chapters||[]).length)f.chapters.forEach(c=>(c.tags||[]).forEach(t=>add(t,k,c.sec)));
-      else (f.tags||[]).forEach(t=>add(t,k,null));});
-    const tags=Object.keys(byTag).sort((a,b)=>byTag[a][0].k-byTag[b][0].k||(byTag[a][0].sec||0)-(byTag[b][0].sec||0));
-    if(tags.length){
-      side+='<div class="sh">Screens <span class="ife-key">'+files.filter(f=>f.type==='image').length+' files</span></div>';
-      side+=tags.map(key=>{const es=byTag[key],e0=es[0],vid=es.some(e=>e.sec!=null);
-        return '<div class="cap chap ife scr" data-es="'+es.map(e=>e.k+':'+(e.sec==null?'':e.sec)).join(',')+'" title="Jump to this screen"><span class="cts">'+(vid?'▶ ':'')+'#'+(e0.k+1)+(e0.sec!=null?' '+fmtSec(e0.sec):'')+'</span><span>✦ '+esc(label[key])+(es.length>1?' <em class="scr-n">× '+es.length+'</em>':'')+'</span></div>';}).join('');
+    const add=(t,k)=>{const key=t.toLowerCase();label[key]=label[key]||t;(byTag[key]=byTag[key]||[]).push({k,sec:null});};
+    const photos=files.map((f,k)=>[f,k]).filter(([f])=>f.type==='image'&&!f.video);
+    photos.forEach(([f,k])=>(f.tags||[]).forEach(t=>add(t,k)));
+    const tags=Object.keys(byTag).sort((a,b)=>byTag[a][0].k-byTag[b][0].k);
+    if(photos.length){
+      side+='<div class="sh">Photos <span class="ife-key">'+photos.length+'</span></div>';
+      side+=tags.length?tags.map(key=>{const es=byTag[key],e0=es[0];
+        return '<div class="cap chap ife scr" data-es="'+es.map(e=>e.k+':').join(',')+'" title="Jump to this screen"><span class="cts">#'+(e0.k+1)+'</span><span>✦ '+esc(label[key])+(es.length>1?' <em class="scr-n">× '+es.length+'</em>':'')+'</span></div>';}).join('')
+        :'<div class="t11" style="padding:0 6px 6px">No screen tags yet.</div>';
+    }
+    // Recordings: each one lists its own chapters as timestamps that seek the video.
+    const recs=files.map((f,k)=>[f,k]).filter(([f])=>f.type==='image'&&f.video);
+    if(recs.length){
+      side+='<div class="sh"'+(photos.length?' style="margin-top:14px"':'')+'>Recordings <span class="ife-key">'+recs.length+'</span></div>';
+      recs.forEach(([f,k],n)=>{
+        side+='<div class="cap chap scr rec" data-es="'+k+':" title="Open this recording"><span class="cts">▶ #'+(k+1)+'</span><span>Recording '+(n+1)+(f.caption?' · '+esc(f.caption):'')+'</span></div>';
+        side+=(f.chapters||[]).length?f.chapters.map(c=>'<div class="cap chap ife scr vch" data-es="'+k+':'+c.sec+'" title="Jump to '+esc(c.t)+'"><span class="cts">'+esc(c.t)+'</span><span>✦ '+esc(c.title)+'</span></div>').join('')
+          :'<div class="t11" style="padding:0 6px 6px 36px">No screens detected yet.</div>';
+      });
     }
     side+='<div class="sh"'+(tags.length?' style="margin-top:14px"':'')+'>Review'+(r.internal_author?' — '+esc(r.internal_author):'')+'</div>';
     side+='<div style="font-size:12.5px;color:var(--ink2);line-height:1.65;white-space:pre-wrap">'+esc(r.internal_text||r.transcript_excerpt||'')+'</div>';
