@@ -276,7 +276,7 @@ svg{display:block}
 .cap-orig{display:block;margin-top:3px;font-size:11px;color:var(--gray);font-style:normal}.cap-orig em{font-style:normal;opacity:.7}
 .cap.aq{cursor:default}.cap.aq:hover{background:none}
 .aq-kws{display:block;margin-top:6px}
-.cap.chap{border-radius:7px}
+.cap.chap{border-radius:7px}.cap.scr.on{background:#fff;box-shadow:inset 3px 0 0 var(--red)}.scr-n{font-style:normal;color:var(--gray);font-weight:600;font-size:11px}
 .cap.chap.ife{background:#fff5f4}
 .cap.chap.ife span:last-child{color:var(--red);font-weight:600}
 .ife-key{font-size:9px;color:var(--red);background:#fff5f4;border:1px solid #f0cdd1;border-radius:999px;padding:1px 6px;font-weight:600;margin-left:6px}
@@ -590,6 +590,7 @@ function restoreURL(){
   FACETS.forEach(([k])=>{const v=p.get(k);if(v)v.split(',').forEach(x=>x&&S.filters[k].add(x));});
   if(p.get('a'))S.cmpA=p.get('a');
   if(p.get('b'))S.cmpB=p.get('b');
+  if(p.get('open'))S.deepOpen=p.get('open');   // ?open=<review url>: open that popup once the list is in
   return p.get('tab');
 }
 
@@ -828,6 +829,8 @@ async function renderReviews(){
   renderSearchBar();
   renderFacetBar();
   paintReviews();
+  // ?open=<review url> deep link: open that review's popup once the list is in.
+  if(S.deepOpen){const op=S.deepOpen;S.deepOpen=null;const k=S.reviews.findIndex(x=>x.url===op);if(k>=0)openModal(k,S.reviews);}
   const ar=$('addRev');if(ar)ar.addEventListener('click',openAddReview);
 }
 
@@ -1312,6 +1315,7 @@ function initStage(r,o){
   const host=$('mStage');if(!host)return;
   const m=mediaList(r,o);let i=0;
   const render=()=>{
+    S.stageIdx=i;if(S.onSlide)S.onSlide(i);
     const it=m[i];host.className='mstage '+it.type+(it.external?' ext':'');
     host.innerHTML='<div class="mstage-in">'+slideHTML(r,o,it)+
       (m.length>1?'<button class="marrow l" id="mPrev" aria-label="Previous">‹</button><button class="marrow r" id="mNext" aria-label="Next">›</button><span class="mcount">'+(i+1)+' / '+m.length+'</span>':'')+'</div>'+
@@ -1377,7 +1381,17 @@ function openModal(idx,rows){
     if(caps.length){side+='<div class="sh" style="margin-top:16px">Full transcript</div>';side+=caps.map(c=>capRow(c,false)).join('');}
     else if(r.transcript_full_en||r.transcript_full||r.transcript_excerpt)side+='<div class="sh" style="margin-top:16px">Transcript</div><div class="cap-all">'+esc(r.transcript_full_en||r.transcript_full||r.transcript_excerpt)+'</div>';
   } else if(isInternal){
-    side+='<div class="sh">Review'+(r.internal_author?' — '+esc(r.internal_author):'')+'</div>';
+    // Screens index: one row per screen tag, like video chapters. Clicking jumps the
+    // stage to the first file carrying that tag; clicking again cycles to the next one.
+    const files=mediaList(r,{isInternal:true});
+    const byTag={};
+    files.forEach((f,k)=>{if(f.type!=='image')return;(f.tags||[]).forEach(t=>{(byTag[t]=byTag[t]||{ks:[],vid:false}).ks.push(k);if(f.video)byTag[t].vid=true;});});
+    const tags=Object.keys(byTag).sort((a,b)=>byTag[a].ks[0]-byTag[b].ks[0]);
+    if(tags.length){
+      side+='<div class="sh">Screens <span class="ife-key">'+files.filter(f=>f.type==='image').length+' files</span></div>';
+      side+=tags.map(t=>{const g=byTag[t];return '<div class="cap chap ife scr" data-ks="'+g.ks.join(',')+'" title="Jump to this screen"><span class="cts">'+(g.vid?'▶ ':'')+'#'+(g.ks[0]+1)+'</span><span>✦ '+esc(t)+(g.ks.length>1?' <em class="scr-n">× '+g.ks.length+'</em>':'')+'</span></div>';}).join('');
+    }
+    side+='<div class="sh"'+(tags.length?' style="margin-top:14px"':'')+'>Review'+(r.internal_author?' — '+esc(r.internal_author):'')+'</div>';
     side+='<div style="font-size:12.5px;color:var(--ink2);line-height:1.65;white-space:pre-wrap">'+esc(r.internal_text||r.transcript_excerpt||'')+'</div>';
   } else {
   const chaps=r.chapters||[];
@@ -1401,7 +1415,13 @@ function openModal(idx,rows){
   if(!isArt)side+='</div>';
   $('mbody').innerHTML=main+side;$('mback').classList.add('show');document.body.style.overflow='hidden';
   renderModalNav();
+  S.onSlide=i=>{document.querySelectorAll('.cap.scr').forEach(el=>el.classList.toggle('on',el.dataset.ks.split(',').map(Number).includes(i)));};
   initStage(r,{vid,isShort,isInternal,isArt});
+  document.querySelectorAll('.cap.scr').forEach(el=>el.addEventListener('click',()=>{
+    const ks=el.dataset.ks.split(',').map(Number),cur=S.stageIdx!=null?S.stageIdx:-1;
+    const next=ks.find(k=>k>cur);S.stageGo(next!=null?next:ks[0]);
+    const st=$('mStage');if(st)st.scrollIntoView({block:'nearest',behavior:'smooth'});
+  }));
   const mf=$('mFlag');if(mf)mf.addEventListener('click',()=>{const on=toggleFlag(r);mf.classList.toggle('on',on);mf.querySelector('span').textContent=on?'Saved':'Bookmark';refreshFlagIcons();});
   // Timestamp -> the video on YouTube at that second (new tab). Clicking the line text seeks the popup player.
   $('mbody').querySelectorAll('.cap[data-s]').forEach(el=>{const s=el.dataset.s;if(s==='')return;
