@@ -233,6 +233,7 @@ _CABIN_SIGNAL_RE = re.compile(
     r'\b(?:review\w*|trip\s+report|class|cabin|seats?|economy|business|first\s+class|premium|polaris|mint'
     r'|qsuites?|suites?|lounge|clubhouse|ife|entertainment|onboard|on\s+board|inflight|in-flight|worth|flew|flying|vs|versus)\b'
     r'|\b\d{1,2}\s*(?:hours?|hrs?)\s+(?:in|on|to|with|aboard|across)\b'
+    r'|\bflight\s+(?:experience|report)\b|\bfirst\s+flight\b|\binaugural\b|\bas\s+bad\s+as\b|\boverrated\b'
     r'|\ba3\d{2}\b|\bb?7\d7\b|\bneo\b|\bmax\s*\d\b',
     re.IGNORECASE,
 )
