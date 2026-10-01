@@ -95,6 +95,22 @@ _SKIP_SIGNALS = ("private video", "video unavailable", "has been removed", "acco
 _BLOCK_SIGNALS = ("sign in to confirm", "not a bot", "429", "too many requests", "http error 403")
 
 
+def _cookies_from_env():
+    """The VM keeps YouTube cookies as YOUTUBE_COOKIES_B64 in .env (same as
+    backfill_transcripts); materialize them if there is no cookies.txt."""
+    if COOKIES.exists():
+        return
+    try:
+        from dotenv import load_dotenv
+        load_dotenv(HERE / ".env")
+    except ImportError:
+        pass
+    b64 = os.environ.get("YOUTUBE_COOKIES_B64", "").strip()
+    if b64:
+        import base64
+        COOKIES.write_bytes(base64.b64decode(b64))
+
+
 def download(video_id: str, workdir: str):
     """→ (path | None, status) where status ∈ ok / skip / block / fail."""
     import yt_dlp
@@ -163,7 +179,10 @@ def main():
     ap.add_argument("--interval", type=float, default=2.0, help="seconds between sampled frames")
     ap.add_argument("--max-runtime-min", type=float, default=float(os.environ.get("MAX_RUNTIME_MIN", 0) or 0))
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--long", action="store_true",
+                    help="full-length videos (not Shorts) that have no chapters at all, newest first")
     a = ap.parse_args()
+    _cookies_from_env()
 
     data = json.loads(CACHE.read_text(encoding="utf-8"))
     rows = data.get("reviews", [])
@@ -171,12 +190,20 @@ def main():
         # An explicit URL may be any video (OCR works on full-length reviews
         # too — it is just slower), not only a Short.
         todo = [r for r in rows if r.get("url") == a.url and _yt_id(r.get("url"))]
+    elif a.long:
+        # Full-length external reviews without description chapters: OCR gives
+        # them tag-only chapters (long_form merge rules). Newest first, and a
+        # video that already failed is not retried every night.
+        todo = [r for r in rows if r.get("media_type") == "video" and not _is_short(r) and _yt_id(r.get("url"))
+                and not r.get("chapters") and not r.get("chapters_ocr_status")]
+        todo.sort(key=lambda r: r.get("published_at") or "", reverse=True)
     else:
+        todo = [r for r in rows if _is_short(r) and _yt_id(r.get("url"))]
         # description chapters (YouTube's own) are authoritative — never replace them
         todo = [r for r in todo if not r.get("chapters") or (a.retag and r.get("chapters_source") == "ocr")]
     if a.limit:
         todo = todo[:a.limit]
-    print(f"OCR repo: {REPO}\n{len(todo)} Shorts to chapter")
+    print(f"OCR repo: {REPO}\n{len(todo)} {'full-length videos' if a.long else 'Shorts'} to chapter")
     if a.dry_run or not todo:
         return
 

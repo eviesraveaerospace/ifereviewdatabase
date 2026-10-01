@@ -31,6 +31,9 @@ else
     log "no YOUTUBE_COOKIES_B64 in .env - skipping transcript grind"
 fi
 
+# Whisper over the internal reviews' own recordings (dashboard venv has whisper).
+"$PY" -u transcribe_internal.py >> "$LOG" 2>&1
+
 # OCR screen tagging. Uses the ios-screen-recording-ocr checkout (~/ife) and
 # its venv (~/ife-venv: torch-cpu, open_clip, rapidocr); skipped when absent.
 #  - internal reviews' own photos/recordings -> tags, verified tags, chapters
@@ -43,6 +46,8 @@ if [ -x "$OCR_PY" ] && [ -f "$OCR_REPO/ocr_video_chapters.py" ]; then
     IFE_OCR_REPO="$OCR_REPO" "$OCR_PY" -u tag_internal_media.py >> "$LOG" 2>&1
     if "$OCR_PY" -c "import yt_dlp" 2>/dev/null; then
         IFE_OCR_REPO="$OCR_REPO" MAX_RUNTIME_MIN="${SHORTS_OCR_MIN:-60}" "$OCR_PY" -u gather_short_chapters.py >> "$LOG" 2>&1
+        # external full-length reviews without chapters, newest first, 90 min cap
+        IFE_OCR_REPO="$OCR_REPO" MAX_RUNTIME_MIN="${LONG_OCR_MIN:-90}" "$OCR_PY" -u gather_short_chapters.py --long >> "$LOG" 2>&1
     else
         log "yt_dlp missing in $OCR_PY - skipping Shorts OCR chapters"
     fi

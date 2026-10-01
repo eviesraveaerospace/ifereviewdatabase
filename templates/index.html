@@ -281,7 +281,7 @@ svg{display:block}
 .mdel{border-color:#e6b4b4;color:#a12b2b}.mdel:hover{background:#fff3f3}
 .tag .tagx{border:0;background:transparent;color:inherit;font-size:13px;line-height:1;margin-left:4px;padding:0 2px;cursor:pointer;opacity:.7}.tag .tagx:hover{opacity:1;color:#a12b2b}
 .mdelf{cursor:pointer;font-family:var(--f);color:#a12b2b!important;border-color:#e6b4b4!important}
-.vchaps{display:flex;flex-wrap:wrap;gap:6px;padding:8px 20px 0}.vchap{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line2);background:#fff;border-radius:7px;padding:3px 8px;font:500 11.5px var(--f);color:var(--ink2);cursor:pointer}.vchap:hover{border-color:var(--red)}.vchap .cts{font-size:11px;font-weight:600;color:var(--red)}
+.vchaps{display:flex;flex-wrap:wrap;gap:6px;padding:8px 20px 0}.vtrans{display:flex;flex-direction:column;gap:4px;padding:10px 20px 0;max-height:160px;overflow-y:auto}.vtrans .vchap{justify-content:flex-start;text-align:left;border-color:transparent;background:transparent;padding:2px 4px}.vtrans .vchap:hover{background:#fff;border-color:var(--line2)}.vchap{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line2);background:#fff;border-radius:7px;padding:3px 8px;font:500 11.5px var(--f);color:var(--ink2);cursor:pointer}.vchap:hover{border-color:var(--red)}.vchap .cts{font-size:11px;font-weight:600;color:var(--red)}
 .cap.chap{border-radius:7px}.cap.scr.vch{margin-left:22px}.cap.scr.rec{font-weight:600;color:var(--ink)}.cap.scr.on{background:#fff;box-shadow:inset 3px 0 0 var(--red)}.scr-n{font-style:normal;color:var(--gray);font-weight:600;font-size:11px}
 .cap.chap.ife{background:#fff5f4}
 .cap.chap.ife span:last-child{color:var(--red);font-weight:600}
@@ -1309,7 +1309,7 @@ function mediaList(r,o){
   if(o.vid)m.push({type:'video'});
   else if(o.isArt)m.push({type:'article'});
   else if(!(r.images||[]).length&&!(r.photos||[]).length)m.push({type:'head'});
-  (r.images||[]).forEach(im=>m.push({type:'image',src:im.local||im.src,origSrc:im.src,chapters:im.chapters||[],verified:im.tags_verified||[],fallback:null,alt:im.alt||'',caption:im.caption||'',airline:im.airline,airlineSrc:im.airline_source,system:im.ife_system,tags:im.tags,visual:im.used_visual,external:!!im.external,video:!!im.video,poster:im.poster||null}));
+  (r.images||[]).forEach(im=>m.push({type:'image',src:im.local||im.src,origSrc:im.src,chapters:im.chapters||[],verified:im.tags_verified||[],transcript:(im.transcript&&im.transcript.text)?im.transcript:null,fallback:null,alt:im.alt||'',caption:im.caption||'',airline:im.airline,airlineSrc:im.airline_source,system:im.ife_system,tags:im.tags,visual:im.used_visual,external:!!im.external,video:!!im.video,poster:im.poster||null}));
   (r.photos||[]).forEach(p=>m.push({type:'image',src:p,alt:'',caption:'',tags:[],uploaded:true}));
   return m;
 }
@@ -1332,7 +1332,8 @@ function slideHTML(r,o,it){
       '<a class="mopen" href="'+esc(it.src)+'" target="_blank" rel="noopener">Open screenshot '+ic('ext',11)+'</a></div></div>'+
       '<div class="mcap">'+chips+'</div>';}
   if(it.video)return '<div class="mslide img"><video controls preload="metadata" playsinline src="'+esc(it.src)+'"'+(it.poster?' poster="'+esc(it.poster)+'"':'')+'></video></div>'+
-    '<div class="mcap">'+chips+(text?'<span class="mcap-t">'+esc(text)+'</span>':'')+'</div>'+vchaps;
+    '<div class="mcap">'+chips+(text?'<span class="mcap-t">'+esc(text)+'</span>':'')+'</div>'+vchaps+
+    (it.transcript?'<div class="vtrans">'+it.transcript.segments.map(sg=>'<button class="vchap" data-sec="'+sg.sec+'"><span class="cts">'+esc(sg.t)+'</span>'+esc(sg.text)+'</button>').join('')+'</div>':'');
   return '<div class="mslide img"><img src="'+esc(it.src)+'" alt="'+esc(it.alt)+'"'+(it.fallback?' data-fb="'+esc(it.fallback)+'" onerror="if(this.dataset.fb){this.src=this.dataset.fb;this.dataset.fb=\'\';}"':'')+'></div>'+
     '<div class="mcap">'+(chips||(it.uploaded?'<span class="tag note">Uploaded photo</span>':'<span class="tag note">Not tagged yet</span>'))+(text?'<span class="mcap-t">'+esc(text)+'</span>':'')+'</div>';
 }
