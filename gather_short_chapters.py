@@ -17,6 +17,7 @@ Stores on each review:
 
 Run:  python gather_short_chapters.py [--limit N] [--url URL] [--retag]
                                       [--max-runtime-min M] [--interval S]
+      (--url accepts any cached video, Short or not)
 Needs the OCR checkout (IFE_OCR_REPO, or one of the known paths below) with
 rapidocr_onnxruntime + opencv installed in this interpreter, and yt-dlp.
 """
@@ -123,25 +124,30 @@ def download(video_id: str, workdir: str):
 
 
 # ── OCR → chapters ───────────────────────────────────────────────────────────
-def ocr_chapters(video_path: str, ocr, interval: float, out_dir: str):
+def ocr_chapters(video_path: str, ocr, interval: float, out_dir: str, long_form: bool = False):
     frames = sample_video(video_path, interval=interval, dedupe_threshold=6.0, max_frames=0, max_width=720)
     args = SimpleNamespace(similarity_threshold=0.5, max_width=720)
     analyze_frames(frames, ocr, args, out_dir)
     raw = json.loads(Path(out_dir, "chapters.json").read_text(encoding="utf-8"))
-    return to_dashboard(raw)
+    return to_dashboard(raw, long_form=long_form)
 
 
-def to_dashboard(raw_chapters):
+def to_dashboard(raw_chapters, long_form=False, gap=8):
     """OCR chapters → dashboard rows. Adjacent chapters with the same tag set
     merge; untagged, untitled stretches (video playback, transitions) are
-    dropped unless they are the only thing in the clip."""
+    dropped unless they are the only thing in the clip.
+
+    long_form (full-length reviews rather than Shorts): only tagged IFE
+    screens become chapters — raw on-screen text ("RICECOOKIE", a baggage
+    chart) is noise at that length — and same-tag runs separated by up to
+    `gap` seconds of untagged frames merge into one chapter."""
     rows = []
     for ch in raw_chapters:
         tags = [t for t in ch.get("tags") or [] if t not in _QUIET_TAGS]
         title = " · ".join(tags) if tags else (ch.get("title") or "").strip()
-        if not tags and (not title or title == "Untitled screen" or not re.search(r"[A-Za-z]{3}", title)):
+        if not tags and (long_form or not title or title == "Untitled screen" or not re.search(r"[A-Za-z]{3}", title)):
             continue  # untagged and unreadable ("7/211134km") — not a chapter
-        if rows and rows[-1]["tags"] == tags and (tags or rows[-1]["title"] == title):
+        if rows and rows[-1]["tags"] == tags and (tags or rows[-1]["title"] == title)                 and ch["start"] - rows[-1]["end"] <= (gap if long_form else 0.01):
             rows[-1]["end"] = ch["end"]
             continue
         rows.append({"t": fmt_ts(ch["start"]), "sec": int(round(ch["start"])), "end": int(round(ch["end"])),
@@ -161,9 +167,10 @@ def main():
 
     data = json.loads(CACHE.read_text(encoding="utf-8"))
     rows = data.get("reviews", [])
-    todo = [r for r in rows if _is_short(r) and _yt_id(r.get("url"))]
     if a.url:
-        todo = [r for r in todo if r.get("url") == a.url]
+        # An explicit URL may be any video (OCR works on full-length reviews
+        # too — it is just slower), not only a Short.
+        todo = [r for r in rows if r.get("url") == a.url and _yt_id(r.get("url"))]
     else:
         # description chapters (YouTube's own) are authoritative — never replace them
         todo = [r for r in todo if not r.get("chapters") or (a.retag and r.get("chapters_source") == "ocr")]
@@ -216,7 +223,7 @@ def main():
                 failed += 1
                 continue
             try:
-                chaps = ocr_chapters(path, ocr, a.interval, os.path.join(tmp, "out"))
+                chaps = ocr_chapters(path, ocr, a.interval, os.path.join(tmp, "out"), long_form=not _is_short(r))
             except Exception as exc:  # noqa: BLE001
                 print(f"  OCR failed: {exc}")
                 r["chapters_ocr_status"] = "ocr-error"

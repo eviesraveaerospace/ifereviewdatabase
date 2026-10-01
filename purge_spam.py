@@ -106,11 +106,26 @@ _gate = _ic.IFECrawler.__new__(_ic.IFECrawler)   # helpers only, no network setu
 _TRUSTED_CHANNELS = {n.lower().replace(" (official)", "") for n in _ic.KNOWN_IFE_CHANNELS}
 
 
+def _gate_title(r):
+    """Title plus its English translation (translating non-Latin titles on the
+    fly, and saving the result so the dashboard shows it)."""
+    title = r.get("title", "")
+    if not r.get("title_en") and r.get("media_type") == "video":
+        en = _ic._title_en(title)
+        if en:
+            r["title_en"] = en
+    return _ic._gate_title(title, r.get("title_en"))
+
+
 def _video_fails_gate(r):
     if r.get("media_type") != "video":
         return False
-    title = r.get("title", "")
+    title = _gate_title(r)
     channel = (r.get("channel_title") or "").strip().lower()
+    # Industry analysis and destination promos are out even on trusted or
+    # official channels (same rule the crawler applies in _is_spam_video).
+    if _ic._is_non_review_content(title) and not r.get("ife_system"):
+        return True
     if _ic._is_trusted_channel(channel) or r.get("ife_system"):
         return False
     # A video the crawler tagged as IFE-system content whose title is about the
@@ -141,6 +156,8 @@ def _press_has_ife_content(r):
     return any(kw in combined for kw in _IFE_CONTENT_KEYWORDS) or bool(r.get("ife_features"))
 
 
+DRY_RUN = "--dry-run" in sys.argv
+
 with open("ife_cache.json", encoding="utf-8") as f:
     data = json.load(f)
 
@@ -154,12 +171,13 @@ for r in data["reviews"]:
         continue
     is_press = r.get("source_tier") == 1
 
+    gtitle = _gate_title(r) if r.get("media_type") == "video" else title
     bad = (
-        _is_spam(title)
-        or _ic._is_spam_video(title, "", r.get("channel_title") or "")
+        _is_spam(gtitle)
+        or _ic._is_spam_video(gtitle, "", r.get("channel_title") or "")
         or _JUNK_RE.search(title)
-        or _is_offtopic(title)
-        or any(s.lower() in title.lower() for s in BAD_TITLE_SUBSTRINGS)
+        or _is_offtopic(gtitle)
+        or any(s.lower() in gtitle.lower() for s in BAD_TITLE_SUBSTRINGS)
         or (is_press and not _press_has_ife_content(r))
         or _video_fails_gate(r)
     )
@@ -170,9 +188,11 @@ for r in data["reviews"]:
 
 data["reviews"] = kept
 
-with open("ife_cache.json", "w", encoding="utf-8") as f:
-    json.dump(data, f, indent=2, ensure_ascii=False)
-
-print(f"Removed {before - len(kept)} entries ({len(kept)} remain)")
+if DRY_RUN:
+    print(f"[dry-run] would remove {before - len(kept)} entries ({len(kept)} remain)")
+else:
+    with open("ife_cache.json", "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+    print(f"Removed {before - len(kept)} entries ({len(kept)} remain)")
 for t in removed:
     print(f"  - {t}")

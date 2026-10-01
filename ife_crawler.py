@@ -1,3 +1,4 @@
+import os
 import re
 import json
 import time
@@ -175,6 +176,8 @@ def _is_spam_video(title: str, duration_iso: str = "", channel_title: str = "",
         return True
     if _EXPLAINER_RE.search(title) and not _is_trusted_channel(channel_title):
         return True
+    if _is_non_review_content(title):
+        return True
     hashtags = re.findall(r'#\w+', title)
     if len(hashtags) >= 4:
         return True
@@ -212,14 +215,65 @@ _NEWS_TITLE_RE = re.compile(
     r'|\bmissing\s+(?:plane|aircraft|jet|flight)\b|\bsearch\s+and\s+rescue\b'
     r'|\bbreaking\b|\bheadlines?\b|\blive\s+tv\b|\b24x7\b'
     r'|\b(?:dope|drug)\s+tests?\b|\bcover(?:ed|s)?[- ]up\b|\bdownplay\w*\b'
-    r'|\bworld\s+news\b|\bhindi\s+news\b|\bnews\b',
+    r'|\bworld\s+news\b|\bhindi\s+news\b|\bnews\b'
+    # Onboard violence / security / medical emergencies ("Pilot Stabbed
+    # Mid-Flight — Chaos on Board") — hard, whatever else the title says.
+    r'|\bstabb\w*\b|\battack(?:s|ed|er)?\b|\bassault\w*\b|\bbrawl\w*\b|\bfist\s*fight\b'
+    r'|\bbomb\b|\bterror\w*\b|\bsquawk\w*\b|\bcode\s+7[57]00\b'
+    r'|\binjur\w+\b|\bhospitali[sz]\w+\b|\bevacuat\w+\b',
+    re.IGNORECASE,
+)
+
+# Cabin / review signal. Reviewers use news-flavoured clickbait too ("CRISIS
+# STRUCK QANTAS? 15 HOURS TO SOUTH AFRICA!", "Is Flying AIR PEACE Worth The
+# Chaos?"), so the softer incident words below and the industry/destination
+# rules only fire when nothing in the title points at a cabin, a seat class, a
+# flight duration, an aircraft type, or the IFE itself.
+_CABIN_SIGNAL_RE = re.compile(
+    r'\b(?:review\w*|trip\s+report|class|cabin|seats?|economy|business|first\s+class|premium|polaris|mint'
+    r'|qsuites?|suites?|lounge|clubhouse|ife|entertainment|onboard|on\s+board|inflight|in-flight|worth|flew|flying|vs|versus)\b'
+    r'|\b\d{1,2}\s*(?:hours?|hrs?)\s+(?:in|on|to|with|aboard|across)\b'
+    r'|\ba3\d{2}\b|\bb?7\d7\b|\bneo\b|\bmax\s*\d\b',
+    re.IGNORECASE,
+)
+
+# Softer incident / regulatory words — news when there is no cabin signal.
+_NEWS_TITLE_SOFT_RE = re.compile(
+    # Disruption coverage ("harrowing plane scare | National Report").
+    r'\bunruly\b|\bdrunk(?:en)?\b|\barrest\w*\b|\bdetained\b|\bcharged\s+with\b'
+    r'|\bdiverted\b|\bdiversion\b|\bscare\b|\bharrowing\b|\bterrifying\b|\bchaos\b|\bpanic\b'
+    r'|\bthreats?\b|\bexclusive\s*:|\burgent\s*:'
+    # Manufacturer safety / regulatory coverage ("Boeing: Four Missing Bolts and
+    # a Broken Safety System", door-plug blowout, whistleblowers, groundings).
+    r'|\bbolts?\b|\bdoor\s+plug\b|\bblowout\b|\bwhistleblower\w*\b|\bgrounded\b|\bgrounding\b'
+    r'|\bfaa\b|\beasa\b|\brecall\w*\b|\bdefects?\b|\bfaulty\b|\bmalfunction\w*\b'
+    r'|\bsafety\s+(?:system|record|concerns?|crisis|scandal|lapses?|failures?|issues?|problems?)\b',
+    re.IGNORECASE,
+)
+
+# The same coverage in other languages. Titles in a non-Latin script are also
+# machine-translated before the gate runs (see _title_en), but these catch the
+# obvious cases without a network call: crash / accident / emergency landing /
+# hijack / breaking / news in Persian, Arabic, Urdu, Hindi, Russian, Turkish,
+# Indonesian, Spanish, Portuguese, French, German, Chinese, Japanese, Korean.
+_NEWS_TITLE_INTL_RE = re.compile(
+    r'خبر|اخبار|أخبار|عاجل|اضطراری|اضطراري|طوارئ|سقوط|تحطم|حادثه|حادث|حادثہ|ہنگامی|خبریں|ربود|اختطاف|هواپیماربایی'
+    r'|हादसा|दुर्घटना|समाचार|ख़बर|खबर|आपातकालीन|अपहरण'
+    r'|катастроф|крушени|новост|авари|экстренн|угон'
+    r'|\bkaza\b|\bhaber\w*\b|\bacil\s+ini[sş]\b|\bkecelakaan\b|\bberita\b|\bdarurat\b'
+    r'|\baccidentes?\b|\bnoticias\b|\bnotícias\b|\bemergencia\b|\bemergência\b|\btragedia\b'
+    r"|\bactualités\b|\batterrissage\s+d'urgence\b|\babsturz\b|\bunfall\b|\bnachrichten\b|\bnotlandung\b"
+    r'|空难|空難|坠机|墜機|事故|新闻|新聞|紧急|緊急|迫降|劫机|劫機'
+    r'|墜落|ニュース|緊急着陸|ハイジャック'
+    r'|추락|사고|뉴스|비상착륙|납치',
     re.IGNORECASE,
 )
 
 # Broadcast / newspaper channels. Word-boundaried proper nouns only, so a
 # reviewer channel like "Simple Flying" or "Airline Videos Live" never matches.
 _NEWS_CHANNEL_RE = re.compile(
-    r'\bnews\b|\bnewsx?\d*\b|\bheadlines\b'
+    r'\bnews\w*\b|\bheadlines\b'
+    r'|خبر|أخبار|اخبار|समाचार|खबर|новости|haber|noticias|notícias|nachrichten|新闻|新聞|ニュース|뉴스'
     r'|\bndtv\b|\bcnn\b|\bbbc\b|\bctv\b|\bcbc\b|\babc\b|\bnbc\b|\bcbs\b|\bfox\b|\bitv\b'
     r'|\bwion\b|\bgeo\b|\bdunya\b|\bary\b|\bindia\s+today\b|\btimes\s+now\b'
     r'|\brepublic\s+(?:tv|world|bharat)\b'
@@ -233,9 +287,127 @@ _NEWS_CHANNEL_RE = re.compile(
 
 def _is_news_broadcast(title: str, channel_title: str = "") -> bool:
     """True for crash/incident/headline coverage or videos from a news broadcaster."""
-    if _NEWS_TITLE_RE.search(title):
+    if _NEWS_TITLE_RE.search(title) or _NEWS_TITLE_INTL_RE.search(title):
+        return True
+    if _NEWS_TITLE_SOFT_RE.search(title) and not _CABIN_SIGNAL_RE.search(title):
         return True
     return bool(channel_title and _NEWS_CHANNEL_RE.search(channel_title))
+
+
+# ── Non-aviation transport ────────────────────────────────────────────────────
+# "INSANE Opening Day Of DUBAI to ABU DHABI Train! Etihad Rail Full Review"
+# entered on the airline keyword. A train/bus/ferry/cruise review with no
+# aviation word in the title is not an IFE review, whatever brand it carries.
+_OTHER_TRANSPORT_RE = re.compile(
+    r'\btrains?\b|\brail(?:way|ways|road)?\b|\bmetro\b|\bsubway\b|\btram\b|\bmonorail\b|\bhyperloop\b'
+    r'|\bbus(?:es)?\b|\bferry\b|\bferries\b|\bcruises?\b|\byachts?\b|\bships?\b|\bboats?\b'
+    r'|\blimo(?:usine)?s?\b|\btaxi\b|\brental\s+car\b|\broad\s+trip\b|\bsleeper\s+(?:car|coach)\b',
+    re.IGNORECASE,
+)
+_AVIATION_WORD_RE = re.compile(
+    r'\bflights?\b|\bfly\b|\bflew\b|\bflying\b|\bairlines?\b|\bairways\b|\baircraft\b|\bairplanes?\b'
+    r'|\bplanes?\b|\bjets?\b|\bboeing\b|\bairbus\b|\ba3\d{2}\b|\b7\d7\b|\bdreamliner\b|\blounge\b|\bairport\b',
+    re.IGNORECASE,
+)
+
+
+_STRICT_CABIN_RE = re.compile(
+    r'\b(?:class|cabin|seats?|economy|business|premium|polaris|mint|qsuites?|suites?|lounge|ife|entertainment|inflight|in-flight)\b',
+    re.IGNORECASE,
+)
+
+
+def _is_other_transport(title: str) -> bool:
+    if not _OTHER_TRANSPORT_RE.search(title) or _AVIATION_WORD_RE.search(title):
+        return False
+    return not (_keyword_hits(title, AIRLINE_KEYWORDS) and _STRICT_CABIN_RE.search(title))
+
+
+# ── Industry analysis / destination promos (applies to trusted channels too) ──
+# Reviewer channels also publish airline business analysis ("What Happened to
+# Etihad Airways?") and official airline channels publish destination promos
+# ("Exploring Tashkent | Etihad"). Neither shows a cabin or an IFE system. A
+# review-shaped title (class / flight / review / cabin / seat / IFE …) or a
+# strong IFE keyword still passes, so "What happened to Emirates First Class?"
+# and "Exploring the new Astrova screens" are kept.
+_INDUSTRY_TITLE_RE = re.compile(
+    r"\bwhat(?:'s|\s+is|\s+has)?\s+(?:happen\w*|going\s+on|wrong)\s+(?:to|with|at)\b"
+    r'|\bwhat\s+went\s+wrong\b|\bthe\s+(?:decline|fall|collapse|downfall|problem|trouble|future|end)\s+(?:of|with|at|about)\b'
+    r'|\bin\s+trouble\b|\bis\s+\w+(?:\s+\w+)?\s+(?:dying|doomed|finished|failing|collapsing)\b'
+    r'|\bbankrupt\w*\b|\bgoing\s+bust\b|\bstruggl\w+\b|\bcrisis\b|\blawsuit\b|\bsued\b|\bfined\b'
+    r'|\bmergers?\b|\bacquisition\b|\btakeover\b|\blayoffs?\b|\bstock\b|\bshareholders?\b|\bearnings\b'
+    r'|\bstrikes?\b|\bunion\b|\bpilots?\s+(?:shortage|strike|pay)\b',
+    re.IGNORECASE,
+)
+_DESTINATION_PROMO_RE = re.compile(
+    r'\bexplor(?:e|ing)\b|\bdiscover(?:ing)?\b|\bthings\s+to\s+do\b|\b(?:travel|city|destination)\s+guide\b'
+    r'|\bdestinations?\b|\ba\s+(?:day|weekend)\s+in\b|\bhidden\s+gems?\b'
+    r'|\bitinerary\b|\btop\s+\d+\s+(?:places|things|spots|beaches|restaurants)\b|\bwhere\s+to\s+(?:stay|eat)\b',
+    re.IGNORECASE,
+)
+
+
+# 機上娛樂 / 机上娱乐 (zh), 機内エンタ(ーテイメント|メ) (ja), 기내 엔터테인먼트 (ko),
+# سرگرمی پرواز / الترفيه على متن (fa/ar).
+_IFE_INTL_RE = re.compile(
+    r'機上娛樂|机上娱乐|機內娛樂|机内娱乐|機内エンタ|기내\s*엔터테인먼트|기내\s*오락|سرگرمی\s+(?:پرواز|هواپیما)|الترفيه\s+(?:على\s+متن|الجوي)'
+)
+
+
+def _has_strong_ife_keyword(text: str) -> bool:
+    t = text.lower()
+    if _IFE_WORD_RE.search(t) or _IFE_INTL_RE.search(t):
+        return True
+    return any(_keyword_re(kw).search(t) for kw in IFE_TITLE_KEYWORDS if kw not in _IFE_TITLE_ONLY_KEYWORDS)
+
+
+def _is_non_review_content(title: str) -> bool:
+    """Industry analysis or destination promo with no review signal and no
+    strong IFE keyword. Checked for every channel, trusted or not."""
+    if _CABIN_SIGNAL_RE.search(title) or _has_strong_ife_keyword(title):
+        return False
+    return bool(_INDUSTRY_TITLE_RE.search(title) or _DESTINATION_PROMO_RE.search(title))
+
+
+# ── Title translation for the gate ────────────────────────────────────────────
+# Non-Latin titles ("کد ۷۵۰۰ و فرود اضطراری در تبوک | …") defeat English-only
+# patterns. Translate them once (Google Translate via deep-translator, no key)
+# so the gates see both the original and the English, and store title_en so
+# the dashboard can show it immediately instead of after translate_captions.
+_NONLATIN_RE = re.compile(r"[^\x00-\x7FÀ-ɏ -➿\U0001F000-\U0001FAFF]")
+_TITLE_EN_CACHE: Dict[str, Optional[str]] = {}
+
+
+def _title_en(title: str) -> Optional[str]:
+    if not title or len(_NONLATIN_RE.findall(title)) < 2:
+        return None
+    if os.environ.get("IFE_NO_TRANSLATE"):
+        return None
+    if title in _TITLE_EN_CACHE:
+        return _TITLE_EN_CACHE[title]
+    out = None
+    try:
+        from deep_translator import GoogleTranslator
+        for attempt in range(2):
+            try:
+                time.sleep(0.4)
+                out = (GoogleTranslator(source="auto", target="en").translate(title[:500]) or "").strip() or None
+                break
+            except Exception as exc:
+                if "too many requests" in str(exc).lower() and attempt == 0:
+                    time.sleep(20)
+                    continue
+                raise
+        if out and out.lower() == title.lower():
+            out = None
+    except Exception:
+        out = None
+    _TITLE_EN_CACHE[title] = out
+    return out
+
+
+def _gate_title(title: str, title_en: Optional[str]) -> str:
+    return f"{title} | {title_en}" if title_en else title
 
 
 # Drones, RC, flight simulators, general aviation, and air sports. "We Make
@@ -320,6 +492,8 @@ def _is_offtopic_video(title: str, channel_title: str = "") -> bool:
     if _is_news_broadcast(title, channel_title):
         return True
     if _HOBBY_SIM_RE.search(title):
+        return True
+    if _is_other_transport(title):
         return True
     if _STORY_TITLE_RE.search(title):
         return True
@@ -1509,10 +1683,12 @@ class IFECrawler:
         description = snippet.get("description", "").strip()
 
         duration_iso = item.get("contentDetails", {}).get("duration", "")
-        if _is_spam_video(title, duration_iso, snippet.get("channelTitle", ""), description):
+        title_en = _title_en(title)
+        gate_title = _gate_title(title, title_en)
+        if _is_spam_video(gate_title, duration_iso, snippet.get("channelTitle", ""), description):
             return None
 
-        title_match = self._has_ife_keyword(title)
+        title_match = self._has_ife_keyword(gate_title)
         # Description-only: skip broad keywords (flight review, seat review, etc.)
         # so AI drama / movie review descriptions don't slip through via "life"/"wife".
         desc_match = self._has_ife_keyword(description, skip_broad=True)
@@ -1521,7 +1697,7 @@ class IFECrawler:
             # IFE keyword — most cabin reviews cover the IFE anyway. Title only:
             # long descriptions of unrelated videos routinely contain "flew",
             # "cabin", "on board", or an airline-name lookalike.
-            if not self._is_aviation_review(title):
+            if not self._is_aviation_review(gate_title):
                 return None
 
         # Off-topic content (news, drones/flight-sim, story narration) rides in
@@ -1529,8 +1705,8 @@ class IFECrawler:
         # keyword such as "flight review". Only a strong IFE keyword or a
         # trusted reviewer channel overrides.
         channel_title = snippet.get("channelTitle", "")
-        strong = self._has_ife_keyword(title, skip_broad=True) or desc_match
-        if not trusted and not strong and _is_offtopic_video(title, channel_title):
+        strong = self._has_ife_keyword(gate_title, skip_broad=True) or desc_match
+        if not trusted and not strong and _is_offtopic_video(gate_title, channel_title):
             return None
 
         published_at = snippet.get("publishedAt", "")
@@ -1559,6 +1735,7 @@ class IFECrawler:
         return {
             "url":                  url,
             "title":                title[:150],
+            "title_en":             title_en,
             "year":                 year,
             "published_at":         published_at,
             "duration_seconds":     duration_seconds,
@@ -1651,17 +1828,19 @@ class IFECrawler:
             channel_meta = soup.find("link", {"itemprop": "name"})
             channel_title = channel_meta["content"].strip() if channel_meta and channel_meta.get("content") else ""
 
-            if not self._has_ife_keyword(title) and not self._has_ife_keyword(description, skip_broad=True):
+            title_en = _title_en(title)
+            gate_title = _gate_title(title, title_en)
+            if not self._has_ife_keyword(gate_title) and not self._has_ife_keyword(description, skip_broad=True):
                 # Same fallback as the API path: genuine flight/cabin reviews
                 # nearly always cover the IFE even without an explicit keyword.
-                if not self._is_aviation_review(title):
+                if not self._is_aviation_review(gate_title):
                     return None
-            strong = (self._has_ife_keyword(title, skip_broad=True)
+            strong = (self._has_ife_keyword(gate_title, skip_broad=True)
                       or self._has_ife_keyword(description, skip_broad=True))
             if (not _is_trusted_channel(channel_title) and not strong
-                    and _is_offtopic_video(title, channel_title)):
+                    and _is_offtopic_video(gate_title, channel_title)):
                 return None
-            if _is_spam_video(title, channel_title=channel_title, description=description):
+            if _is_spam_video(gate_title, channel_title=channel_title, description=description):
                 return None
 
             combined = (title + " " + description).lower()
@@ -1684,6 +1863,7 @@ class IFECrawler:
             return {
                 "url":                  url,
                 "title":                title[:150],
+                "title_en":             title_en,
                 "year":                 year,
                 "published_at":         published_at,
                 "is_short":             _is_short(title, None, url),
@@ -1947,7 +2127,7 @@ class IFECrawler:
                 continue
             if _keyword_re(kw).search(t):
                 return True
-        return bool(_IFE_WORD_RE.search(t))
+        return bool(_IFE_WORD_RE.search(t) or _IFE_INTL_RE.search(t))
 
     def _detect_system(self, text: str) -> Optional[str]:
         t = text.lower()
