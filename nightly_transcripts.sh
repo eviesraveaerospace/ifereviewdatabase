@@ -16,12 +16,6 @@ log() { echo "$(date -u '+%F %T') $*" >> "$LOG"; }
 
 log "==== nightly run started ===="
 
-if ! grep -qE '^YOUTUBE_COOKIES_B64=.+' .env 2>/dev/null; then
-    log "no YOUTUBE_COOKIES_B64 in .env - skipping transcript grind"
-    log "==== nightly run finished ===="
-    exit 0
-fi
-
 # Start from the latest upstream cache (the cloud crawl committed at 03:00).
 # --autostash carries local notes/flags edits across; if the rebase cannot
 # apply cleanly we keep working on the local state and sort it out at push.
@@ -30,8 +24,31 @@ if ! git pull --rebase --autostash origin main >> "$LOG" 2>&1; then
     git rebase --abort >> "$LOG" 2>&1
 fi
 
-MAX_RUNTIME_MIN="${MAX_RUNTIME_MIN:-300}" "$PY" -u backfill_transcripts.py >> "$LOG" 2>&1
-"$PY" -u translate_captions.py >> "$LOG" 2>&1
+if grep -qE '^YOUTUBE_COOKIES_B64=.+' .env 2>/dev/null; then
+    MAX_RUNTIME_MIN="${MAX_RUNTIME_MIN:-300}" "$PY" -u backfill_transcripts.py >> "$LOG" 2>&1
+    "$PY" -u translate_captions.py >> "$LOG" 2>&1
+else
+    log "no YOUTUBE_COOKIES_B64 in .env - skipping transcript grind"
+fi
+
+# OCR screen tagging. Uses the ios-screen-recording-ocr checkout (~/ife) and
+# its venv (~/ife-venv: torch-cpu, open_clip, rapidocr); skipped when absent.
+#  - internal reviews' own photos/recordings -> tags, verified tags, chapters
+#    (resumable: only files without ocr_done are processed, so new Forms
+#    imports get tagged the night after they land)
+#  - Shorts without description chapters -> OCR chapters, 60 min cap
+OCR_REPO="${IFE_OCR_REPO:-$HOME/ife}"
+OCR_PY="${IFE_OCR_PY:-$HOME/ife-venv/bin/python}"
+if [ -x "$OCR_PY" ] && [ -f "$OCR_REPO/ocr_video_chapters.py" ]; then
+    IFE_OCR_REPO="$OCR_REPO" "$OCR_PY" -u tag_internal_media.py >> "$LOG" 2>&1
+    if "$OCR_PY" -c "import yt_dlp" 2>/dev/null; then
+        IFE_OCR_REPO="$OCR_REPO" MAX_RUNTIME_MIN="${SHORTS_OCR_MIN:-60}" "$OCR_PY" -u gather_short_chapters.py >> "$LOG" 2>&1
+    else
+        log "yt_dlp missing in $OCR_PY - skipping Shorts OCR chapters"
+    fi
+else
+    log "OCR repo/venv not found ($OCR_REPO, $OCR_PY) - skipping screen tagging"
+fi
 
 # Publish: cache + team notes/bookmarks + uploaded photos. Retry once after a
 # rebase in case CI or a teammate pushed while Whisper was running.
@@ -40,7 +57,7 @@ git add ife_cache.json notes.json flags.json >> "$LOG" 2>&1
 if git diff --staged --quiet; then
     log "nothing to commit"
 else
-    git commit -q -m "data: nightly transcript backfill (VM)" >> "$LOG" 2>&1
+    git commit -q -m "data: nightly transcripts + OCR screen tags (VM)" >> "$LOG" 2>&1
     if ! git push origin main >> "$LOG" 2>&1; then
         log "push rejected; rebasing onto origin/main and retrying"
         if ! git pull --rebase origin main >> "$LOG" 2>&1; then
