@@ -15,6 +15,7 @@ Per review: transcript_full = narration of every recording (only if any),
 Run:  python transcribe_internal.py [--limit N] [--url URL] [--force] [--dry-run]
 """
 import argparse
+import subprocess
 import json
 import os
 import sys
@@ -51,7 +52,23 @@ def fmt_ts(sec):
     return f"{sec // 60}:{sec % 60:02d}"
 
 
+def has_audio(path):
+    """False when ffprobe finds no audio stream (screen recordings taken with
+    the mic off). Whisper raises on those, so treat them as silent instead of
+    retrying every night."""
+    try:
+        out = subprocess.run(
+            ["ffprobe", "-v", "error", "-select_streams", "a", "-show_entries",
+             "stream=codec_type", "-of", "csv=p=0", str(path)],
+            capture_output=True, text=True, timeout=60).stdout
+    except (OSError, subprocess.SubprocessError):
+        return True  # cannot tell; let whisper try
+    return "audio" in out
+
+
 def transcribe(model, path):
+    if not has_audio(path):
+        return {"text": "", "lang": None, "segments": [], "silent": True, "no_audio": True}
     res = model.transcribe(str(path), fp16=False)
     segs = [{"t": fmt_ts(s["start"]), "sec": int(round(s["start"])), "text": s["text"].strip()}
             for s in res.get("segments", []) if s.get("text", "").strip()]
