@@ -27,6 +27,7 @@ Run:  python translate_captions.py                 (both passes)
       python translate_captions.py --prefer emirates   (do that airline first)
       python translate_captions.py --lines-only    (skip whole-transcript pass)
 """
+import collections
 import json
 import re
 import sys
@@ -242,8 +243,16 @@ def google_translate(translator, text):
     return " ".join(p.strip() for p in parts if p)
 
 
+class GoogleBlocked(RuntimeError):
+    """Google has rate-limited this IP; further requests only extend the ban."""
+
+
+_GOOGLE_BLOCKED = False
+
+
 def translate_text(translator, text, lang="auto"):
     """Offline Argos when a pack for `lang` is installed, else Google."""
+    global _GOOGLE_BLOCKED
     tr = _argos(lang) if lang not in ("auto", "und") else None
     if tr is not None:
         try:
@@ -253,7 +262,15 @@ def translate_text(translator, text, lang="auto"):
                 return out
         except Exception as e:      # e.g. missing stanza sentencizer for a pack
             print(f"    argos {lang} failed ({type(e).__name__}), falling back to Google")
-    return google_translate(translator, text)
+    if _GOOGLE_BLOCKED:
+        raise GoogleBlocked("google rate-limited earlier this run")
+    try:
+        return google_translate(translator, text)
+    except Exception as e:
+        if "too many requests" in str(e).lower() or type(e).__name__ == "TooManyRequests":
+            _GOOGLE_BLOCKED = True
+            raise GoogleBlocked(str(e)[:80]) from e
+        raise
 
 
 def _rederive_from_english(r, en):
@@ -326,6 +343,7 @@ def translate_transcripts(data, translator, prefer=None, limit=None):
 
     print(f"Transcripts to translate: {len(todo)}")
     done = fail = 0
+    blocked_note = False
     touched = set()
     langs = {}
     for n, r in enumerate(todo, 1):
@@ -345,6 +363,12 @@ def translate_transcripts(data, translator, prefer=None, limit=None):
             done += 1
             langs[r["transcript_lang"]] = langs.get(r["transcript_lang"], 0) + 1
             print(f"  [{n}/{len(todo)}] {r['transcript_lang']:>4}  {(r.get('title') or '')[:60]}")
+        except GoogleBlocked as e:
+            fail += 1
+            if not blocked_note:
+                print(f"  ! google rate-limited ({str(e)[:60]}); "
+                      f"skipping transcripts with no offline pack for the rest of this run")
+                blocked_note = True
         except Exception as e:
             fail += 1
             print(f"  ! [{n}/{len(todo)}] failed {r['url']}: {type(e).__name__} {str(e)[:80]}")
@@ -353,6 +377,10 @@ def translate_transcripts(data, translator, prefer=None, limit=None):
             touched.clear()
     if touched:
         merge_save(data, touched, TRANSCRIPT_KEYS)
+    if blocked_note:
+        skipped = [r for r in todo if not r.get("transcript_full_en")]
+        print(f"  google-blocked, still pending: {len(skipped)} "
+              f"{dict(sorted(collections.Counter(r.get('transcript_lang') for r in skipped).items()))}")
     print(f"Transcripts done: {done} (failed {fail}) by language: "
           f"{dict(sorted(langs.items(), key=lambda x: -x[1]))}")
 
