@@ -73,6 +73,40 @@ def _is_short(r) -> bool:
     return r.get("media_type") == "video" and bool(r.get("is_short") or "/shorts/" in (r.get("url") or ""))
 
 
+_IFE_TITLE_RE = re.compile(
+    r"\b(review|trip report|flight report|business class|first class|economy|premium economy|"
+    r"cabin|seat|ife|in-?flight entertainment|entertainment|screen|wifi|wi-fi)\b", re.I)
+_OFFTOPIC_TITLE_RE = re.compile(
+    r"\b(wwe|wrestl|match|meeting|council|authority|defen[cs]e|war\b|missile|petrol|"
+    r"status|points|miles|credit card|rewards|book(ing)? (flight )?tickets?|kaise)\b", re.I)
+
+
+def _long_priority(r):
+    """Rank full-length videos for the OCR budget: IFE review content first.
+    Higher is better. Mirrors the dashboard's relevance signals (transcript,
+    IFE features, system, airlines) plus title cues; 'seat' alone is too
+    common to count as an IFE signal."""
+    feats = {k for k in (r.get("ife_features") or {}) if k != "seat"}
+    score = 0.0
+    if r.get("transcript_available"):
+        score += 3.0
+    score += min(len(feats), 3) * 1.0
+    if r.get("ife_system"):
+        score += 2.0
+    elif r.get("ife_system_guess"):
+        score += 0.5
+    score += min(len(r.get("airlines_mentioned") or []), 2) * 0.75
+    if r.get("source_tier") == 1:
+        score += 1.0
+    title = r.get("title") or ""
+    score += min(len(_IFE_TITLE_RE.findall(title)), 2) * 0.75
+    if _OFFTOPIC_TITLE_RE.search(title):
+        score -= 3.0
+    if not feats and not r.get("airlines_mentioned") and not r.get("ife_system"):
+        score -= 2.0
+    return score
+
+
 def _yt_id(url: str):
     m = re.search(r"(?:v=|youtu\.be/|/shorts/)([A-Za-z0-9_-]{11})", url or "")
     return m.group(1) if m else None
@@ -196,7 +230,9 @@ def main():
         # video that already failed is not retried every night.
         todo = [r for r in rows if r.get("media_type") == "video" and not _is_short(r) and _yt_id(r.get("url"))
                 and not r.get("chapters") and not r.get("chapters_ocr_status")]
-        todo.sort(key=lambda r: r.get("published_at") or "", reverse=True)
+        # Best IFE-review candidates first (the backlog is thousands of videos
+        # and the nightly budget covers a few dozen), newest within a tier.
+        todo.sort(key=lambda r: (_long_priority(r), r.get("published_at") or ""), reverse=True)
     else:
         todo = [r for r in rows if _is_short(r) and _yt_id(r.get("url"))]
         # description chapters (YouTube's own) are authoritative — never replace them
