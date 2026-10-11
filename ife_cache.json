@@ -535836,43 +535836,43 @@
         {
           "t": "00:15",
           "sec": 15,
-          "title": "Seat Tour and Amenities",
+          "title": "Seat Tour and Amenities - Seat 65K",
           "ife": false
         },
         {
           "t": "01:42",
           "sec": 102,
-          "title": "Hong Kong (HKG) Departure and Takeoff",
+          "title": "Hong Kong Departure and Takeoff",
           "ife": false
         },
         {
           "t": "02:05",
           "sec": 125,
-          "title": "Snack Box Service",
+          "title": "In-Flight Snack Box Service",
           "ife": false
         },
         {
           "t": "02:28",
           "sec": 148,
-          "title": "Restroom Tour",
+          "title": "Restroom Walkthrough",
           "ife": false
         },
         {
           "t": "02:32",
           "sec": 152,
-          "title": "In-Flight Entertainment",
+          "title": "In-Flight Entertainment (StudioCX)",
           "ife": true
         },
         {
           "t": "02:48",
           "sec": 168,
-          "title": "Wi-Fi Options",
+          "title": "Wi-Fi Options and Pricing",
           "ife": true
         },
         {
           "t": "03:02",
           "sec": 182,
-          "title": "Five-Star Rating and Landing at Singapore Changi (SIN)",
+          "title": "Final Rating and Landing at Singapore Changi (SIN)",
           "ife": false
         }
       ],
