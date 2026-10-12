@@ -182,6 +182,20 @@ def ocr_chapters(video_path: str, ocr, interval: float, out_dir: str, long_form:
     return to_dashboard(raw, long_form=long_form)
 
 
+# Untagged Shorts chapters keep only on-screen titles that read like an IFE
+# screen. Everything else OCR picks up in a Short (creator caption overlays,
+# channel names, menu dish names, garbled text) is noise in the modal and in
+# the Screens index.
+_SCREEN_VOCAB = re.compile(
+    r"\b(movies?|films?|tv|series|shows?|music|audio|games?|maps?|flight ?info\w*|wifi|wi-?fi|internet|"
+    r"connect\w*|menu|entertainment|home|welcome|information|settings?|language|search|seat|seatback|"
+    r"screen|display|remote|headphones?|usb|bluetooth|camera|live ?tv|news|sports?|kids|children|"
+    r"magazines?|shop|duty ?free|meals?|food|drinks?|dining|beverages?|order|chat|messag\w*|destination|"
+    r"arrival|departure|boarding|safety|charge|power|my ?flight|playlists?|podcasts?|box ?sets?|"
+    r"new ?releases?|classics?|comedy|drama|action|documentar\w*|continue watching|watch|play|pause|"
+    r"subtitles?|volume|brightness|exit|back)\b", re.I)
+
+
 def to_dashboard(raw_chapters, long_form=False, gap=8):
     """OCR chapters → dashboard rows. Adjacent chapters with the same tag set
     merge; untagged, untitled stretches (video playback, transitions) are
@@ -197,6 +211,8 @@ def to_dashboard(raw_chapters, long_form=False, gap=8):
         title = " · ".join(tags) if tags else (ch.get("title") or "").strip()
         if not tags and (long_form or not title or title == "Untitled screen" or not re.search(r"[A-Za-z]{3}", title)):
             continue  # untagged and unreadable ("7/211134km") — not a chapter
+        if not tags and not _SCREEN_VOCAB.search(title):
+            continue  # untagged and not an IFE screen word ("DCTEATS", "SUBSCRIBE")
         if rows and rows[-1]["tags"] == tags and (tags or rows[-1]["title"] == title)                 and ch["start"] - rows[-1]["end"] <= (gap if long_form else 0.01):
             rows[-1]["end"] = ch["end"]
             continue
@@ -236,7 +252,9 @@ def main():
     else:
         todo = [r for r in rows if _is_short(r) and _yt_id(r.get("url"))]
         # description chapters (YouTube's own) are authoritative — never replace them
-        todo = [r for r in todo if not r.get("chapters") or (a.retag and r.get("chapters_source") == "ocr")]
+        # A Short already OCR'd (possibly to zero chapters) is not redone unless --retag.
+        todo = [r for r in todo if (not r.get("chapters") and r.get("chapters_source") != "ocr")
+                or (a.retag and r.get("chapters_source") == "ocr")]
     if a.limit:
         todo = todo[:a.limit]
     print(f"OCR repo: {REPO}\n{len(todo)} {'full-length videos' if a.long else 'Shorts'} to chapter")
