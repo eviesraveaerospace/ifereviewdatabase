@@ -1794,7 +1794,7 @@ class IFECrawler:
         combined = (title + " " + description).lower()
 
         trans_ok, excerpt, captions, full_transcript = False, None, [], ""
-        if TRANSCRIPTS_AVAILABLE:
+        if TRANSCRIPTS_AVAILABLE and not os.environ.get("IFE_NO_TRANSCRIPT"):
             trans_ok, excerpt, captions, full_transcript = self._get_transcript(video_id)
 
         search_text = combined + " " + full_transcript
@@ -1926,7 +1926,7 @@ class IFECrawler:
 
             trans_ok, excerpt, captions = False, None, []
             full_transcript = ""
-            if TRANSCRIPTS_AVAILABLE:
+            if TRANSCRIPTS_AVAILABLE and not os.environ.get("IFE_NO_TRANSCRIPT"):
                 trans_ok, excerpt, captions, full_transcript = self._get_transcript(video_id)
 
             search_text = combined + " " + full_transcript

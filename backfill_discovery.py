@@ -42,6 +42,9 @@ sys.stdout.reconfigure(encoding="utf-8")
 # video would otherwise stall the run for minutes. backfill_transcripts.py
 # does that work in the nightly job.
 os.environ.setdefault("IFE_NO_WHISPER", "1")
+# Nor captions: fetching them one video at a time is what made a 300-upload
+# channel take ten minutes. backfill_transcripts.py fills them in nightly.
+os.environ.setdefault("IFE_NO_TRANSCRIPT", "1")
 
 try:
     from dotenv import load_dotenv
