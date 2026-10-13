@@ -692485,7 +692485,9 @@
       "screen_tags": [
         "Media player"
       ],
-      "screen_tag_source": "ocr-video"
+      "screen_tag_source": "ocr-video",
+      "sentiment": "positive",
+      "sentiment_score": 0.765
     },
     {
       "url": "https://www.youtube.com/watch?v=Qn_WMjIfmj8",
@@ -692696,7 +692698,9 @@
       "screen_tags": [
         "Flight info"
       ],
-      "screen_tag_source": "ocr-video"
+      "screen_tag_source": "ocr-video",
+      "sentiment": "positive",
+      "sentiment_score": 0.713
     },
     {
       "url": "https://www.youtube.com/watch?v=MuBgUh0KDJA",
@@ -692845,7 +692849,9 @@
         "Flight info",
         "Navigation Menu"
       ],
-      "screen_tag_source": "ocr-video"
+      "screen_tag_source": "ocr-video",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=-vCrN4Rgvms",
@@ -693098,7 +693104,9 @@
       "screen_tags": [
         "Navigation Menu"
       ],
-      "screen_tag_source": "ocr-video"
+      "screen_tag_source": "ocr-video",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=6Y_IPTI84qQ",
@@ -693402,7 +693410,9 @@
       "transcript_source": "whisper",
       "title_lang": "en",
       "screen_tags": [],
-      "screen_tag_source": "ocr-video"
+      "screen_tag_source": "ocr-video",
+      "sentiment": "positive",
+      "sentiment_score": 0.273
     },
     {
       "url": "https://www.youtube.com/watch?v=KDykl4uc60I",
@@ -693479,7 +693489,9 @@
         "Error & troubleshooting",
         "Flight info"
       ],
-      "screen_tag_source": "ocr-video"
+      "screen_tag_source": "ocr-video",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=oJQKHYpqG9Q",
@@ -694984,7 +694996,9 @@
       "screen_tags": [
         "Navigation Menu"
       ],
-      "screen_tag_source": "ocr-video"
+      "screen_tag_source": "ocr-video",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=GvGAaMF_67E",
@@ -695155,7 +695169,9 @@
       "transcript_lang": "en",
       "title_lang": "en",
       "screen_tags": [],
-      "screen_tag_source": "ocr-video"
+      "screen_tag_source": "ocr-video",
+      "sentiment": "positive",
+      "sentiment_score": 0.637
     },
     {
       "url": "https://www.youtube.com/watch?v=UzDywoC7Pks",
@@ -695195,7 +695211,9 @@
       "transcript_source": "whisper",
       "title_lang": "en",
       "screen_tags": [],
-      "screen_tag_source": "ocr-video"
+      "screen_tag_source": "ocr-video",
+      "sentiment": "positive",
+      "sentiment_score": 0.562
     },
     {
       "url": "https://www.youtube.com/watch?v=LVLN4R2Cgqs",
@@ -695233,7 +695251,9 @@
       "transcript_lang": "en",
       "title_lang": "en",
       "screen_tags": [],
-      "screen_tag_source": "ocr-video"
+      "screen_tag_source": "ocr-video",
+      "sentiment": "positive",
+      "sentiment_score": 0.402
     },
     {
       "url": "https://www.youtube.com/watch?v=2e9kw5Na8PA",
@@ -695497,7 +695517,9 @@
       "transcript_lang": "en",
       "title_lang": "en",
       "screen_tags": [],
-      "screen_tag_source": "ocr-video"
+      "screen_tag_source": "ocr-video",
+      "sentiment": "positive",
+      "sentiment_score": 0.357
     },
     {
       "url": "https://www.youtube.com/watch?v=sTaSIoqslMI",
@@ -695574,7 +695596,9 @@
         "Media player",
         "Navigation Menu"
       ],
-      "screen_tag_source": "ocr-video"
+      "screen_tag_source": "ocr-video",
+      "sentiment": "positive",
+      "sentiment_score": 0.421
     },
     {
       "url": "https://www.youtube.com/watch?v=MhlMU3mezb4",
@@ -695611,7 +695635,9 @@
       "transcript_source": "whisper",
       "title_lang": "en",
       "screen_tags": [],
-      "screen_tag_source": "ocr-video"
+      "screen_tag_source": "ocr-video",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=NflRct1a6lA",
@@ -695727,7 +695753,9 @@
       "transcript_lang": "en",
       "title_lang": "en",
       "screen_tags": [],
-      "screen_tag_source": "ocr-video"
+      "screen_tag_source": "ocr-video",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=Wm60lpIjT-M",
@@ -696020,7 +696048,9 @@
       "transcript_lang": "en",
       "title_lang": "en",
       "screen_tags": [],
-      "screen_tag_source": "ocr-video"
+      "screen_tag_source": "ocr-video",
+      "sentiment": "positive",
+      "sentiment_score": 0.44
     },
     {
       "url": "https://www.youtube.com/watch?v=rCgtpFXuCtc",
@@ -696297,7 +696327,9 @@
       "screen_tags": [
         "Navigation Menu"
       ],
-      "screen_tag_source": "ocr-video"
+      "screen_tag_source": "ocr-video",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=EHG8D3SKKJQ",
@@ -696502,7 +696534,9 @@
         "Error & troubleshooting",
         "Media player"
       ],
-      "screen_tag_source": "ocr-video"
+      "screen_tag_source": "ocr-video",
+      "sentiment": "negative",
+      "sentiment_score": -0.34
     },
     {
       "url": "https://www.youtube.com/watch?v=KCyUhhaRncM",
@@ -696714,7 +696748,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": null,
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=FtqbXBnnr3c",
@@ -696759,7 +696795,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": null,
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=WeyRc7ipJt8",
@@ -696803,7 +696841,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": null,
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "positive",
+      "sentiment_score": 0.103
     },
     {
       "url": "https://www.youtube.com/watch?v=JTaOhxi-FMY",
@@ -696880,7 +696920,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": "description",
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=6XtIzYPoyb8",
@@ -696916,7 +696958,9 @@
       "chapters_source": "ocr",
       "screen_tags": [],
       "screen_tag_source": "ocr-video",
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "positive",
+      "sentiment_score": 0.294
     },
     {
       "url": "https://www.youtube.com/watch?v=Rri7iGboO9A",
@@ -696955,7 +696999,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": null,
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=DRT5zgF4uTQ",
@@ -696994,7 +697040,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": null,
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=yYMuEWodm60",
@@ -697038,7 +697086,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": null,
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=B7CLa5rcl8A",
@@ -697151,7 +697201,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": "description",
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "positive",
+      "sentiment_score": 0.637
     },
     {
       "url": "https://www.youtube.com/watch?v=pWIjvmiFl5I",
@@ -697202,7 +697254,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": null,
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "positive",
+      "sentiment_score": 0.493
     },
     {
       "url": "https://www.youtube.com/watch?v=YrR1zDpXCdA",
@@ -697311,7 +697365,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": "description",
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "positive",
+      "sentiment_score": 0.226
     },
     {
       "url": "https://www.youtube.com/watch?v=Aikd9ZDL5kM",
@@ -697382,7 +697438,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": "description",
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "positive",
+      "sentiment_score": 0.637
     },
     {
       "url": "https://www.youtube.com/watch?v=Ba5lG-v_zvk",
@@ -697476,7 +697534,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": "description",
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "positive",
+      "sentiment_score": 0.668
     },
     {
       "url": "https://www.youtube.com/watch?v=0-Lm0Wxp1fI",
@@ -697508,7 +697568,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": null,
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "positive",
+      "sentiment_score": 0.226
     },
     {
       "url": "https://www.youtube.com/watch?v=9Rzg6s9KhcI",
@@ -697550,7 +697612,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": null,
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "positive",
+      "sentiment_score": 0.637
     },
     {
       "url": "https://www.youtube.com/watch?v=6kmL-r8B2vk",
@@ -697584,7 +697648,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": null,
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=PLAzxU5L5Do",
@@ -697656,7 +697722,9 @@
       "chapters_source": "ocr",
       "screen_tags": [],
       "screen_tag_source": "ocr-video",
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "positive",
+      "sentiment_score": 0.421
     },
     {
       "url": "https://www.youtube.com/watch?v=Q0JmLI2Z5Kg",
@@ -697728,7 +697796,9 @@
       "chapters_source": "ocr",
       "screen_tags": [],
       "screen_tag_source": "ocr-video",
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "positive",
+      "sentiment_score": 0.421
     },
     {
       "url": "https://www.youtube.com/watch?v=gKfD2yk-SkU",
@@ -697769,7 +697839,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": null,
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "positive",
+      "sentiment_score": 0.421
     },
     {
       "url": "https://www.youtube.com/watch?v=F2fBpLlfc8w",
@@ -697898,7 +697970,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": "description",
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=9q5NJ0FQ0Tg",
@@ -698012,7 +698086,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": "description",
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "positive",
+      "sentiment_score": 0.494
     },
     {
       "url": "https://www.youtube.com/watch?v=6a3AEL4f2Vs",
@@ -698048,7 +698124,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": null,
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=9TfKKwYodcE",
@@ -698202,7 +698280,9 @@
       "chapters_source": "ocr",
       "screen_tags": [],
       "screen_tag_source": "ocr-video",
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=AmtWDoQG_Rw",
@@ -698238,7 +698318,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": null,
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "positive",
+      "sentiment_score": 0.562
     },
     {
       "url": "https://www.youtube.com/watch?v=RPzDvZ0PWB0",
@@ -698326,7 +698408,9 @@
         "Food & beverage"
       ],
       "screen_tag_source": "ocr-video",
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "positive",
+      "sentiment_score": 0.475
     },
     {
       "url": "https://www.youtube.com/watch?v=4IF6b7gEbxY",
@@ -698381,7 +698465,9 @@
       "chapters_source": "ocr",
       "screen_tags": [],
       "screen_tag_source": "ocr-video",
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=sOoJxOsV3Nk",
@@ -698710,7 +698796,9 @@
         "Food & beverage"
       ],
       "screen_tag_source": "ocr-video",
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=Yrg-1VGwIl4",
@@ -698744,7 +698832,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": null,
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=-TJETAGm8pY",
@@ -698811,7 +698901,9 @@
         "Flight info"
       ],
       "screen_tag_source": "ocr-video",
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=KxLsRvWQ87c",
@@ -698863,7 +698955,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": null,
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=Y16iMV-TXhM",
@@ -698894,7 +698988,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": null,
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=Tt7_tjT9DM0",
@@ -699032,7 +699128,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": "description",
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=gOzx3pteR48",
@@ -699079,7 +699177,9 @@
       "source_name": "Creator",
       "chapters_source": "ocr",
       "screen_tags": [],
-      "screen_tag_source": "ocr-video"
+      "screen_tag_source": "ocr-video",
+      "sentiment": "negative",
+      "sentiment_score": -0.178
     },
     {
       "url": "https://www.youtube.com/watch?v=u5U9iSvy1cs",
@@ -699122,7 +699222,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": null,
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=sk33-KoJdXU",
@@ -699158,7 +699260,9 @@
       "chapters_source": "ocr",
       "screen_tags": [],
       "screen_tag_source": "ocr-video",
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=SYbof6Vu98g",
@@ -699248,7 +699352,9 @@
         "Media player"
       ],
       "screen_tag_source": "ocr-video",
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=y3IVyl7oem0",
@@ -699379,7 +699485,9 @@
         "Media player"
       ],
       "screen_tag_source": "ocr-video",
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=mQRw4U-rK2E",
@@ -699559,7 +699667,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": "description",
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "negative",
+      "sentiment_score": -0.402
     },
     {
       "url": "https://www.youtube.com/watch?v=3q8L7UQISw0",
@@ -699607,7 +699717,9 @@
       "chapters_source": "ocr",
       "screen_tags": [],
       "screen_tag_source": "ocr-video",
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=yi2aSROk9zU",
@@ -699706,7 +699818,9 @@
         "Navigation Menu"
       ],
       "screen_tag_source": "ocr-video",
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=5Q9hKF5dOoI",
@@ -699742,7 +699856,9 @@
       "chapters_source": "ocr",
       "screen_tags": [],
       "screen_tag_source": "ocr-video",
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=_c3KcH2DrfM",
@@ -699978,7 +700094,9 @@
         "Navigation Menu"
       ],
       "screen_tag_source": "ocr-video",
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "negative",
+      "sentiment_score": -0.25
     },
     {
       "url": "https://www.youtube.com/watch?v=Ps5OnWO0bIg",
@@ -700103,7 +700221,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": "description",
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=fwQc1NwMu-I",
@@ -700221,7 +700341,9 @@
         "Navigation Menu"
       ],
       "screen_tag_source": "ocr-video",
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=LWdf4Zsvo6M",
@@ -700261,7 +700383,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": null,
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=WCE6jt4k3Bs",
@@ -700307,7 +700431,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": null,
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "neutral",
+      "sentiment_score": -0.026
     },
     {
       "url": "https://www.youtube.com/watch?v=bwq76x56VCQ",
@@ -700485,8 +700611,1775 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": "description",
-      "title_lang": "en"
+      "title_lang": "en",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=hk5HcEfa5Ic",
+      "title": "Emirates Best Service & Hospitality in Business Class. So professional & friendly #emirates",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-09-27T01:33:46Z",
+      "duration_seconds": 19,
+      "is_short": true,
+      "channel_title": "Zarthuras",
+      "view_count": 1293,
+      "like_count": 9,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Emirates ICE",
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "emirates",
+          "mentions": 7
+        }
+      ],
+      "aircraft_mentioned": [
+        {
+          "keyword": "a380",
+          "mentions": 1
+        }
+      ],
+      "ife_features": {
+        "seat": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=0Bijs4jEsTU",
+      "title": "Emirates Kids Meal Review ✈️😍 | What Do Kids Get on Emirates Flights? | Family Travel Vlog",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-13T04:07:44Z",
+      "duration_seconds": 180,
+      "is_short": true,
+      "channel_title": "My Kind Of Productions",
+      "view_count": 527,
+      "like_count": 18,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Emirates ICE",
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "emirates",
+          "mentions": 9
+        }
+      ],
+      "aircraft_mentioned": [],
+      "ife_features": {
+        "entertainment_system": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=aG5Pso0fitE",
+      "title": "Singapore Airlines Business Class | London to Melbourne | A Travel Diary (4K)",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-09T07:41:20Z",
+      "duration_seconds": 1115,
+      "is_short": false,
+      "channel_title": "babygurllans",
+      "view_count": 819,
+      "like_count": 10,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "KrisWorld",
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "singapore airlines",
+          "mentions": 6
+        }
+      ],
+      "aircraft_mentioned": [],
+      "ife_features": {
+        "entertainment_system": true,
+        "4k_display": true,
+        "seat": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=AWdAcwZZbEY",
+      "title": "Singapore Airlines B777-300ER Economy Class | Does Aircraft Age Matter?",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-10T16:07:04Z",
+      "duration_seconds": 1374,
+      "is_short": false,
+      "channel_title": "IH Aviation and Travel",
+      "view_count": 187,
+      "like_count": 4,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "KrisWorld",
+      "chapters": [
+        {
+          "t": "00:00",
+          "sec": 0,
+          "title": "Introduction",
+          "ife": false
+        },
+        {
+          "t": "00:47",
+          "sec": 47,
+          "title": "Route Map",
+          "ife": false
+        },
+        {
+          "t": "01:00",
+          "sec": 60,
+          "title": "Landing at Singapore Changi Airport (SIN)",
+          "ife": false
+        },
+        {
+          "t": "02:33",
+          "sec": 153,
+          "title": "Changi Airport",
+          "ife": false
+        },
+        {
+          "t": "03:38",
+          "sec": 218,
+          "title": "A look at today’s aircraft",
+          "ife": false
+        },
+        {
+          "t": "04:09",
+          "sec": 249,
+          "title": "Boarding",
+          "ife": false
+        },
+        {
+          "t": "04:49",
+          "sec": 289,
+          "title": "Economy Class Seat",
+          "ife": false
+        },
+        {
+          "t": "07:30",
+          "sec": 450,
+          "title": "Pushback and Safety Video",
+          "ife": false
+        },
+        {
+          "t": "08:47",
+          "sec": 527,
+          "title": "Taxiing",
+          "ife": false
+        },
+        {
+          "t": "09:11",
+          "sec": 551,
+          "title": "Takeoff from Singapore Changi Airport (SIN)",
+          "ife": false
+        },
+        {
+          "t": "11:47",
+          "sec": 707,
+          "title": "Inflight Entertainment System",
+          "ife": true
+        },
+        {
+          "t": "14:06",
+          "sec": 846,
+          "title": "Lunch Service",
+          "ife": false
+        },
+        {
+          "t": "16:27",
+          "sec": 987,
+          "title": "Thoughts on Service",
+          "ife": false
+        },
+        {
+          "t": "16:44",
+          "sec": 1004,
+          "title": "Mount Fuji Views",
+          "ife": false
+        },
+        {
+          "t": "17:22",
+          "sec": 1042,
+          "title": "Approach and Landing at Tokyo Narita Airport (NRT)",
+          "ife": false
+        },
+        {
+          "t": "19:00",
+          "sec": 1140,
+          "title": "Final Thoughts",
+          "ife": false
+        },
+        {
+          "t": "22:34",
+          "sec": 1354,
+          "title": "IH Score",
+          "ife": false
+        }
+      ],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "singapore airlines",
+          "mentions": 5
+        }
+      ],
+      "aircraft_mentioned": [
+        {
+          "keyword": "boeing",
+          "mentions": 3
+        }
+      ],
+      "ife_features": {
+        "entertainment_system": true,
+        "content": true,
+        "seat": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": "description"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=FE4jU5sUf1I",
+      "title": "KLM’s Economy Comfort Extra Legroom Worth It?",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-11T07:00:07Z",
+      "duration_seconds": 701,
+      "is_short": false,
+      "channel_title": "Laurens & Laura",
+      "view_count": 2907,
+      "like_count": 31,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Thales AVANT",
+      "chapters": [
+        {
+          "t": "00:00",
+          "sec": 0,
+          "title": "KLM Economy Comfort Flying Worth It?",
+          "ife": false
+        },
+        {
+          "t": "00:46",
+          "sec": 46,
+          "title": "Check-in Chaos & Seat Gamble",
+          "ife": false
+        },
+        {
+          "t": "02:20",
+          "sec": 140,
+          "title": "Boarding Boeing 777-300ER",
+          "ife": false
+        },
+        {
+          "t": "03:00",
+          "sec": 180,
+          "title": "Economy Comfort Seat Review",
+          "ife": false
+        },
+        {
+          "t": "05:45",
+          "sec": 345,
+          "title": "Toilet Surprising Experience",
+          "ife": false
+        },
+        {
+          "t": "06:19",
+          "sec": 379,
+          "title": "Meal 1: Disappointing Food & Sad Snack",
+          "ife": false
+        },
+        {
+          "t": "08:48",
+          "sec": 528,
+          "title": "Premium Comfort vs Economy Comfort Advice",
+          "ife": false
+        },
+        {
+          "t": "09:22",
+          "sec": 562,
+          "title": "Meal 2: much better?",
+          "ife": false
+        },
+        {
+          "t": "10:03",
+          "sec": 603,
+          "title": "Full Ticket Price & Conclusion",
+          "ife": false
+        }
+      ],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "klm",
+          "mentions": 7
+        },
+        {
+          "keyword": "etihad",
+          "mentions": 1
+        },
+        {
+          "keyword": "singapore airlines",
+          "mentions": 1
+        }
+      ],
+      "aircraft_mentioned": [
+        {
+          "keyword": "boeing",
+          "mentions": 2
+        }
+      ],
+      "ife_features": {
+        "seat": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": "description"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=-uFbTbiNcRI",
+      "title": "What Cathay Pacific Business Class Serves on a 3.5-Hour Flight to Osaka 🍱 (Part 5)",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-06T05:00:02Z",
+      "duration_seconds": 45,
+      "is_short": true,
+      "channel_title": "Midair Times",
+      "view_count": 968,
+      "like_count": 13,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "StudioCX",
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "cathay pacific",
+          "mentions": 1
+        }
+      ],
+      "aircraft_mentioned": [],
+      "ife_features": {},
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=dp6Da2L8bYE",
+      "title": "The Lufthansa Group Airline That Puts Lufthansa To Shame",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-12T13:09:59Z",
+      "duration_seconds": 1308,
+      "is_short": false,
+      "channel_title": "Nonstop Dan",
+      "view_count": 109918,
+      "like_count": 1990,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Thales AVANT",
+      "chapters": [
+        {
+          "t": "0:00",
+          "sec": 0,
+          "title": "Intro: European airline tier list",
+          "ife": false
+        },
+        {
+          "t": "1:10",
+          "sec": 70,
+          "title": "Starting in Greece",
+          "ife": false
+        },
+        {
+          "t": "1:28",
+          "sec": 88,
+          "title": "Vienna Airport premium check-in",
+          "ife": false
+        },
+        {
+          "t": "1:47",
+          "sec": 107,
+          "title": "Austrian Airlines lounge in Vienna",
+          "ife": false
+        },
+        {
+          "t": "2:45",
+          "sec": 165,
+          "title": "Austrian 787-9 seat map",
+          "ife": false
+        },
+        {
+          "t": "3:41",
+          "sec": 221,
+          "title": "First look - Austrian new business",
+          "ife": false
+        },
+        {
+          "t": "4:33",
+          "sec": 273,
+          "title": "Seat storage and design features",
+          "ife": false
+        },
+        {
+          "t": "5:28",
+          "sec": 328,
+          "title": "Welcome drinks and the in-flight chef",
+          "ife": false
+        },
+        {
+          "t": "6:03",
+          "sec": 363,
+          "title": "Takeoff from Vienna",
+          "ife": false
+        },
+        {
+          "t": "7:35",
+          "sec": 455,
+          "title": "What has changed at Austrian",
+          "ife": false
+        },
+        {
+          "t": "8:33",
+          "sec": 513,
+          "title": "Crew service and a smaller cabin",
+          "ife": false
+        },
+        {
+          "t": "9:20",
+          "sec": 560,
+          "title": "Meal service: amuse-bouche and signature cocktail",
+          "ife": false
+        },
+        {
+          "t": "10:14",
+          "sec": 614,
+          "title": "The menu and drinks list",
+          "ife": false
+        },
+        {
+          "t": "10:43",
+          "sec": 643,
+          "title": "Mezze, soup and main course",
+          "ife": false
+        },
+        {
+          "t": "12:20",
+          "sec": 740,
+          "title": "What makes a flight fun",
+          "ife": false
+        },
+        {
+          "t": "13:55",
+          "sec": 835,
+          "title": "Austrian's place in Lufthansa Group",
+          "ife": false
+        },
+        {
+          "t": "15:15",
+          "sec": 915,
+          "title": "The dessert letdown",
+          "ife": false
+        },
+        {
+          "t": "16:03",
+          "sec": 963,
+          "title": "Coffee and the in-flight chef problem",
+          "ife": false
+        },
+        {
+          "t": "17:25",
+          "sec": 1045,
+          "title": "Lavatories and amenity kit",
+          "ife": false
+        },
+        {
+          "t": "17:55",
+          "sec": 1075,
+          "title": "Bed mode",
+          "ife": false
+        },
+        {
+          "t": "19:05",
+          "sec": 1145,
+          "title": "Entertainment and Wi-Fi",
+          "ife": true
+        },
+        {
+          "t": "19:45",
+          "sec": 1185,
+          "title": "Pre-arrival meal",
+          "ife": false
+        },
+        {
+          "t": "20:43",
+          "sec": 1243,
+          "title": "Verdict and updated tier list",
+          "ife": false
+        }
+      ],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "lufthansa",
+          "mentions": 5
+        },
+        {
+          "keyword": "austrian airlines",
+          "mentions": 4
+        },
+        {
+          "keyword": "swiss",
+          "mentions": 1
+        }
+      ],
+      "aircraft_mentioned": [
+        {
+          "keyword": "787-9",
+          "mentions": 3
+        },
+        {
+          "keyword": "boeing",
+          "mentions": 2
+        },
+        {
+          "keyword": "787",
+          "mentions": 1
+        },
+        {
+          "keyword": "dreamliner",
+          "mentions": 1
+        }
+      ],
+      "ife_features": {
+        "content": true,
+        "connectivity": true,
+        "seat": true
+      },
+      "ife_specs": {
+        "wifi_type": "Wi-Fi"
+      },
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": "description"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=AtDzvvUymq0",
+      "title": "Turkish Airlines Business Class: The Food Stole the Show!",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-12T12:31:51Z",
+      "duration_seconds": 609,
+      "is_short": false,
+      "channel_title": "Mike Cannon Adventures",
+      "view_count": 370,
+      "like_count": 13,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Panasonic eX3",
+      "chapters": [
+        {
+          "t": "0:00",
+          "sec": 0,
+          "title": "Why This Flight Stood Out",
+          "ife": false
+        },
+        {
+          "t": "0:31",
+          "sec": 31,
+          "title": "Welcome Onboard & First Impressions",
+          "ife": false
+        },
+        {
+          "t": "1:27",
+          "sec": 87,
+          "title": "Lanvin Amenity Kit & Entertainment",
+          "ife": true
+        },
+        {
+          "t": "2:23",
+          "sec": 143,
+          "title": "Discover the Taste of Turkey",
+          "ife": false
+        },
+        {
+          "t": "3:27",
+          "sec": 207,
+          "title": "Appetizer Trolley: The Service Highlight",
+          "ife": false
+        },
+        {
+          "t": "5:41",
+          "sec": 341,
+          "title": "Salmon Dinner",
+          "ife": false
+        },
+        {
+          "t": "5:59",
+          "sec": 359,
+          "title": "Turkish Desserts & Ice Cream",
+          "ife": false
+        },
+        {
+          "t": "7:14",
+          "sec": 434,
+          "title": "Bed Setup, Slippers & Sleeping Comfort",
+          "ife": false
+        },
+        {
+          "t": "8:05",
+          "sec": 485,
+          "title": "Breakfast Before Arrival",
+          "ife": false
+        },
+        {
+          "t": "8:54",
+          "sec": 534,
+          "title": "What Could Improve & My Final Verdict",
+          "ife": false
+        }
+      ],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "turkish airlines",
+          "mentions": 18
+        }
+      ],
+      "aircraft_mentioned": [],
+      "ife_features": {
+        "seat": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": "description"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=wywsdGc7uTQ",
+      "title": "Reactors Reaction To Airplane!'s INFLATABLE Autopilot!! | Airplane! (1980) Movie Reaction",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-09-30T21:45:27Z",
+      "duration_seconds": 1114,
+      "is_short": false,
+      "channel_title": "Mixed Reactions",
+      "view_count": 18943,
+      "like_count": 406,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": null,
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [],
+      "aircraft_mentioned": [],
+      "ife_features": {
+        "content": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=Vvk4Di7Krfg",
+      "title": "United Airlines 3:33 AM Mid-flight on Boeing 737-800 & 737 MAX 8 Next MODS Interiors",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-13T08:21:33Z",
+      "duration_seconds": 61,
+      "is_short": true,
+      "channel_title": "OSMDRG91TA Mario, Daisy, Rosalina, Peach & Pauline",
+      "view_count": 46,
+      "like_count": 0,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Panasonic eX3",
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "united airlines",
+          "mentions": 11
+        },
+        {
+          "keyword": "jetblue",
+          "mentions": 7
+        },
+        {
+          "keyword": "air canada",
+          "mentions": 2
+        },
+        {
+          "keyword": "american airlines",
+          "mentions": 1
+        },
+        {
+          "keyword": "delta",
+          "mentions": 1
+        }
+      ],
+      "aircraft_mentioned": [
+        {
+          "keyword": "737",
+          "mentions": 6
+        },
+        {
+          "keyword": "737 max",
+          "mentions": 6
+        },
+        {
+          "keyword": "boeing",
+          "mentions": 5
+        }
+      ],
+      "ife_features": {
+        "entertainment_system": true,
+        "content": true,
+        "connectivity": true,
+        "seat": true
+      },
+      "ife_specs": {
+        "wifi_type": "Wi-Fi"
+      },
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=XybkIEmEkkc",
+      "title": "United Airlines 3:33 AM Mid-flight on Boeing 737-900/900ER & 737 MAX 9 Next MODS Interiors",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-13T04:58:25Z",
+      "duration_seconds": 61,
+      "is_short": true,
+      "channel_title": "OSMDRG91TA Mario, Daisy, Rosalina, Peach & Pauline",
+      "view_count": 145,
+      "like_count": 2,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Panasonic eX3",
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "united airlines",
+          "mentions": 11
+        },
+        {
+          "keyword": "jetblue",
+          "mentions": 7
+        },
+        {
+          "keyword": "air canada",
+          "mentions": 2
+        },
+        {
+          "keyword": "american airlines",
+          "mentions": 1
+        },
+        {
+          "keyword": "delta",
+          "mentions": 1
+        }
+      ],
+      "aircraft_mentioned": [
+        {
+          "keyword": "737",
+          "mentions": 6
+        },
+        {
+          "keyword": "737 max",
+          "mentions": 6
+        },
+        {
+          "keyword": "boeing",
+          "mentions": 5
+        }
+      ],
+      "ife_features": {
+        "entertainment_system": true,
+        "content": true,
+        "connectivity": true,
+        "seat": true
+      },
+      "ife_specs": {
+        "wifi_type": "Wi-Fi"
+      },
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=eGao6F5xAtE",
+      "title": "I Spent 24 Hours In The World's Best Airport Hotel",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-11T15:00:30Z",
+      "duration_seconds": 811,
+      "is_short": false,
+      "channel_title": "James Edward",
+      "view_count": 14167,
+      "like_count": 282,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Panasonic eX3",
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "american airlines",
+          "mentions": 1
+        }
+      ],
+      "aircraft_mentioned": [],
+      "ife_features": {
+        "content": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=M9ep_7-LLSs",
+      "title": "Everything You Need to Know: United Airlines to Iceland | EWR KEF ✈️",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-10T13:00:32Z",
+      "duration_seconds": 963,
+      "is_short": false,
+      "channel_title": "Journey with Dipti",
+      "view_count": 184,
+      "like_count": 2,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Panasonic eX3",
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "united airlines",
+          "mentions": 6
+        }
+      ],
+      "aircraft_mentioned": [],
+      "ife_features": {
+        "seat": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=8dzVJTzMntc",
+      "title": "Stockholm to New York (EWR) | Flight Review | SAS Airlines | Airbus a330-300",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-11T12:22:50Z",
+      "duration_seconds": 600,
+      "is_short": false,
+      "channel_title": "Global Niko Travel",
+      "view_count": 698,
+      "like_count": 21,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": null,
+      "chapters": [
+        {
+          "t": "00:00",
+          "sec": 0,
+          "title": "00:31 Boarding",
+          "ife": false
+        },
+        {
+          "t": "00:31",
+          "sec": 31,
+          "title": "01:47 Taxi to Runway",
+          "ife": false
+        },
+        {
+          "t": "01:47",
+          "sec": 107,
+          "title": "04:22 Takeoff",
+          "ife": false
+        },
+        {
+          "t": "04:22",
+          "sec": 262,
+          "title": "04:50 Cruising",
+          "ife": false
+        },
+        {
+          "t": "04:50",
+          "sec": 290,
+          "title": "05:08 1st Meal Service",
+          "ife": false
+        },
+        {
+          "t": "05:08",
+          "sec": 308,
+          "title": "05:33 Iceland",
+          "ife": false
+        },
+        {
+          "t": "05:33",
+          "sec": 333,
+          "title": "05:53 Greenland",
+          "ife": false
+        },
+        {
+          "t": "05:53",
+          "sec": 353,
+          "title": "06:31 Cruising",
+          "ife": false
+        },
+        {
+          "t": "06:31",
+          "sec": 391,
+          "title": "06:47 2nd Meal Service",
+          "ife": false
+        },
+        {
+          "t": "06:47",
+          "sec": 407,
+          "title": "07:46 Cruising",
+          "ife": false
+        },
+        {
+          "t": "07:46",
+          "sec": 466,
+          "title": "09:19 Landing",
+          "ife": false
+        },
+        {
+          "t": "09:19",
+          "sec": 559,
+          "title": "09:58 Taxi to Gate",
+          "ife": false
+        }
+      ],
+      "media_type": "video",
+      "airlines_mentioned": [],
+      "aircraft_mentioned": [
+        {
+          "keyword": "airbus",
+          "mentions": 3
+        }
+      ],
+      "ife_features": {
+        "entertainment_system": true,
+        "content": true,
+        "seat": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": "description"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=CR3ephyxksc",
+      "title": "TRAVEL DAY! | Is British Airways Club Europe REALLY Worth It?",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-09-18T07:00:06Z",
+      "duration_seconds": 1554,
+      "is_short": false,
+      "channel_title": "JFR.PRODUCTIONS",
+      "view_count": 5526,
+      "like_count": 86,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Panasonic eX3",
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "british airways",
+          "mentions": 3
+        }
+      ],
+      "aircraft_mentioned": [],
+      "ife_features": {},
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=KCDOlpSe_JE",
+      "title": "Bathroom Review- My $20,000 First Class Emirates Seat",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-12T16:34:31Z",
+      "duration_seconds": 103,
+      "is_short": true,
+      "channel_title": "Super RC",
+      "view_count": 673,
+      "like_count": 12,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Emirates ICE",
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "emirates",
+          "mentions": 2
+        }
+      ],
+      "aircraft_mentioned": [],
+      "ife_features": {
+        "seat": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=qo-kMc2tIAI",
+      "title": "Air India A319 Business Class 🇮🇳 | Is the Legacy Maharaja Still Worth It?",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-10T20:36:20Z",
+      "duration_seconds": 1396,
+      "is_short": false,
+      "channel_title": "FlyWithAbeer",
+      "view_count": 1239,
+      "like_count": 5,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Panasonic eX3",
+      "chapters": [
+        {
+          "t": "00:00",
+          "sec": 0,
+          "title": "Intro",
+          "ife": false
+        },
+        {
+          "t": "00:35",
+          "sec": 35,
+          "title": "Mumbai CSMIA Terminal-2",
+          "ife": false
+        },
+        {
+          "t": "02:11",
+          "sec": 131,
+          "title": "Adani Lounge",
+          "ife": false
+        },
+        {
+          "t": "03:05",
+          "sec": 185,
+          "title": "Plane Spotting",
+          "ife": false
+        },
+        {
+          "t": "04:17",
+          "sec": 257,
+          "title": "Boarding the A319",
+          "ife": false
+        },
+        {
+          "t": "07:13",
+          "sec": 433,
+          "title": "Business Class Seat Tour",
+          "ife": false
+        },
+        {
+          "t": "09:52",
+          "sec": 592,
+          "title": "Pushback & Takeoff from Mumbai",
+          "ife": false
+        },
+        {
+          "t": "13:16",
+          "sec": 796,
+          "title": "Air India A319 Models",
+          "ife": false
+        },
+        {
+          "t": "14:02",
+          "sec": 842,
+          "title": "Meal Service Begins",
+          "ife": false
+        },
+        {
+          "t": "14:24",
+          "sec": 864,
+          "title": "Stir Fried Hakka Noodles Main Course",
+          "ife": false
+        },
+        {
+          "t": "18:55",
+          "sec": 1135,
+          "title": "Mexican Brown Rice Salad Bowl",
+          "ife": false
+        },
+        {
+          "t": "19:47",
+          "sec": 1187,
+          "title": "Lavatory Review",
+          "ife": false
+        },
+        {
+          "t": "20:19",
+          "sec": 1219,
+          "title": "Inflight Entertainment",
+          "ife": true
+        },
+        {
+          "t": "20:55",
+          "sec": 1255,
+          "title": "Descent into Vijayawada",
+          "ife": false
+        },
+        {
+          "t": "21:53",
+          "sec": 1313,
+          "title": "Final Thoughts: Farewell to Air India A319",
+          "ife": false
+        },
+        {
+          "t": "23:05",
+          "sec": 1385,
+          "title": "Outro",
+          "ife": false
+        }
+      ],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "air india",
+          "mentions": 9
+        }
+      ],
+      "aircraft_mentioned": [
+        {
+          "keyword": "airbus",
+          "mentions": 5
+        }
+      ],
+      "ife_features": {
+        "content": true,
+        "seat": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": "description"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=MIg-_22I9f8",
+      "title": "Emirates Business Class, Hong Kong - Bangkok",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-09-29T14:34:02Z",
+      "duration_seconds": 94,
+      "is_short": true,
+      "channel_title": "Three Boarding Passes",
+      "view_count": 32,
+      "like_count": 0,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Emirates ICE",
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "emirates",
+          "mentions": 3
+        }
+      ],
+      "aircraft_mentioned": [
+        {
+          "keyword": "a380",
+          "mentions": 2
+        }
+      ],
+      "ife_features": {},
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=Rkz2GZxwP7Y",
+      "title": "Emirates New Cabin Experience 2026 ✈️ Premium Economy, Business & First Class | ATM Dubai",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-09-27T11:44:41Z",
+      "duration_seconds": 29,
+      "is_short": true,
+      "channel_title": "Quintessential Insider",
+      "view_count": 1434,
+      "like_count": 8,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Emirates ICE",
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "emirates",
+          "mentions": 7
+        }
+      ],
+      "aircraft_mentioned": [],
+      "ife_features": {
+        "seat": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=aEUzPe9LzkY",
+      "title": "Inside Emirates’ New Cabin Experience | New Seats, More Comfort & Premium Economy",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-01T14:43:32Z",
+      "duration_seconds": 188,
+      "is_short": false,
+      "channel_title": "Czech Business Council",
+      "view_count": 37,
+      "like_count": 0,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Emirates ICE",
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "emirates",
+          "mentions": 6
+        }
+      ],
+      "aircraft_mentioned": [
+        {
+          "keyword": "777",
+          "mentions": 1
+        },
+        {
+          "keyword": "a380",
+          "mentions": 1
+        },
+        {
+          "keyword": "boeing",
+          "mentions": 1
+        }
+      ],
+      "ife_features": {
+        "connectivity": true,
+        "seat": true,
+        "usb_power": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=QlB-h4bdcik",
+      "title": "Emirates business class flight Seoul to Dubai August 2026",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-09-28T20:21:20Z",
+      "duration_seconds": 33,
+      "is_short": true,
+      "channel_title": "Tyra's Travels",
+      "view_count": 55,
+      "like_count": 1,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Emirates ICE",
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "emirates",
+          "mentions": 1
+        }
+      ],
+      "aircraft_mentioned": [],
+      "ife_features": {},
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=-eqqSAi7l8Q",
+      "title": "Inside emirates business class A380 to Milan",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-09-21T23:19:17Z",
+      "duration_seconds": 45,
+      "is_short": true,
+      "channel_title": "Ariella Loren",
+      "view_count": 1485,
+      "like_count": 21,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Emirates ICE",
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "emirates",
+          "mentions": 3
+        }
+      ],
+      "aircraft_mentioned": [
+        {
+          "keyword": "a380",
+          "mentions": 2
+        }
+      ],
+      "ife_features": {
+        "entertainment_system": true,
+        "seat": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=CXcsgjckfuA",
+      "title": "Dubai to Zurich on the Emirates A380 (Business Class)",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-03T10:16:52Z",
+      "duration_seconds": 312,
+      "is_short": false,
+      "channel_title": "Yatrik",
+      "view_count": 109,
+      "like_count": 0,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Emirates ICE",
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "emirates",
+          "mentions": 1
+        }
+      ],
+      "aircraft_mentioned": [
+        {
+          "keyword": "a380",
+          "mentions": 1
+        }
+      ],
+      "ife_features": {},
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=sLOObIwe7po",
+      "title": "What Cabin Crew Must Do in the 10 Hours Before Your Flight",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-06T23:30:40Z",
+      "duration_seconds": 803,
+      "is_short": false,
+      "channel_title": "Above the Cabin",
+      "view_count": 569,
+      "like_count": 3,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Emirates ICE",
+      "chapters": [
+        {
+          "t": "0:00",
+          "sec": 0,
+          "title": "The 10 Hours Passengers Never See",
+          "ife": false
+        },
+        {
+          "t": "0:56",
+          "sec": 56,
+          "title": "Why a 300-Seat Jet Needs 6 Flight Attendants",
+          "ife": false
+        },
+        {
+          "t": "1:43",
+          "sec": 103,
+          "title": "The Rest Clock and the FAA's 10-Hour Rule",
+          "ife": false
+        },
+        {
+          "t": "3:51",
+          "sec": 231,
+          "title": "Why 10 Hours of Rest Is Not 10 Hours of Sleep",
+          "ife": false
+        },
+        {
+          "t": "5:04",
+          "sec": 304,
+          "title": "The 8-Hour Alcohol Rule for Flight Attendants",
+          "ife": false
+        },
+        {
+          "t": "6:22",
+          "sec": 382,
+          "title": "The Alarm and the Emirates Uniform",
+          "ife": false
+        },
+        {
+          "t": "7:11",
+          "sec": 431,
+          "title": "Report Time and the 25-Minute Check-In Gate",
+          "ife": false
+        },
+        {
+          "t": "7:56",
+          "sec": 476,
+          "title": "When Boarding Was Unpaid",
+          "ife": false
+        },
+        {
+          "t": "8:43",
+          "sec": 523,
+          "title": "Inside the Pre-Flight Crew Briefing",
+          "ife": false
+        },
+        {
+          "t": "9:31",
+          "sec": 571,
+          "title": "The Safe Talk Question",
+          "ife": false
+        },
+        {
+          "t": "10:52",
+          "sec": 652,
+          "title": "The Last Hour on Board Before Boarding",
+          "ife": false
+        },
+        {
+          "t": "11:43",
+          "sec": 703,
+          "title": "Your Flight Started Hours Ago",
+          "ife": false
+        }
+      ],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "emirates",
+          "mentions": 4
+        },
+        {
+          "keyword": "delta",
+          "mentions": 2
+        },
+        {
+          "keyword": "american airlines",
+          "mentions": 1
+        }
+      ],
+      "aircraft_mentioned": [],
+      "ife_features": {
+        "entertainment_system": true,
+        "seat": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": "description"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=Rgw9JerDB8E",
+      "title": "7 Hours in the World’s Best Economy Class",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-08T04:00:27Z",
+      "duration_seconds": 231,
+      "is_short": false,
+      "channel_title": "Introverted Chronicles",
+      "view_count": 414,
+      "like_count": 8,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": null,
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [],
+      "aircraft_mentioned": [],
+      "ife_features": {},
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=3l05Ha-v5eY",
+      "title": "Saudia B787 Business Class | Casablanca to Jeddah (SV 378)",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-02T10:00:35Z",
+      "duration_seconds": 422,
+      "is_short": false,
+      "channel_title": "Jay to the World",
+      "view_count": 335,
+      "like_count": 6,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Panasonic eX3",
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "saudia",
+          "mentions": 3
+        }
+      ],
+      "aircraft_mentioned": [
+        {
+          "keyword": "787",
+          "mentions": 1
+        },
+        {
+          "keyword": "boeing",
+          "mentions": 1
+        }
+      ],
+      "ife_features": {
+        "seat": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=sQYmDZlwUnk",
+      "title": "Flying Malaysia Airlines Economy | Bengaluru to Kuala Lumpur | MH 105 | Boeing 737-800 | VT-AAA",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-12T06:45:10Z",
+      "duration_seconds": 1084,
+      "is_short": false,
+      "channel_title": "VT-AAA",
+      "view_count": 143,
+      "like_count": 5,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": null,
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [],
+      "aircraft_mentioned": [
+        {
+          "keyword": "boeing",
+          "mentions": 3
+        },
+        {
+          "keyword": "airbus",
+          "mentions": 1
+        }
+      ],
+      "ife_features": {
+        "seat": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=DNcTHONqlQI",
+      "title": "Flydubai Flight Drama: How Indian Pilot Smit Machchhar Saved 174 Lives | NTV Telugu",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-01T16:29:24Z",
+      "duration_seconds": 249,
+      "is_short": false,
+      "channel_title": "NTV Telugu",
+      "view_count": 191448,
+      "like_count": 783,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": null,
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [],
+      "aircraft_mentioned": [],
+      "ife_features": {},
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=kjKgLwSaYJM",
+      "title": "Pilot WNI yang Kemudikan Ethiopian Airlines Dicegat Israel, Dipaksa Putar Balik saat Menuju Tel Aviv",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-13T09:29:03Z",
+      "duration_seconds": 96,
+      "is_short": true,
+      "channel_title": "Tribunnews",
+      "view_count": 1484,
+      "like_count": 21,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": null,
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [],
+      "aircraft_mentioned": [],
+      "ife_features": {},
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
     }
   ],
-  "last_updated": "2026-10-12T10:37:21.317775"
+  "last_updated": "2026-10-13T10:28:42.375751"
 }
