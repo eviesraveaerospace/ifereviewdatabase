@@ -37,7 +37,14 @@ fi
 # Discovery backfill (2024 -> now): known reviewer channels' upload lists plus
 # quarter-sliced searches, within a fixed API budget per night so the cloud
 # crawl's own quota is not starved. Resumes from backfill_discovery_state.json.
-BACKFILL_UNITS="${BACKFILL_UNITS:-3000}" "$PY" -u backfill_discovery.py >> "$LOG" 2>&1
+# Same Google project as the cloud crawl (which needs ~9k of the 10k/day), so
+# only the cheap channel pass runs nightly; the search pass waits for a quota
+# increase: set BACKFILL_SEARCH=1 (and a bigger BACKFILL_UNITS) once granted.
+if [ "${BACKFILL_SEARCH:-0}" = "1" ]; then
+    BACKFILL_UNITS="${BACKFILL_UNITS:-3000}" "$PY" -u backfill_discovery.py >> "$LOG" 2>&1
+else
+    BACKFILL_UNITS="${BACKFILL_UNITS:-600}" "$PY" -u backfill_discovery.py --channels-only >> "$LOG" 2>&1
+fi
 
 # OCR screen tagging. Uses the ios-screen-recording-ocr checkout (~/ife) and
 # its venv (~/ife-venv: torch-cpu, open_clip, rapidocr); skipped when absent.
