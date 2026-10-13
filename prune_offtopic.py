@@ -3,7 +3,9 @@ Re-apply the crawler's off-topic / news / spam gate to cached YouTube entries
 and drop the ones that would not be accepted today.
 
 Only entries with no IFE evidence are candidates: no detected system, no OCR
-screen tags, no IFE feature beyond "seat", no transcript. Trusted reviewer
+screen tags, no IFE feature beyond "seat", no transcript. Videos the OCR pass
+has already sampled without finding any IFE screen are dropped when nothing
+else (system, text features) says IFE either. Trusted reviewer
 channels are never pruned. Everything removed is written to
 pruned_offtopic.json so it can be inspected or restored.
 
@@ -40,6 +42,15 @@ def has_ife_evidence(r):
     return bool(r.get("ife_system") or r.get("screen_tags") or feats or r.get("transcript_available"))
 
 
+def ocr_found_nothing(r):
+    """OCR has sampled this video and tagged no IFE screen, and neither the
+    text nor a detected system claims one. A transcript alone is not enough:
+    captions exist for almost every video."""
+    processed = r.get("chapters_source") == "ocr" or r.get("screen_tag_source") == "ocr-video"
+    feats = {k for k in (r.get("ife_features") or {}) if k != "seat"}
+    return processed and not r.get("screen_tags") and not r.get("ife_system") and not feats
+
+
 def should_prune(r):
     if "youtube.com" not in (r.get("url") or ""):
         return False
@@ -52,6 +63,8 @@ def should_prune(r):
         # description ("enjoy our award-winning entertainment...") are not
         # evidence. Only the title, OCR tags or a detected system keep it.
         return not (r.get("ife_system") or r.get("screen_tags"))
+    if ocr_found_nothing(r):
+        return True       # the OCR pass watched it and saw no IFE screen, and nothing else says IFE
     if has_ife_evidence(r):
         return False
     if _is_trusted_channel(ch):

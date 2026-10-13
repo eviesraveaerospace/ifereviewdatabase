@@ -62,6 +62,10 @@ else
     log "OCR repo/venv not found ($OCR_REPO, $OCR_PY) - skipping screen tagging"
 fi
 
+# Drop entries the gate rejects today and videos the OCR pass has sampled
+# without finding an IFE screen (copies kept in pruned_offtopic.json).
+"$PY" prune_offtopic.py --apply >> "$LOG" 2>&1
+
 # Publish: cache + team notes/bookmarks + uploaded photos. Retry once after a
 # rebase in case CI or a teammate pushed while Whisper was running.
 git add ife_cache.json notes.json flags.json >> "$LOG" 2>&1
