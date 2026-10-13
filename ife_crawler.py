@@ -262,6 +262,12 @@ _NEWS_TITLE_INTL_RE = re.compile(
     r'|हादसा|दुर्घटना|समाचार|ख़बर|खबर|आपातकालीन|अपहरण'
     r'|катастроф|крушени|новост|авари|экстренн|угон'
     r'|\bkaza\b|\bhaber\w*\b|\bacil\s+ini[sş]\b|\bkecelakaan\b|\bberita\b|\bdarurat\b'
+    # Indonesian / Malay incident verbs: intercepted, forced to turn back, skidded,
+    # crashed, killed, exploded, caught fire, evacuation, incident
+    r'|\bdicegat\b|\bdipaksa\b|\bputar\s+balik\b|\btergelincir\b|\bjatuh\b|\btewas\b'
+    r'|\bmeledak\b|\bterbakar\b|\bevakuasi\b|\binsiden\b|\bmendarat\s+darurat\b'
+    # Vietnamese / Thai: news, accident, emergency, plane crash
+    r'|\btin\s+tức\b|\btai\s+nạn\b|\bkhẩn\s+cấp\b|\brơi\s+máy\s+bay\b|อุบัติเหตุ|ฉุกเฉิน|เครื่องบินตก'
     r'|\baccidentes?\b|\bnoticias\b|\bnotícias\b|\bemergencia\b|\bemergência\b|\btragedia\b'
     r"|\bactualités\b|\batterrissage\s+d'urgence\b|\babsturz\b|\bunfall\b|\bnachrichten\b|\bnotlandung\b"
     r'|空难|空難|坠机|墜機|事故|新闻|新聞|紧急|緊急|迫降|劫机|劫機'
@@ -273,7 +279,12 @@ _NEWS_TITLE_INTL_RE = re.compile(
 # Broadcast / newspaper channels. Word-boundaried proper nouns only, so a
 # reviewer channel like "Simple Flying" or "Airline Videos Live" never matches.
 _NEWS_CHANNEL_RE = re.compile(
-    r'\bnews\w*\b|\bheadlines\b'
+    r'news|\bheadlines\b'                       # substring: Tribunnews, DetikNews, Newsroom
+    r'|\btribun\w*|\bkompas\b|\bdetik\w*|\bliputan\s*6\b|\bmetro\s*tv\b|\btv\s*one\b'
+    r'|\bcnbc\b|\bantara\b|\bokezone\b|\bsindo\w*|\bkumparan\b|\bberita\w*'
+    r'|\bvtv\b|\bvnexpress\b|\bthanh\s+niên\b|\btuổi\s+trẻ\b|ไทยรัฐ|ข่าว|\bthairath\b'
+    r'|\btimes\s+of\s+india\b|\bnew\s+york\s+times\b|\beuronews\b|\buae\s+times\b'
+    r'|\baeronews\w*'
     r'|خبر|أخبار|اخبار|समाचार|खबर|новости|haber|noticias|notícias|nachrichten|新闻|新聞|ニュース|뉴스'
     r'|\bndtv\b|\bcnn\b|\bbbc\b|\bctv\b|\bcbc\b|\babc\b|\bnbc\b|\bcbs\b|\bfox\b|\bitv\b'
     r'|\bwion\b|\bgeo\b|\bdunya\b|\bary\b|\bindia\s+today\b|\btimes\s+now\b'
