@@ -38,6 +38,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.stdout.reconfigure(encoding="utf-8")
+# Captions are fetched at discovery time, but Whisper is not: a single long
+# video would otherwise stall the run for minutes. backfill_transcripts.py
+# does that work in the nightly job.
+os.environ.setdefault("IFE_NO_WHISPER", "1")
 
 try:
     from dotenv import load_dotenv

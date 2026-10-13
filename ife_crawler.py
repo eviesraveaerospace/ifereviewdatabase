@@ -2056,8 +2056,10 @@ class IFECrawler:
             if "IpBlocked" in type(e).__name__:
                 ip_blocked = True
 
-        # ── 2. Whisper fallback (skipped when IP-blocked — yt-dlp would fail too) ──
-        if not ip_blocked:
+        # ── 2. Whisper fallback (skipped when IP-blocked — yt-dlp would fail too,
+        #       or when IFE_NO_WHISPER is set: discovery runs leave transcription
+        #       to the nightly backfill_transcripts pass) ──
+        if not ip_blocked and not os.environ.get("IFE_NO_WHISPER"):
             return self._whisper_transcript(video_id, score_kws)
 
         return False, None, [], ""
