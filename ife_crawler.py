@@ -379,6 +379,9 @@ _NONLATIN_RE = re.compile(r"[^\x00-\x7FÀ-ɏ -➿\U0001F000-\U0001FAFF]")
 _TITLE_EN_CACHE: Dict[str, Optional[str]] = {}
 
 
+_GOOGLE_TITLE_BLOCKED = False
+
+
 def _title_en(title: str) -> Optional[str]:
     if not title or len(_NONLATIN_RE.findall(title)) < 2:
         return None
@@ -386,23 +389,21 @@ def _title_en(title: str) -> Optional[str]:
         return None
     if title in _TITLE_EN_CACHE:
         return _TITLE_EN_CACHE[title]
+    global _GOOGLE_TITLE_BLOCKED
     out = None
-    try:
-        from deep_translator import GoogleTranslator
-        for attempt in range(2):
-            try:
-                time.sleep(0.4)
-                out = (GoogleTranslator(source="auto", target="en").translate(title[:500]) or "").strip() or None
-                break
-            except Exception as exc:
-                if "too many requests" in str(exc).lower() and attempt == 0:
-                    time.sleep(20)
-                    continue
-                raise
-        if out and out.lower() == title.lower():
+    if not _GOOGLE_TITLE_BLOCKED:
+        try:
+            from deep_translator import GoogleTranslator
+            time.sleep(0.4)
+            out = (GoogleTranslator(source="auto", target="en").translate(title[:500]) or "").strip() or None
+            if out and out.lower() == title.lower():
+                out = None
+        except Exception as exc:
             out = None
-    except Exception:
-        out = None
+            if "too many requests" in str(exc).lower():
+                # Rate-limited for the rest of this process: every further
+                # attempt would cost seconds and fail. Use the offline models.
+                _GOOGLE_TITLE_BLOCKED = True
     if out is None:
         out = _title_en_offline(title)
     _TITLE_EN_CACHE[title] = out
