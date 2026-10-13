@@ -32,6 +32,7 @@ Run:  python backfill_discovery.py                  (default 3000 units)
 import argparse
 import json
 import os
+import re
 import sys
 from collections import Counter
 from datetime import datetime, timezone
@@ -74,6 +75,33 @@ def _is_airline_channel(name):
     from ife_crawler import AIRLINE_KEYWORDS, GLOBAL_AIRLINES
     n = (name or "").strip().lower().replace(" (official)", "")
     return bool(n) and (n in AIRLINE_KEYWORDS or n in {a.lower() for a in GLOBAL_AIRLINES})
+
+
+# A reviewer channel's upload list is everything they publish: lounge tours,
+# airport walks, landings, miles news, Roblox. Channel-found videos must look
+# like a cabin/flight review by title (any language the crawl targets).
+_STRONG_RE = re.compile(
+    r"business class|first class|economy|premium economy|premium|suite|cabin|seat|review|trip report|"
+    r"flight report|full flight|inflight|in-flight|\bife\b|entertainment|wifi|wi-fi|"
+    r"ビジネスクラス|エコノミー|ファーストクラス|プレミアム|搭乗記|機内|商务舱|商務艙|经济舱|經濟艙|头等舱|頭等艙|機上|"
+    r"비즈니스|이코노미|일등석|탑승기|hạng thương gia|hạng phổ thông|kelas bisnis|kelas ekonomi|"
+    r"ชั้นธุรกิจ|ชั้นประหยัด|درجة|بزنس|क्लास|कक्षा", re.I)
+_WEAK_RE = re.compile(r"onboard|on board|flying|flew|fly(?:ing)? (?:on|with)|experience|\bflight\b", re.I)
+_HARD_DROP_RE = re.compile(
+    r"roblox|lounge|ラウンジ|airport (?:tour|walk|guide|measures|review)|terminal|landing|take ?off|departure|"
+    r"arrival|engine|spotting|timelapse|time lapse|cockpit|walking tour|4k walk|livestream|live stream|"
+    r"機内ライブ|ライブ|空港|hotel|resort|cruise|train|credit card", re.I)
+_SOFT_DROP_RE = re.compile(r"miles?\b|points|status|campaign|sale|マイル|キャンペーン|セール|値上げ|減額|ルール|特典|"
+                           r"unboxing|haul|q&a|vlog day|news|joining|announce", re.I)
+
+
+def channel_title_ok(title):
+    t = title or ""
+    if _HARD_DROP_RE.search(t):
+        return False
+    if _STRONG_RE.search(t):
+        return True
+    return bool(_WEAK_RE.search(t)) and not _SOFT_DROP_RE.search(t)
 
 
 def _yt_id(url):
@@ -158,6 +186,8 @@ class Backfill:
             url = f"https://www.youtube.com/watch?v={vid}"
             self.existing.add(url)
             official = source.endswith("(official)") or _is_airline_channel(source[8:] if source.startswith("channel:") else "")
+            if source.startswith("channel:") and not official and not trusted                     and not channel_title_ok(item.get("snippet", {}).get("title", "")):
+                continue
             entry = self.c._build_youtube_entry_from_api(vid, item, trusted=trusted and not official)
             if entry and official:
                 # An airline's own channel is mostly marketing (destination
@@ -269,6 +299,35 @@ class Backfill:
               f"search calls left {s_left} (~{s_left * COST_SEARCH:,} units)")
 
 
+def refilter(dry_run):
+    """One-off: drop channel-found cache entries that fail channel_title_ok and
+    carry no IFE evidence. Copies go to pruned_offtopic.json."""
+    cache = HERE / "ife_cache.json"
+    pruned = HERE / "pruned_offtopic.json"
+    data = json.loads(cache.read_text(encoding="utf-8"))
+    rows = data["reviews"]
+    trusted = set(KNOWN_IFE_CHANNELS)
+
+    def evidence(r):
+        feats = {k for k in (r.get("ife_features") or {}) if k != "seat"}
+        return bool(r.get("ife_system") or r.get("screen_tags") or feats)
+
+    gone = [r for r in rows if (r.get("discovered_by") or "").startswith("channel:")
+            and r["discovered_by"][8:] not in trusted
+            and not channel_title_ok(r.get("title") or "") and not evidence(r)]
+    print(f"{len(gone)} of {len(rows)} would be dropped")
+    for r in gone[:25]:
+        print("  ", (r.get("title") or "")[:90])
+    if dry_run:
+        return
+    urls = {r["url"] for r in gone}
+    data["reviews"] = [r for r in rows if r["url"] not in urls]
+    old = json.loads(pruned.read_text(encoding="utf-8")) if pruned.exists() else []
+    pruned.write_text(json.dumps(old + gone, indent=1, ensure_ascii=False), encoding="utf-8")
+    cache.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+    print(f"dropped {len(gone)}; {len(data['reviews'])} remain")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--since", default=os.environ.get("BACKFILL_SINCE", "2024-01-01"))
@@ -277,7 +336,14 @@ def main():
     ap.add_argument("--channels-only", action="store_true")
     ap.add_argument("--search-only", action="store_true")
     ap.add_argument("--status", action="store_true")
+    ap.add_argument("--refilter", action="store_true",
+                    help="re-apply channel_title_ok to cached channel-found entries with no IFE evidence")
+    ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()
+
+    if a.refilter:
+        refilter(a.dry_run)
+        return
 
     api_key = os.environ.get("YOUTUBE_API_KEY", "")
     if not api_key:
