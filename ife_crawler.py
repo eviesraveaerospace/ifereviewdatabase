@@ -114,7 +114,10 @@ _EXPLAINER_RE = re.compile(
 )
 
 # Channels whose output is never IFE/airline-review content (lowercase, exact).
-_BLOCKED_CHANNELS = {"the strange file"}
+_BLOCKED_CHANNELS = {"the strange file", "voyadex"}
+
+# Roblox / flight-sim gameplay: never a real cabin review, from any channel.
+_GAME_RE = re.compile(r"\broblox\b|\bpilot\s+training\s+flight\s+simulator\b|\bptfs\b", re.I)
 
 # Serialized web-novel / short-drama promos (Chinese, Korean, dubbed) — the
 # genre markers appear in the channel name or the description hashtag wall.
@@ -171,6 +174,8 @@ def _is_spam_video(title: str, duration_iso: str = "", channel_title: str = "",
     explainers/documentaries, blocked channels, and Shorts that are NOT airline
     reviews (airline-review Shorts are kept and shown vertically)."""
     if channel_title and channel_title.strip().lower() in _BLOCKED_CHANNELS:
+        return True
+    if _GAME_RE.search(title) or _GAME_RE.search(channel_title or "") or _GAME_RE.search(description or ""):
         return True
     if channel_title and _SHORT_DRAMA_RE.search(channel_title):
         return True
