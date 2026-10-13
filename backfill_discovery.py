@@ -66,6 +66,13 @@ def _ife_signal(r):
     return bool(r.get("ife_system") or r.get("screen_tags") or feats)
 
 
+def _is_airline_channel(name):
+    """True when a channel is an airline's own account (name is the airline)."""
+    from ife_crawler import AIRLINE_KEYWORDS, GLOBAL_AIRLINES
+    n = (name or "").strip().lower().replace(" (official)", "")
+    return bool(n) and (n in AIRLINE_KEYWORDS or n in {a.lower() for a in GLOBAL_AIRLINES})
+
+
 def _yt_id(url):
     import re
     m = re.search(r"[?&]v=([A-Za-z0-9_-]{11})|/shorts/([A-Za-z0-9_-]{11})", url or "")
@@ -147,7 +154,17 @@ class Backfill:
                 continue
             url = f"https://www.youtube.com/watch?v={vid}"
             self.existing.add(url)
-            entry = self.c._build_youtube_entry_from_api(vid, item, trusted=trusted)
+            official = source.endswith("(official)") or _is_airline_channel(source[8:] if source.startswith("channel:") else "")
+            entry = self.c._build_youtube_entry_from_api(vid, item, trusted=trusted and not official)
+            if entry and official:
+                # An airline's own channel is mostly marketing (destination
+                # guides, crew stories, ASMR). Keep only uploads whose title or
+                # description is explicitly about the IFE / cabin product.
+                sn = item.get("snippet", {})
+                text_ok = (self.c._has_ife_keyword(sn.get("title", ""), skip_broad=True)
+                           or self.c._has_ife_keyword(sn.get("description", ""), skip_broad=True))
+                if not text_ok:
+                    entry = None
             if entry:
                 entry["discovered_by"] = source
                 self.added.append(entry)
