@@ -29,6 +29,7 @@ Run:  python translate_captions.py                 (both passes)
 """
 import collections
 import json
+import os
 import re
 import sys
 import time
@@ -243,6 +244,77 @@ def google_translate(translator, text):
     return " ".join(p.strip() for p in parts if p)
 
 
+# ── NLLB-200 (offline, covers languages Argos has no pack for) ───────────────
+# ctranslate2 conversion of facebook/nllb-200-distilled-600M, built on the VM
+# with: ct2-transformers-converter --model facebook/nllb-200-distilled-600M
+#       --output_dir ~/nllb-600M-ct2 --quantization int8
+_NLLB_DIR = os.environ.get("NLLB_CT2_DIR") or str(Path.home() / "nllb-600M-ct2")
+_NLLB_CODES = {
+    "ta": "tam_Taml", "pa": "pan_Guru", "ml": "mal_Mlym", "bn": "ben_Beng", "tl": "tgl_Latn",
+    "hi": "hin_Deva", "ur": "urd_Arab", "te": "tel_Telu", "kn": "kan_Knda", "mr": "mar_Deva",
+    "gu": "guj_Gujr", "ne": "npi_Deva", "si": "sin_Sinh", "my": "mya_Mymr", "km": "khm_Khmr",
+    "ja": "jpn_Jpan", "zh": "zho_Hans", "zh-cn": "zho_Hans", "zh-tw": "zho_Hant", "ko": "kor_Hang",
+    "th": "tha_Thai", "vi": "vie_Latn", "id": "ind_Latn", "ms": "zsm_Latn", "ar": "arb_Arab",
+    "fa": "pes_Arab", "he": "heb_Hebr", "tr": "tur_Latn", "ru": "rus_Cyrl", "uk": "ukr_Cyrl",
+    "el": "ell_Grek", "pt": "por_Latn", "es": "spa_Latn", "fr": "fra_Latn", "de": "deu_Latn",
+    "it": "ita_Latn", "nl": "nld_Latn", "pl": "pol_Latn", "ro": "ron_Latn", "cs": "ces_Latn",
+    "sv": "swe_Latn", "da": "dan_Latn", "no": "nob_Latn", "fi": "fin_Latn", "hu": "hun_Latn",
+}
+_NLLB = None
+
+
+def _nllb():
+    """(ctranslate2.Translator, tokenizer) or None when the model is not installed."""
+    global _NLLB
+    if _NLLB is None:
+        _NLLB = False
+        if os.path.isdir(_NLLB_DIR):
+            try:
+                import ctranslate2
+                from transformers import AutoTokenizer
+                tok = AutoTokenizer.from_pretrained("facebook/nllb-200-distilled-600M")
+                _NLLB = (ctranslate2.Translator(_NLLB_DIR, device="cpu", compute_type="int8"), tok)
+            except Exception as e:  # noqa: BLE001
+                print(f"    nllb unavailable ({type(e).__name__}: {str(e)[:60]})")
+    return _NLLB or None
+
+
+def _sentences(text, limit=400):
+    """Sentence-ish pieces no longer than `limit` chars (NLLB truncates long inputs)."""
+    out = []
+    for piece in re.split(r"(?<=[.!?।。|])\s+", text):
+        piece = piece.strip()
+        while len(piece) > limit:
+            cut = piece.rfind(" ", 0, limit)
+            cut = cut if cut > limit // 2 else limit
+            out.append(piece[:cut])
+            piece = piece[cut:].strip()
+        if piece:
+            out.append(piece)
+    return out
+
+
+def nllb_translate(text, lang):
+    """Offline NLLB-200 lang->en, or None if the language/model is unavailable."""
+    src = _NLLB_CODES.get(lang)
+    m = _nllb()
+    if not src or not m:
+        return None
+    translator, tok = m
+    tok.src_lang = src
+    sents = _sentences(text)
+    out = []
+    for i in range(0, len(sents), 16):
+        batch = sents[i:i + 16]
+        toks = [tok.convert_ids_to_tokens(tok.encode(s)) for s in batch]
+        res = translator.translate_batch(toks, target_prefix=[["eng_Latn"]] * len(toks),
+                                         beam_size=2, max_decoding_length=300, max_batch_size=8)
+        for r in res:
+            ids = tok.convert_tokens_to_ids(r.hypotheses[0][1:])
+            out.append(tok.decode(ids, skip_special_tokens=True))
+    return " ".join(o.strip() for o in out if o)
+
+
 class GoogleBlocked(RuntimeError):
     """Google has rate-limited this IP; further requests only extend the ban."""
 
@@ -262,6 +334,13 @@ def translate_text(translator, text, lang="auto"):
                 return out
         except Exception as e:      # e.g. missing stanza sentencizer for a pack
             print(f"    argos {lang} failed ({type(e).__name__}), falling back to Google")
+    if lang not in ("auto", "und"):
+        try:
+            en = nllb_translate(text, lang)
+            if en and en.strip():
+                return en
+        except Exception as e:  # noqa: BLE001
+            print(f"    nllb {lang} failed ({type(e).__name__}), falling back to Google")
     if _GOOGLE_BLOCKED:
         raise GoogleBlocked("google rate-limited earlier this run")
     try:
