@@ -82,6 +82,8 @@ def _is_airline_channel(name):
 # like a cabin/flight review by title (any language the crawl targets).
 _STRONG_RE = re.compile(
     r"business class|first class|economy|premium economy|premium|suite|cabin|seat|review|trip report|"
+    r"upper class|club world|club europe|club suite|polaris|delta one|qsuite|the residence|apartment|mint|"
+    r"long-?haul|short-?haul|"
     r"flight report|full flight|inflight|in-flight|\bife\b|entertainment|wifi|wi-fi|"
     r"ビジネスクラス|エコノミー|ファーストクラス|プレミアム|搭乗記|機内|商务舱|商務艙|经济舱|經濟艙|头等舱|頭等艙|機上|"
     r"비즈니스|이코노미|일등석|탑승기|hạng thương gia|hạng phổ thông|kelas bisnis|kelas ekonomi|"
