@@ -34,6 +34,11 @@ fi
 # Whisper over the internal reviews' own recordings (dashboard venv has whisper).
 "$PY" -u transcribe_internal.py >> "$LOG" 2>&1
 
+# Discovery backfill (2024 -> now): known reviewer channels' upload lists plus
+# quarter-sliced searches, within a fixed API budget per night so the cloud
+# crawl's own quota is not starved. Resumes from backfill_discovery_state.json.
+BACKFILL_UNITS="${BACKFILL_UNITS:-3000}" "$PY" -u backfill_discovery.py >> "$LOG" 2>&1
+
 # OCR screen tagging. Uses the ios-screen-recording-ocr checkout (~/ife) and
 # its venv (~/ife-venv: torch-cpu, open_clip, rapidocr); skipped when absent.
 #  - internal reviews' own photos/recordings -> tags, verified tags, chapters

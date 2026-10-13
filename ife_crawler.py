@@ -403,8 +403,32 @@ def _title_en(title: str) -> Optional[str]:
             out = None
     except Exception:
         out = None
+    if out is None:
+        out = _title_en_offline(title)
     _TITLE_EN_CACHE[title] = out
     return out
+
+
+def _title_en_offline(title: str) -> Optional[str]:
+    """Argos / NLLB via translate_captions when Google is unavailable (the VM)."""
+    try:
+        import translate_captions as tc
+        lang = tc._guess_lang(title)
+        if lang in ("und", "en"):
+            return None
+        out = None
+        tr = tc._argos(lang)
+        if tr is not None:
+            try:
+                out = tr.translate(title[:500])
+            except Exception:
+                out = None
+        if not out:
+            out = tc.nllb_translate(title[:500], lang)
+        out = (out or "").strip() or None
+        return None if (out and out.lower() == title.lower()) else out
+    except Exception:
+        return None
 
 
 def _gate_title(title: str, title_en: Optional[str]) -> str:
@@ -755,6 +779,14 @@ AIRLINE_KEYWORDS = [
     "jetblue", "hawaiian airlines", "aer lingus", "ita airways", "westjet",
     "latam", "avianca", "condor", "discover airlines", "breeze airways",
     "porter airlines", "spirit airlines", "zipair", "saudia", "aeromexico",
+    # South / Southeast Asia and Gulf
+    "air india express", "akasa", "spicejet", "indigo", "vistara", "srilankan", "biman",
+    "pia", "pakistan international", "nepal airlines", "vietjet", "vietnam airlines",
+    "lion air", "batik air", "citilink", "garuda", "nok air", "bangkok airways",
+    "malaysia airlines", "philippine airlines", "cebu pacific", "scoot", "airasia",
+    "flynas", "flyadeal", "jazeera", "air astana", "oman air", "gulf air", "kuwait airways",
+    "royal jordanian", "flydubai", "air arabia", "egyptair", "ethiopian airlines",
+    "kenya airways", "royal air maroc", "starlux", "asiana", "vietnam airlines",
 ]
 
 AIRCRAFT_KEYWORDS = [
@@ -1196,6 +1228,29 @@ YOUTUBE_QUERIES = [
     "LATAM entretenimiento a bordo reseña",
     "TAP Air Portugal entretenimento bordo avaliação",
     "Turkish Airlines inflight entertainment inceleme",
+    # Hindi / Indian market
+    "फ्लाइट रिव्यू बिजनेस क्लास",
+    "Air India business class review hindi",
+    "IndiGo flight review hindi screen",
+    "Vistara business class review hindi",
+    "flight review hindi inflight entertainment",
+    # Arabic / Gulf market
+    "تجربة طيران درجة رجال الأعمال",
+    "مراجعة طيران الإمارات الترفيه على متن الطائرة",
+    "تجربة الطيران السعودية درجة الأعمال",
+    "تجربة طيران القطرية شاشة الترفيه",
+    # Thai
+    "รีวิวการบิน ชั้นธุรกิจ",
+    "รีวิวสายการบิน หน้าจอความบันเทิง",
+    "รีวิวการบินไทย ชั้นประหยัด",
+    # Indonesian
+    "review penerbangan kelas bisnis hiburan dalam pesawat",
+    "review Garuda Indonesia kelas bisnis",
+    "review penerbangan layar hiburan",
+    # Vietnamese
+    "review chuyến bay hạng thương gia",
+    "trải nghiệm Vietnam Airlines màn hình giải trí",
+    "review chuyến bay Vietjet",
 ]
 
 # ── Systematic discovery ──────────────────────────────────────────────────────
@@ -1232,6 +1287,10 @@ GLOBAL_AIRLINES = [
     # Africa
     "Ethiopian Airlines", "South African Airways", "Kenya Airways", "EgyptAir",
     "Royal Air Maroc", "RwandAir", "Air Mauritius",
+    # South / Southeast Asia and Gulf carriers with big review markets
+    "Air India Express", "Akasa Air", "SpiceJet", "SriLankan Airlines", "Biman Bangladesh",
+    "PIA", "Nepal Airlines", "VietJet", "Lion Air", "Citilink", "Nok Air", "Bangkok Airways",
+    "flynas", "flyadeal", "Jazeera Airways", "Air Astana",
 ]
 _AIRLINE_QUERY_TEMPLATES = [
     "{a} inflight entertainment review",
@@ -1529,7 +1588,8 @@ class IFECrawler:
         except Exception:
             return []
 
-    def _yt_search_api(self, query: str, limit: int = 50, published_after: str = None) -> List[str]:
+    def _yt_search_api(self, query: str, limit: int = 50, published_after: str = None,
+                       published_before: str = None) -> List[str]:
         """YouTube Data API v3 search — 100 quota units per call, up to 50 results."""
         params = {
             "part": "id",
@@ -1541,6 +1601,8 @@ class IFECrawler:
         }
         if published_after:
             params["publishedAfter"] = published_after
+        if published_before:
+            params["publishedBefore"] = published_before
         if "#shorts" in query.lower():
             params["videoDuration"] = "short"   # under 4 min: the Shorts/reels bucket
         resp = None
