@@ -41,14 +41,19 @@ def has_ife_evidence(r):
 
 
 def should_prune(r):
-    if "youtube.com" not in (r.get("url") or "") or has_ife_evidence(r):
+    if "youtube.com" not in (r.get("url") or ""):
         return False
     ch = r.get("channel_title") or ""
     title = _gate_title(r.get("title") or "", r.get("title_en"))
     if _CRAWLER._has_ife_keyword(title, skip_broad=True):
         return False      # explicit IFE subject: a news outlet's IFE segment still counts
     if is_airline_channel(ch):
-        return True       # airline's own marketing upload with no IFE subject
+        # An airline's own upload: features inferred from its boilerplate
+        # description ("enjoy our award-winning entertainment...") are not
+        # evidence. Only the title, OCR tags or a detected system keep it.
+        return not (r.get("ife_system") or r.get("screen_tags"))
+    if has_ife_evidence(r):
+        return False
     if _is_trusted_channel(ch):
         return False
     # Off-topic only (news, hobby/sim, story narration, documentaries, other

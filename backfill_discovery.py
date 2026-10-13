@@ -160,10 +160,9 @@ class Backfill:
                 # An airline's own channel is mostly marketing (destination
                 # guides, crew stories, ASMR). Keep only uploads whose title or
                 # description is explicitly about the IFE / cabin product.
-                sn = item.get("snippet", {})
-                text_ok = (self.c._has_ife_keyword(sn.get("title", ""), skip_broad=True)
-                           or self.c._has_ife_keyword(sn.get("description", ""), skip_broad=True))
-                if not text_ok:
+                # Title only: airline descriptions carry boilerplate about
+                # "award-winning entertainment" under every upload.
+                if not self.c._has_ife_keyword(item.get("snippet", {}).get("title", ""), skip_broad=True):
                     entry = None
             if entry:
                 entry["discovered_by"] = source
