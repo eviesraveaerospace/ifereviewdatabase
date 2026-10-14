@@ -1178221,7 +1178221,8 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "discovered_by": "channel:Traveller - Maxi & Maro"
+      "discovered_by": "channel:Traveller - Maxi & Maro",
+      "chapters_source": null
     },
     {
       "url": "https://www.youtube.com/watch?v=oX2BUmrBMUU",
@@ -1178370,7 +1178371,8 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "discovered_by": "channel:Traveller - Maxi & Maro"
+      "discovered_by": "channel:Traveller - Maxi & Maro",
+      "chapters_source": "description"
     },
     {
       "url": "https://www.youtube.com/watch?v=xlkhuKunaXs",
@@ -1178403,7 +1178405,8 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "discovered_by": "channel:Traveller - Maxi & Maro"
+      "discovered_by": "channel:Traveller - Maxi & Maro",
+      "chapters_source": null
     },
     {
       "url": "https://www.youtube.com/watch?v=XuVujK-RNIg",
@@ -1178521,7 +1178524,8 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "discovered_by": "channel:Traveller - Maxi & Maro"
+      "discovered_by": "channel:Traveller - Maxi & Maro",
+      "chapters_source": "description"
     },
     {
       "url": "https://www.youtube.com/watch?v=5p-Ux8jrJ6o",
@@ -1178570,7 +1178574,8 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "discovered_by": "channel:Traveller - Maxi & Maro"
+      "discovered_by": "channel:Traveller - Maxi & Maro",
+      "chapters_source": null
     },
     {
       "url": "https://www.youtube.com/watch?v=uD-A3rr51SY",
@@ -1178612,7 +1178617,8 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "discovered_by": "channel:Traveller - Maxi & Maro"
+      "discovered_by": "channel:Traveller - Maxi & Maro",
+      "chapters_source": null
     },
     {
       "url": "https://www.youtube.com/watch?v=5IHTFTJAcMM",
@@ -1178766,7 +1178772,8 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "discovered_by": "channel:Traveller - Maxi & Maro"
+      "discovered_by": "channel:Traveller - Maxi & Maro",
+      "chapters_source": "description"
     },
     {
       "url": "https://www.youtube.com/watch?v=99eMnVPCNI0",
@@ -1178805,7 +1178812,8 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "discovered_by": "channel:Traveller - Maxi & Maro"
+      "discovered_by": "channel:Traveller - Maxi & Maro",
+      "chapters_source": null
     },
     {
       "url": "https://www.youtube.com/watch?v=RFKbfz1jaJA",
@@ -1178842,7 +1178850,8 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "discovered_by": "channel:Traveller - Maxi & Maro"
+      "discovered_by": "channel:Traveller - Maxi & Maro",
+      "chapters_source": null
     },
     {
       "url": "https://www.youtube.com/watch?v=mOmo3dvcF_E",
@@ -1178936,7 +1178945,8 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "discovered_by": "channel:Traveller - Maxi & Maro"
+      "discovered_by": "channel:Traveller - Maxi & Maro",
+      "chapters_source": "description"
     },
     {
       "url": "https://www.youtube.com/watch?v=YRRvB3C-SYE",
@@ -1179012,7 +1179022,8 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "discovered_by": "channel:Traveller - Maxi & Maro"
+      "discovered_by": "channel:Traveller - Maxi & Maro",
+      "chapters_source": "description"
     },
     {
       "url": "https://www.youtube.com/watch?v=b_0WdKmWjFU",
@@ -1179054,7 +1179065,8 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "discovered_by": "channel:Traveller - Maxi & Maro"
+      "discovered_by": "channel:Traveller - Maxi & Maro",
+      "chapters_source": null
     }
   ],
   "last_updated": "2026-10-14T11:01:17.895947"
