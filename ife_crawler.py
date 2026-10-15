@@ -571,6 +571,30 @@ _IFE_TITLE_ONLY_KEYWORDS = {
     "inflight wifi review", "airline wifi review", "starlink wifi flight",
 }
 
+# Uploads a reviewer channel publishes that are never a cabin review, even from
+# trusted channels: lounge tours, airport walks, landings, hotels, Roblox.
+CHANNEL_HARD_DROP_RE = re.compile(
+    r"roblox|lounge|ラウンジ|airport (?:tour|walk|guide|measures|review)|terminal|landing|take ?off|departure|"
+    r"arrival|engine|spotting|timelapse|time lapse|cockpit|walking tour|4k walk|livestream|live stream|"
+    r"機内ライブ|ライブ|空港|hotel|resort|cruise|train|credit card", re.I)
+
+# A title naming the cabin product overrides a hard drop ("Etihad A380 Biz Class
+# + new Abu Dhabi lounges" is still a cabin review).
+CHANNEL_CABIN_RE = re.compile(
+    r"business class|biz class|first class|economy|premium economy|suite|trip report|flight report|full flight|"
+    r"upper class|club world|club europe|club suite|polaris|delta one|qsuite|the residence|apartment|"
+    r"ビジネスクラス|エコノミー|ファーストクラス|搭乗記|商务舱|商務艙|经济舱|經濟艙|头等舱|頭等艙|"
+    r"비즈니스|이코노미|일등석|탑승기|hạng thương gia|hạng phổ thông|kelas bisnis|kelas ekonomi|"
+    r"ชั้นธุรกิจ|ชั้นประหยัด|درجة|بزنس|क्लास|कक्षा", re.I)
+
+
+def channel_hard_drop(title: str) -> bool:
+    """Lounge / airport / Roblox upload from a reviewer channel, unless the title
+    also names a cabin product."""
+    t = title or ""
+    return bool(CHANNEL_HARD_DROP_RE.search(t)) and not CHANNEL_CABIN_RE.search(t)
+
+
 # Standalone "ife" word — needs boundary check to avoid matching "life", "wife", "knife"
 _IFE_WORD_RE = re.compile(r'\bife\b', re.IGNORECASE)
 
@@ -1508,6 +1532,8 @@ class IFECrawler:
                 url = f"https://www.youtube.com/watch?v={vid_id}"
                 self.visited.add(url)
                 # Trusted reviewer-channel videos bypass the strict keyword gate.
+                if vid_id in channel_ids and channel_hard_drop(item.get("snippet", {}).get("title", "")):
+                    continue
                 entry = self._build_youtube_entry_from_api(vid_id, item, trusted=(vid_id in channel_ids))
                 if entry:
                     self.results.append(entry)
@@ -2219,7 +2245,9 @@ class IFECrawler:
         return None
 
     def _features(self, text: str) -> Dict[str, bool]:
-        return {f: True for f, kws in IFE_FEATURE_KEYWORDS.items() if any(kw in text for kw in kws)}
+        # Boundary match: substring "ife" hit "life"/"wife", tagging street vlogs as IFE.
+        return {f: True for f, kws in IFE_FEATURE_KEYWORDS.items()
+                if any(_keyword_re(kw).search(text) for kw in kws)}
 
     def _mentions(self, text: str, keywords: List[str]) -> List[Dict]:
         out = [{"keyword": kw, "mentions": len(_keyword_re(kw).findall(text))}

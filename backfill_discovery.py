@@ -53,7 +53,7 @@ try:
 except ImportError:
     pass
 
-from ife_crawler import (IFECrawler, KNOWN_IFE_CHANNELS, YOUTUBE_QUERIES,  # noqa: E402
+from ife_crawler import (IFECrawler, KNOWN_IFE_CHANNELS, CHANNEL_HARD_DROP_RE, channel_hard_drop, YOUTUBE_QUERIES,  # noqa: E402
                          AUTO_DISCOVERY_QUERIES, _CURATED_QUERY_COUNT)
 from ife_data_manager import IFEDataManager  # noqa: E402
 
@@ -89,17 +89,14 @@ _STRONG_RE = re.compile(
     r"비즈니스|이코노미|일등석|탑승기|hạng thương gia|hạng phổ thông|kelas bisnis|kelas ekonomi|"
     r"ชั้นธุรกิจ|ชั้นประหยัด|درجة|بزنس|क्लास|कक्षा", re.I)
 _WEAK_RE = re.compile(r"onboard|on board|flying|flew|fly(?:ing)? (?:on|with)|experience|\bflight\b", re.I)
-_HARD_DROP_RE = re.compile(
-    r"roblox|lounge|ラウンジ|airport (?:tour|walk|guide|measures|review)|terminal|landing|take ?off|departure|"
-    r"arrival|engine|spotting|timelapse|time lapse|cockpit|walking tour|4k walk|livestream|live stream|"
-    r"機内ライブ|ライブ|空港|hotel|resort|cruise|train|credit card", re.I)
+_HARD_DROP_RE = CHANNEL_HARD_DROP_RE
 _SOFT_DROP_RE = re.compile(r"miles?\b|points|status|campaign|sale|マイル|キャンペーン|セール|値上げ|減額|ルール|特典|"
                            r"unboxing|haul|q&a|vlog day|news|joining|announce", re.I)
 
 
 def channel_title_ok(title):
     t = title or ""
-    if _HARD_DROP_RE.search(t):
+    if channel_hard_drop(t):
         return False
     if _STRONG_RE.search(t):
         return True
@@ -188,8 +185,11 @@ class Backfill:
             url = f"https://www.youtube.com/watch?v={vid}"
             self.existing.add(url)
             official = source.endswith("(official)") or _is_airline_channel(source[8:] if source.startswith("channel:") else "")
-            if source.startswith("channel:") and not official and not trusted                     and not channel_title_ok(item.get("snippet", {}).get("title", "")):
-                continue
+            if source.startswith("channel:") and not official:
+                ctitle = item.get("snippet", {}).get("title", "")
+                # Hard drops (lounge, airport walk, Roblox...) apply to trusted channels too.
+                if channel_hard_drop(ctitle) or (not trusted and not channel_title_ok(ctitle)):
+                    continue
             entry = self.c._build_youtube_entry_from_api(vid, item, trusted=trusted and not official)
             if entry and official:
                 # An airline's own channel is mostly marketing (destination
@@ -308,15 +308,27 @@ def refilter(dry_run):
     pruned = HERE / "pruned_offtopic.json"
     data = json.loads(cache.read_text(encoding="utf-8"))
     rows = data["reviews"]
-    trusted = set(KNOWN_IFE_CHANNELS)
+    # Same trust rule as the backfill: known reviewers plus channels with many IFE hits.
+    hits = Counter(r.get("channel_title") for r in rows if _ife_signal(r) and r.get("channel_title"))
+    trusted = set(KNOWN_IFE_CHANNELS) | {ch for ch, n in hits.items() if n >= TRUSTED_CHANNEL_HITS}
 
     def evidence(r):
-        feats = {k for k in (r.get("ife_features") or {}) if k != "seat"}
+        # entertainment_system was set by a substring "ife" match ("life", "wife")
+        # on descriptions, so alone it proves nothing; other features, a named
+        # system, or an OCR'd screen do.
+        feats = {k for k in (r.get("ife_features") or {}) if k not in ("seat", "entertainment_system")}
         return bool(r.get("ife_system") or r.get("screen_tags") or feats)
 
-    gone = [r for r in rows if (r.get("discovered_by") or "").startswith("channel:")
-            and r["discovered_by"][8:] not in trusted
-            and not channel_title_ok(r.get("title") or "") and not evidence(r)]
+    def bad(r):
+        src = r.get("discovered_by") or ""
+        if not src.startswith("channel:"):
+            return False
+        t = r.get("title") or ""
+        if channel_hard_drop(t):
+            return True
+        return src[8:] not in trusted and not channel_title_ok(t) and not evidence(r)
+
+    gone = [r for r in rows if bad(r)]
     print(f"{len(gone)} of {len(rows)} would be dropped")
     for r in gone[:25]:
         print("  ", (r.get("title") or "")[:90])
