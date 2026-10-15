@@ -79,6 +79,14 @@ _OFFICIAL_PROMO_RE = re.compile(
 
 _OFFICIAL_AIRLINE_CHANNELS = {"emirates", "singapore airlines", "etihad airways", "qatar airways"}
 
+def is_airline_channel(name: str) -> bool:
+    """True when a channel is an airline's own account (name is the airline).
+    Airline uploads are marketing, not reviews, and are never kept."""
+    n = (name or "").strip().lower().replace(" (official)", "")
+    return bool(n) and (n in _OFFICIAL_AIRLINE_CHANNELS or n in AIRLINE_KEYWORDS
+                        or n in {a.lower() for a in GLOBAL_AIRLINES})
+
+
 def is_official_promo(title: str, channel_title: str = "") -> bool:
     if channel_title and channel_title.strip().lower() in _OFFICIAL_AIRLINE_CHANNELS:
         return True
@@ -174,6 +182,8 @@ def _is_spam_video(title: str, duration_iso: str = "", channel_title: str = "",
     explainers/documentaries, blocked channels, and Shorts that are NOT airline
     reviews (airline-review Shorts are kept and shown vertically)."""
     if channel_title and channel_title.strip().lower() in _BLOCKED_CHANNELS:
+        return True
+    if is_airline_channel(channel_title):
         return True
     if _GAME_RE.search(title) or _GAME_RE.search(channel_title or "") or _GAME_RE.search(description or ""):
         return True
@@ -1126,12 +1136,7 @@ KNOWN_IFE_CHANNELS: dict = {
     "Luxury Travel Diary":      "UCyvOVVytophF3HZNFlaK1ZQ",  # verified ✓ (API-resolved)
     "AirlineReporter":          "UCkiY21AyoawQdK6mzhidtnw",  # verified ✓ (API-resolved)
 
-    # Official airline channels — for genuine "Official" promo/showcase content,
-    # as distinct from the independent reviewer channels above.
-    "Emirates (official)":          "UCJ6jdm9qTla9Lp3Jf-TPwbg",  # verified ✓ 1.9M subs
-    "Singapore Airlines (official)":"UCIrr4E2y6Cv-2FSxk1_PBGQ",  # verified ✓ 133K subs
-    "Etihad Airways (official)":    "UCVl7yuQhcmRpv3iydZ97eUw",  # verified ✓ 349K subs
-    "Qatar Airways (official)":     "UCi8xUU_lg3zr8UcBXLdEheQ",  # verified ✓
+    # Airline-owned channels are deliberately absent: their uploads are marketing.
 }
 
 

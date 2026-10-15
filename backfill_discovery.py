@@ -71,10 +71,8 @@ def _ife_signal(r):
 
 
 def _is_airline_channel(name):
-    """True when a channel is an airline's own account (name is the airline)."""
-    from ife_crawler import AIRLINE_KEYWORDS, GLOBAL_AIRLINES
-    n = (name or "").strip().lower().replace(" (official)", "")
-    return bool(n) and (n in AIRLINE_KEYWORDS or n in {a.lower() for a in GLOBAL_AIRLINES})
+    from ife_crawler import is_airline_channel
+    return is_airline_channel(name)
 
 
 # A reviewer channel's upload list is everything they publish: lounge tours,
@@ -184,21 +182,16 @@ class Backfill:
                 continue
             url = f"https://www.youtube.com/watch?v={vid}"
             self.existing.add(url)
-            official = source.endswith("(official)") or _is_airline_channel(source[8:] if source.startswith("channel:") else "")
-            if source.startswith("channel:") and not official:
+            # Airline-owned channels are marketing, never reviews: skip outright.
+            src_ch = source[8:] if source.startswith("channel:") else ""
+            if _is_airline_channel(src_ch) or _is_airline_channel(item.get("snippet", {}).get("channelTitle", "")):
+                continue
+            if source.startswith("channel:"):
                 ctitle = item.get("snippet", {}).get("title", "")
                 # Hard drops (lounge, airport walk, Roblox...) apply to trusted channels too.
                 if channel_hard_drop(ctitle) or (not trusted and not channel_title_ok(ctitle)):
                     continue
-            entry = self.c._build_youtube_entry_from_api(vid, item, trusted=trusted and not official)
-            if entry and official:
-                # An airline's own channel is mostly marketing (destination
-                # guides, crew stories, ASMR). Keep only uploads whose title or
-                # description is explicitly about the IFE / cabin product.
-                # Title only: airline descriptions carry boilerplate about
-                # "award-winning entertainment" under every upload.
-                if not self.c._has_ife_keyword(item.get("snippet", {}).get("title", ""), skip_broad=True):
-                    entry = None
+            entry = self.c._build_youtube_entry_from_api(vid, item, trusted=trusted)
             if entry:
                 entry["discovered_by"] = source
                 self.added.append(entry)
