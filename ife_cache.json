@@ -1174180,7 +1174180,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=7k4RuJ9Sg3o",
@@ -1174219,7 +1174221,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=6XtIzYPoyb8",
@@ -1174252,7 +1174256,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "positive",
+      "sentiment_score": 0.294
     },
     {
       "url": "https://www.youtube.com/watch?v=LgJurfFb9bM",
@@ -1174287,7 +1174293,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=B72-o4v_twU",
@@ -1174320,7 +1174328,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "negative",
+      "sentiment_score": -0.572
     },
     {
       "url": "https://www.youtube.com/watch?v=F6v5_BBcjnc",
@@ -1174429,7 +1174439,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": "description"
+      "chapters_source": "description",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=P12w1wnSakE",
@@ -1174462,7 +1174474,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=m8xYPGLDyEU",
@@ -1174495,7 +1174509,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "negative",
+      "sentiment_score": -0.226
     },
     {
       "url": "https://www.youtube.com/watch?v=fYCoKmMAOZk",
@@ -1174528,7 +1174544,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "positive",
+      "sentiment_score": 0.402
     },
     {
       "url": "https://www.youtube.com/watch?v=sCbfUu3d3VE",
@@ -1174564,7 +1174582,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=n3HSp1X8cKY",
@@ -1174597,7 +1174617,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "positive",
+      "sentiment_score": 0.617
     },
     {
       "url": "https://www.youtube.com/watch?v=r8k6IivLvyc",
@@ -1174709,7 +1174731,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": "description"
+      "chapters_source": "description",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=33-b8W03dEA",
@@ -1174754,7 +1174778,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=l8jwoDabqH0",
@@ -1174782,7 +1174808,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=FX2Hyy503DE",
@@ -1174936,7 +1174964,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": "description"
+      "chapters_source": "description",
+      "sentiment": "positive",
+      "sentiment_score": 0.296
     },
     {
       "url": "https://www.youtube.com/watch?v=l_CHReLgS_A",
@@ -1174984,7 +1175014,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "positive",
+      "sentiment_score": 0.176
     },
     {
       "url": "https://www.youtube.com/watch?v=6NqrPBpXECc",
@@ -1175063,7 +1175095,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": "description"
+      "chapters_source": "description",
+      "sentiment": "positive",
+      "sentiment_score": 0.296
     },
     {
       "url": "https://www.youtube.com/watch?v=OQuvQ93V2sE",
@@ -1175096,7 +1175130,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "positive",
+      "sentiment_score": 0.402
     },
     {
       "url": "https://www.youtube.com/watch?v=p9JKDxOS6wg",
@@ -1175137,7 +1175173,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "positive",
+      "sentiment_score": 0.767
     },
     {
       "url": "https://www.youtube.com/watch?v=mLQuTG0srB4",
@@ -1175179,7 +1175217,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "negative",
+      "sentiment_score": -0.542
     },
     {
       "url": "https://www.youtube.com/watch?v=wBDvZZJlBcw",
@@ -1175217,7 +1175257,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=9TfKKwYodcE",
@@ -1175250,7 +1175292,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=kprrBiGAhwk",
@@ -1175356,7 +1175400,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": "description"
+      "chapters_source": "description",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=av7YtBgt86I",
@@ -1175398,7 +1175444,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "positive",
+      "sentiment_score": 0.627
     },
     {
       "url": "https://www.youtube.com/watch?v=IomSEjWPScU",
@@ -1175433,7 +1175481,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=TAgFxxCiuaI",
@@ -1175468,7 +1175518,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "positive",
+      "sentiment_score": 0.202
     },
     {
       "url": "https://www.youtube.com/watch?v=UXMI-uk5lHc",
@@ -1175516,7 +1175568,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "positive",
+      "sentiment_score": 0.361
     },
     {
       "url": "https://www.youtube.com/watch?v=pmX5H8045ko",
@@ -1175549,7 +1175603,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=5eVoPausmEg",
@@ -1175587,7 +1175643,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=Ye8BHDpZkS4",
@@ -1175622,7 +1175680,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=z3VqVqTIiJA",
@@ -1175659,7 +1175719,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "positive",
+      "sentiment_score": 0.542
     },
     {
       "url": "https://www.youtube.com/watch?v=Utss3Xj4n54",
@@ -1175697,7 +1175759,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=-X6n8O25n38",
@@ -1175732,7 +1175796,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=YnHLkSGg1h8",
@@ -1175765,7 +1175831,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=jre3eWXT2PM",
@@ -1175801,7 +1175869,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "positive",
+      "sentiment_score": 0.176
     },
     {
       "url": "https://www.youtube.com/watch?v=lPSLXdItOC8",
@@ -1175831,7 +1175901,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "negative",
+      "sentiment_score": -0.34
     },
     {
       "url": "https://www.youtube.com/watch?v=6FD_KzO7p18",
@@ -1175866,7 +1175938,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=M7nrVciqDVU",
@@ -1175899,7 +1175973,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=ONOPp837XWw",
@@ -1175932,7 +1176008,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=5BHbW-95qPI",
@@ -1175967,7 +1176045,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "positive",
+      "sentiment_score": 0.226
     },
     {
       "url": "https://www.youtube.com/watch?v=e_dqtSANH-4",
@@ -1175995,7 +1176075,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=s7WaBHkgjL0",
@@ -1176084,7 +1176166,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": "description"
+      "chapters_source": "description",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=N3rtPsC5YZI",
@@ -1176120,7 +1176204,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "negative",
+      "sentiment_score": -0.527
     },
     {
       "url": "https://www.youtube.com/watch?v=IEGvnEPTGbY",
@@ -1176164,7 +1176250,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "positive",
+      "sentiment_score": 0.713
     },
     {
       "url": "https://www.youtube.com/watch?v=iTJA7qtGNcM",
@@ -1176197,7 +1176285,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=WuZfotUOyIE",
@@ -1176245,7 +1176335,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=34K9FTJHfPc",
@@ -1176280,7 +1176372,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "positive",
+      "sentiment_score": 0.226
     },
     {
       "url": "https://www.youtube.com/watch?v=RM_W5XMTUGk",
@@ -1176467,7 +1176561,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": "description"
+      "chapters_source": "description",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=U2iOuk7apZU",
@@ -1176500,7 +1176596,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=oxKLUi1NBv8",
@@ -1176533,7 +1176631,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=VsSITSTNXr4",
@@ -1176566,7 +1176666,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=RHS3Kc32TdI",
@@ -1176605,7 +1176707,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=N3jbxLfNdJM",
@@ -1176643,7 +1176747,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "positive",
+      "sentiment_score": 0.624
     },
     {
       "url": "https://www.youtube.com/watch?v=rfkky12PRF4",
@@ -1176676,7 +1176782,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=aXS0V4WtOw0",
@@ -1176711,7 +1176819,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=gOzx3pteR48",
@@ -1176746,7 +1176856,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "negative",
+      "sentiment_score": -0.178
     },
     {
       "url": "https://www.youtube.com/watch?v=DmgzvAYvVkU",
@@ -1176779,7 +1176891,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "negative",
+      "sentiment_score": -0.402
     },
     {
       "url": "https://www.youtube.com/watch?v=keiQykcsFuw",
@@ -1176812,7 +1176926,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "positive",
+      "sentiment_score": 0.637
     },
     {
       "url": "https://www.youtube.com/watch?v=7CfDjX7Z2Gk",
@@ -1176850,7 +1176966,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=uSpztDSlEjg",
@@ -1176914,7 +1177032,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": "description"
+      "chapters_source": "description",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=XUT9NHhnE-k",
@@ -1176947,7 +1177067,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=56ZO_s_mRBU",
@@ -1176985,7 +1177107,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=qsqJV4nj41g",
@@ -1177013,7 +1177137,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=zlSCFUGq3-k",
@@ -1177046,7 +1177172,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=whfoEf-eT98",
@@ -1177090,7 +1177218,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=3gVS-vyPQkg",
@@ -1177128,7 +1177258,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=VZl-eBU2-fk",
@@ -1177168,7 +1177300,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=R946amzBH_Q",
@@ -1177212,7 +1177346,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=NuPgXArFhKw",
@@ -1177247,7 +1177383,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=FZVmJgQUaMg",
@@ -1177290,7 +1177428,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=rPeGGAPxEQI",
@@ -1177323,7 +1177463,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=DXUNUHIWbRw",
@@ -1177356,7 +1177498,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=r-NAwVWoYkc",
@@ -1177394,7 +1177538,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "positive",
+      "sentiment_score": 0.44
     },
     {
       "url": "https://www.youtube.com/watch?v=Sx55987eOJE",
@@ -1177422,7 +1177568,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "positive",
+      "sentiment_score": 0.477
     },
     {
       "url": "https://www.youtube.com/watch?v=GVgQ7Ff7F7U",
@@ -1177457,7 +1177605,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=rgjmXYKG6e0",
@@ -1177492,7 +1177642,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=uX9vFy9-raM",
@@ -1177536,7 +1177688,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=p2_hbU3AsIc",
@@ -1177574,7 +1177728,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=1kZoC401Kdo",
@@ -1177611,7 +1177767,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=o5cMtGSVAFk",
@@ -1177646,7 +1177804,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=TIFkuTR65C4",
@@ -1177681,7 +1177841,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=3Nk26ImGIW8",
@@ -1177714,7 +1177876,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=prW8MXZHA34",
@@ -1177747,7 +1177911,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=0o4e--yKBgM",
@@ -1177780,7 +1177946,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=i_IW-qrmGPo",
@@ -1177813,7 +1177981,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=Xdk7up7sUVQ",
@@ -1177846,7 +1178016,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=vxfiFdj9_zU",
@@ -1177874,7 +1178046,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=W_9mDkq1HL4",
@@ -1177907,7 +1178081,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=d3vkTtAI4K4",
@@ -1177940,7 +1178116,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "positive",
+      "sentiment_score": 0.511
     },
     {
       "url": "https://www.youtube.com/watch?v=TNfRL1c2evU",
@@ -1177973,7 +1178151,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=vxuOUraCQjw",
@@ -1178006,7 +1178186,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=NFIyR9B4eqo",
@@ -1178039,7 +1178221,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=cDnhQTbTJXs",
@@ -1178072,7 +1178256,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "negative",
+      "sentiment_score": -0.226
     },
     {
       "url": "https://www.youtube.com/watch?v=akDJdZf1P20",
@@ -1178110,7 +1178296,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Creator",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=ok_08YTFlAc",
@@ -1178143,7 +1178331,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Official",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=Kz0agL-Q40U",
@@ -1178176,7 +1178366,9 @@
       "transcript_full": "",
       "source_tier": 2,
       "source_name": "Official",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=Ko2BbLyTq7s",
@@ -1178222,7 +1178414,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "discovered_by": "channel:Traveller - Maxi & Maro",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=oX2BUmrBMUU",
@@ -1178372,7 +1178566,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "discovered_by": "channel:Traveller - Maxi & Maro",
-      "chapters_source": "description"
+      "chapters_source": "description",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=xlkhuKunaXs",
@@ -1178406,7 +1178602,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "discovered_by": "channel:Traveller - Maxi & Maro",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=XuVujK-RNIg",
@@ -1178525,7 +1178723,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "discovered_by": "channel:Traveller - Maxi & Maro",
-      "chapters_source": "description"
+      "chapters_source": "description",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=5p-Ux8jrJ6o",
@@ -1178575,7 +1178775,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "discovered_by": "channel:Traveller - Maxi & Maro",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "positive",
+      "sentiment_score": 0.421
     },
     {
       "url": "https://www.youtube.com/watch?v=uD-A3rr51SY",
@@ -1178618,7 +1178820,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "discovered_by": "channel:Traveller - Maxi & Maro",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=5IHTFTJAcMM",
@@ -1178773,7 +1178977,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "discovered_by": "channel:Traveller - Maxi & Maro",
-      "chapters_source": "description"
+      "chapters_source": "description",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=99eMnVPCNI0",
@@ -1178813,7 +1179019,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "discovered_by": "channel:Traveller - Maxi & Maro",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=RFKbfz1jaJA",
@@ -1178851,7 +1179059,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "discovered_by": "channel:Traveller - Maxi & Maro",
-      "chapters_source": null
+      "chapters_source": null,
+      "sentiment": "positive",
+      "sentiment_score": 0.226
     },
     {
       "url": "https://www.youtube.com/watch?v=mOmo3dvcF_E",
@@ -1178946,7 +1179156,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "discovered_by": "channel:Traveller - Maxi & Maro",
-      "chapters_source": "description"
+      "chapters_source": "description",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=YRRvB3C-SYE",
@@ -1179023,7 +1179235,9 @@
       "source_tier": 2,
       "source_name": "Creator",
       "discovered_by": "channel:Traveller - Maxi & Maro",
-      "chapters_source": "description"
+      "chapters_source": "description",
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
     },
     {
       "url": "https://www.youtube.com/watch?v=b_0WdKmWjFU",
@@ -1179066,8 +1179280,1380 @@
       "source_tier": 2,
       "source_name": "Creator",
       "discovered_by": "channel:Traveller - Maxi & Maro",
+      "chapters_source": null,
+      "sentiment": "neutral",
+      "sentiment_score": 0.0
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=8mKJmxsxV8U",
+      "title": "Emirates 777 Economy for Just $110?! Singapore to Cambodia Flight Review",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-14T21:28:05Z",
+      "duration_seconds": 1369,
+      "is_short": false,
+      "channel_title": "OwenTravels",
+      "view_count": 226,
+      "like_count": 5,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Emirates ICE",
+      "chapters": [
+        {
+          "t": "00:00",
+          "sec": 0,
+          "title": "Emirates to Cambodia for $110?!",
+          "ife": false
+        },
+        {
+          "t": "00:35",
+          "sec": 35,
+          "title": "Singapore Changi Terminal 1",
+          "ife": false
+        },
+        {
+          "t": "01:08",
+          "sec": 68,
+          "title": "Jewel Changi Early Check-In",
+          "ife": false
+        },
+        {
+          "t": "01:36",
+          "sec": 96,
+          "title": "Exploring Jewel Rain Vortex",
+          "ife": false
+        },
+        {
+          "t": "02:14",
+          "sec": 134,
+          "title": "Emirates Self Check-In",
+          "ife": false
+        },
+        {
+          "t": "02:35",
+          "sec": 155,
+          "title": "Terminal 1 & Kinetic Rain",
+          "ife": false
+        },
+        {
+          "t": "03:54",
+          "sec": 234,
+          "title": "Immigration, Duty-Free & Singapore Food",
+          "ife": false
+        },
+        {
+          "t": "04:41",
+          "sec": 281,
+          "title": "Terminal 3 Butterfly Garden",
+          "ife": false
+        },
+        {
+          "t": "05:57",
+          "sec": 357,
+          "title": "Emirates Boeing 777 & Fifth-Freedom Route",
+          "ife": false
+        },
+        {
+          "t": "06:42",
+          "sec": 402,
+          "title": "Gate C24 & Boarding Preparations",
+          "ife": false
+        },
+        {
+          "t": "08:03",
+          "sec": 483,
+          "title": "Boarding Emirates Economy Class",
+          "ife": false
+        },
+        {
+          "t": "08:53",
+          "sec": 533,
+          "title": "Emirates Boeing 777 Seat Tour",
+          "ife": false
+        },
+        {
+          "t": "10:10",
+          "sec": 610,
+          "title": "ICE Inflight Entertainment Review",
+          "ife": true
+        },
+        {
+          "t": "12:26",
+          "sec": 746,
+          "title": "Safety Video & Departure",
+          "ife": false
+        },
+        {
+          "t": "13:04",
+          "sec": 784,
+          "title": "Taxiing & Aircraft Spotting at Changi",
+          "ife": false
+        },
+        {
+          "t": "15:03",
+          "sec": 903,
+          "title": "Boeing 777 Takeoff from Singapore",
+          "ife": false
+        },
+        {
+          "t": "16:40",
+          "sec": 1000,
+          "title": "Cruising Above Southeast Asia",
+          "ife": false
+        },
+        {
+          "t": "17:19",
+          "sec": 1039,
+          "title": "Emirates Economy Class Meal Review",
+          "ife": false
+        },
+        {
+          "t": "19:11",
+          "sec": 1151,
+          "title": "Lavatory Tour",
+          "ife": false
+        },
+        {
+          "t": "19:32",
+          "sec": 1172,
+          "title": "Preparing for Arrival",
+          "ife": false
+        },
+        {
+          "t": "20:13",
+          "sec": 1213,
+          "title": "Emirates Cabin Crew Experience",
+          "ife": false
+        },
+        {
+          "t": "21:14",
+          "sec": 1274,
+          "title": "Landing at Techo International Airport",
+          "ife": false
+        },
+        {
+          "t": "22:41",
+          "sec": 1361,
+          "title": "First Impressions of Cambodia’s New Airport",
+          "ife": false
+        },
+        {
+          "t": "24:28",
+          "sec": 1468,
+          "title": "Emirates Economy Class Final Verdict",
+          "ife": false
+        },
+        {
+          "t": "25:07",
+          "sec": 1507,
+          "title": "Final Thoughts & Onward Journey",
+          "ife": false
+        }
+      ],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "emirates",
+          "mentions": 18
+        }
+      ],
+      "aircraft_mentioned": [
+        {
+          "keyword": "boeing",
+          "mentions": 8
+        },
+        {
+          "keyword": "777",
+          "mentions": 7
+        }
+      ],
+      "ife_features": {
+        "entertainment_system": true,
+        "seat": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": "description"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=ZxiadHWZ6nY",
+      "title": "How Good is CATHAY PACIFIC Now? (A330 Economy Review)",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-14T14:33:17Z",
+      "duration_seconds": 856,
+      "is_short": false,
+      "channel_title": "Jack Roaming",
+      "view_count": 767,
+      "like_count": 23,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "StudioCX",
+      "chapters": [
+        {
+          "t": "0:00",
+          "sec": 0,
+          "title": "Intro",
+          "ife": false
+        },
+        {
+          "t": "0:47",
+          "sec": 47,
+          "title": "Bus From Hong Kong Island to HKG Airport",
+          "ife": false
+        },
+        {
+          "t": "1:26",
+          "sec": 86,
+          "title": "Today’s Itinerary",
+          "ife": false
+        },
+        {
+          "t": "1:48",
+          "sec": 108,
+          "title": "Hong Kong International Airport (HKG)",
+          "ife": false
+        },
+        {
+          "t": "3:04",
+          "sec": 184,
+          "title": "Cathay Pacific: History & Fleet",
+          "ife": false
+        },
+        {
+          "t": "5:03",
+          "sec": 303,
+          "title": "Our Plane: Airbus A330-300",
+          "ife": false
+        },
+        {
+          "t": "5:21",
+          "sec": 321,
+          "title": "Boarding CX 921",
+          "ife": false
+        },
+        {
+          "t": "5:33",
+          "sec": 333,
+          "title": "Cathay Pacific A330 Economy Product",
+          "ife": false
+        },
+        {
+          "t": "7:26",
+          "sec": 446,
+          "title": "Hong Kong (HKG): Taxi & Takeoff",
+          "ife": false
+        },
+        {
+          "t": "9:49",
+          "sec": 589,
+          "title": "Inflight Meal (Hong Kong Breakfast)",
+          "ife": false
+        },
+        {
+          "t": "10:34",
+          "sec": 634,
+          "title": "Entertainment System",
+          "ife": true
+        },
+        {
+          "t": "11:17",
+          "sec": 677,
+          "title": "Cabin Crew, Loo, Onboard Experience",
+          "ife": false
+        },
+        {
+          "t": "11:38",
+          "sec": 698,
+          "title": "Cebu-Mactan (CEB) Approach & Landing",
+          "ife": false
+        },
+        {
+          "t": "13:06",
+          "sec": 786,
+          "title": "Price & Conclusions",
+          "ife": false
+        }
+      ],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "cathay pacific",
+          "mentions": 5
+        }
+      ],
+      "aircraft_mentioned": [
+        {
+          "keyword": "airbus",
+          "mentions": 3
+        },
+        {
+          "keyword": "a330",
+          "mentions": 2
+        }
+      ],
+      "ife_features": {
+        "entertainment_system": true,
+        "content": true,
+        "seat": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": "description"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=-IAoKjIQ7OQ",
+      "title": "What's it like to fly American Airlines Short Haul Business Class (Cartagena to Miami)",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-15T04:00:35Z",
+      "duration_seconds": 1151,
+      "is_short": false,
+      "channel_title": "Jayden Wong",
+      "view_count": 1979,
+      "like_count": 134,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Panasonic eX3",
+      "chapters": [
+        {
+          "t": "00:00",
+          "sec": 0,
+          "title": "Intro & check-in",
+          "ife": false
+        },
+        {
+          "t": "01:05",
+          "sec": 65,
+          "title": "Airside",
+          "ife": false
+        },
+        {
+          "t": "02:30",
+          "sec": 150,
+          "title": "Boarding flight AA1144",
+          "ife": false
+        },
+        {
+          "t": "04:06",
+          "sec": 246,
+          "title": "Seat 3A & features",
+          "ife": false
+        },
+        {
+          "t": "05:53",
+          "sec": 353,
+          "title": "Passenger announcement (PA)",
+          "ife": false
+        },
+        {
+          "t": "07:09",
+          "sec": 429,
+          "title": "Takeoff",
+          "ife": false
+        },
+        {
+          "t": "08:37",
+          "sec": 517,
+          "title": "Inflight entertainment",
+          "ife": true
+        },
+        {
+          "t": "09:48",
+          "sec": 588,
+          "title": "Inflight service",
+          "ife": false
+        },
+        {
+          "t": "11:56",
+          "sec": 716,
+          "title": "Conclusion",
+          "ife": false
+        },
+        {
+          "t": "13:27",
+          "sec": 807,
+          "title": "Landing",
+          "ife": false
+        },
+        {
+          "t": "15:44",
+          "sec": 944,
+          "title": "Miami vlog",
+          "ife": false
+        }
+      ],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "american airlines",
+          "mentions": 3
+        },
+        {
+          "keyword": "etihad",
+          "mentions": 1
+        },
+        {
+          "keyword": "cathay pacific",
+          "mentions": 1
+        },
+        {
+          "keyword": "iberia",
+          "mentions": 1
+        },
+        {
+          "keyword": "qantas",
+          "mentions": 1
+        }
+      ],
+      "aircraft_mentioned": [
+        {
+          "keyword": "a350-900",
+          "mentions": 2
+        },
+        {
+          "keyword": "a380",
+          "mentions": 1
+        },
+        {
+          "keyword": "boeing",
+          "mentions": 1
+        }
+      ],
+      "ife_features": {
+        "content": true,
+        "connectivity": true,
+        "seat": true,
+        "bluetooth_audio": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": "description"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=qUYY5-MCdic",
+      "title": "Award Flight Cancellation Fees: Which Airlines Are BEST and WORST?",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-13T20:00:33Z",
+      "duration_seconds": 581,
+      "is_short": false,
+      "channel_title": "The Rewards Master",
+      "view_count": 1286,
+      "like_count": 42,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": null,
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [],
+      "aircraft_mentioned": [],
+      "ife_features": {},
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
       "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=eZusbpqpyFE",
+      "title": "Virgin Australia Business Class Review | Brisbane Lounge + Boeing 737",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-15T06:00:22Z",
+      "duration_seconds": 934,
+      "is_short": false,
+      "channel_title": "ItsIvyBond | Ivy Bond | Travel lover",
+      "view_count": 7,
+      "like_count": 3,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Panasonic eX3",
+      "chapters": [
+        {
+          "t": "00:00",
+          "sec": 0,
+          "title": "Intro",
+          "ife": false
+        },
+        {
+          "t": "00:42",
+          "sec": 42,
+          "title": "How to Find the Virgin Australia Lounge",
+          "ife": false
+        },
+        {
+          "t": "01:23",
+          "sec": 83,
+          "title": "Entering the Lounge",
+          "ife": false
+        },
+        {
+          "t": "01:57",
+          "sec": 117,
+          "title": "Lounge Tour & First Impressions",
+          "ife": false
+        },
+        {
+          "t": "02:47",
+          "sec": 167,
+          "title": "Breakfast Buffet, Pancakes & Drinks",
+          "ife": false
+        },
+        {
+          "t": "04:43",
+          "sec": 283,
+          "title": "Coffee Experience & Travel Tips",
+          "ife": false
+        },
+        {
+          "t": "05:18",
+          "sec": 318,
+          "title": "Lounge Shop",
+          "ife": false
+        },
+        {
+          "t": "05:42",
+          "sec": 342,
+          "title": "Shower Facilities",
+          "ife": false
+        },
+        {
+          "t": "06:03",
+          "sec": 363,
+          "title": "Virgin Australia Lounge Review",
+          "ife": false
+        },
+        {
+          "t": "07:46",
+          "sec": 466,
+          "title": "Time to Fly & Boarding",
+          "ife": false
+        },
+        {
+          "t": "09:13",
+          "sec": 553,
+          "title": "Business Class Seat Tour",
+          "ife": false
+        },
+        {
+          "t": "10:29",
+          "sec": 629,
+          "title": "Takeoff from Brisbane",
+          "ife": false
+        },
+        {
+          "t": "11:08",
+          "sec": 668,
+          "title": "In-Flight Entertainment",
+          "ife": true
+        },
+        {
+          "t": "11:39",
+          "sec": 699,
+          "title": "Business Class Breakfast",
+          "ife": false
+        },
+        {
+          "t": "12:43",
+          "sec": 763,
+          "title": "Virgin Australia Business Class Score",
+          "ife": false
+        },
+        {
+          "t": "14:50",
+          "sec": 890,
+          "title": "What's Coming Next",
+          "ife": false
+        }
+      ],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "qantas",
+          "mentions": 2
+        }
+      ],
+      "aircraft_mentioned": [
+        {
+          "keyword": "737",
+          "mentions": 3
+        },
+        {
+          "keyword": "boeing",
+          "mentions": 3
+        }
+      ],
+      "ife_features": {
+        "entertainment_system": true,
+        "seat": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": "description"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=rlthym02xmU",
+      "title": "✈️ IndiGo Stretch Seats Review 😍 More Legroom or Just Hype? #Shorts",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-10T13:57:22Z",
+      "duration_seconds": 15,
+      "is_short": true,
+      "channel_title": "Anagh Sharma",
+      "view_count": 1362,
+      "like_count": 7,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": null,
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "indigo",
+          "mentions": 5
+        }
+      ],
+      "aircraft_mentioned": [],
+      "ife_features": {
+        "seat": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=eltKjATdlqk",
+      "title": "Dining in the Sky | Etihad A321LR Business Class",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-14T09:00:06Z",
+      "duration_seconds": 10,
+      "is_short": true,
+      "channel_title": "a350",
+      "view_count": 1704,
+      "like_count": 16,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Panasonic eX3",
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "etihad",
+          "mentions": 2
+        }
+      ],
+      "aircraft_mentioned": [],
+      "ife_features": {
+        "seat": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=K0LaqtwBrqw",
+      "title": "Thai Airways Flight Inflight Food Experience ✈️🍜 #thaiairways #travel",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-04T13:00:06Z",
+      "duration_seconds": 145,
+      "is_short": true,
+      "channel_title": "San Phyo On Earth",
+      "view_count": 363,
+      "like_count": 6,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Thales AVANT",
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "thai airways",
+          "mentions": 3
+        }
+      ],
+      "aircraft_mentioned": [],
+      "ife_features": {
+        "seat": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=VV8eETrPRQ4",
+      "title": "Air India Delhi to Singapore Trip Report #shorts 👀",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-14T19:58:30Z",
+      "duration_seconds": 19,
+      "is_short": true,
+      "channel_title": "OwenTravels",
+      "view_count": 799,
+      "like_count": 3,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Panasonic eX3",
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "air india",
+          "mentions": 2
+        }
+      ],
+      "aircraft_mentioned": [],
+      "ife_features": {},
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=A1Mhno9clyg",
+      "title": "There's an Air about India | Vaibhav Sooryavanshi x Air India",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-09-18T11:47:48Z",
+      "duration_seconds": 103,
+      "is_short": true,
+      "channel_title": "Air India Official",
+      "view_count": 7526068,
+      "like_count": 1023,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Panasonic eX3",
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "air india",
+          "mentions": 1
+        }
+      ],
+      "aircraft_mentioned": [],
+      "ife_features": {},
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=3hkB3_oyXtc",
+      "title": "STARLUX Airbus A350-900 (B-58501) takeoff from Tokyo Narita Airport",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-09-27T08:41:42Z",
+      "duration_seconds": 153,
+      "is_short": true,
+      "channel_title": "SFCommuter50",
+      "view_count": 166,
+      "like_count": 2,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Panasonic eX3",
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "starlux",
+          "mentions": 2
+        }
+      ],
+      "aircraft_mentioned": [
+        {
+          "keyword": "airbus",
+          "mentions": 2
+        },
+        {
+          "keyword": "a350-900",
+          "mentions": 2
+        }
+      ],
+      "ife_features": {},
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=9rL7DcZnfyc",
+      "title": "EVA Air Business Class SURPRISED Me! Better Than Thai Airways?",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-14T17:24:15Z",
+      "duration_seconds": 782,
+      "is_short": false,
+      "channel_title": "mosmiles",
+      "view_count": 1102,
+      "like_count": 31,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Panasonic eX3",
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "eva air",
+          "mentions": 6
+        },
+        {
+          "keyword": "thai airways",
+          "mentions": 4
+        },
+        {
+          "keyword": "lufthansa",
+          "mentions": 1
+        },
+        {
+          "keyword": "singapore airlines",
+          "mentions": 1
+        },
+        {
+          "keyword": "china airlines",
+          "mentions": 1
+        }
+      ],
+      "aircraft_mentioned": [
+        {
+          "keyword": "boeing",
+          "mentions": 2
+        }
+      ],
+      "ife_features": {
+        "seat": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=6F2RMNliBNA",
+      "title": "Is Emirates' New Business Class Worth It? 777-300ER Singapore to Dubai",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-14T14:09:00Z",
+      "duration_seconds": 376,
+      "is_short": false,
+      "channel_title": "Pepper.Eggy.Nugget",
+      "view_count": 269,
+      "like_count": 0,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Emirates ICE",
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "emirates",
+          "mentions": 7
+        }
+      ],
+      "aircraft_mentioned": [
+        {
+          "keyword": "boeing",
+          "mentions": 2
+        }
+      ],
+      "ife_features": {
+        "entertainment_system": true,
+        "seat": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=_NMmz-1-4oQ",
+      "title": "Qatar Airways A350 Unleashes Full Power in Vienna 🔥✈️",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-09-23T06:47:53Z",
+      "duration_seconds": 92,
+      "is_short": true,
+      "channel_title": "Travel Expertos",
+      "view_count": 1241,
+      "like_count": 20,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Oryx One",
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "qatar airways",
+          "mentions": 2
+        }
+      ],
+      "aircraft_mentioned": [
+        {
+          "keyword": "a350",
+          "mentions": 4
+        },
+        {
+          "keyword": "airbus",
+          "mentions": 1
+        }
+      ],
+      "ife_features": {},
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=r5Nk9KEwnsQ",
+      "title": "How much does Qatar Airways flight crew actually earn? ✈️💰👀",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-09-16T15:37:56Z",
+      "duration_seconds": 11,
+      "is_short": true,
+      "channel_title": "Skylux Travel",
+      "view_count": 17304,
+      "like_count": 54,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Oryx One",
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "qatar airways",
+          "mentions": 1
+        }
+      ],
+      "aircraft_mentioned": [],
+      "ife_features": {},
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=23oJ7ByzsXY",
+      "title": "TRIP REPORT | Etihad Airways - Airbus A350-1000 - Abu Dhabi (AUH) to Tokyo Narita (NRT)  | Economy",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-14T22:00:22Z",
+      "duration_seconds": 628,
+      "is_short": false,
+      "channel_title": "BR Trip Report",
+      "view_count": 334,
+      "like_count": 10,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Panasonic eX3",
+      "chapters": [],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "etihad",
+          "mentions": 6
+        }
+      ],
+      "aircraft_mentioned": [
+        {
+          "keyword": "airbus",
+          "mentions": 4
+        },
+        {
+          "keyword": "a350-1000",
+          "mentions": 4
+        }
+      ],
+      "ife_features": {
+        "content": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": null
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=ODUVPkTEdeg",
+      "title": "Why Can't You Use a Power Bank on a Plane? Because of This. And You Packed One.",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-13T18:00:24Z",
+      "duration_seconds": 449,
+      "is_short": false,
+      "channel_title": "Lift the Lid",
+      "view_count": 323,
+      "like_count": 4,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Thales AVANT",
+      "chapters": [
+        {
+          "t": "0:00",
+          "sec": 0,
+          "title": "IndiGo: a power bank fire in the overhead bin",
+          "ife": false
+        },
+        {
+          "t": "0:27",
+          "sec": 27,
+          "title": "Why can't you use your power bank on a plane?",
+          "ife": false
+        },
+        {
+          "t": "0:56",
+          "sec": 56,
+          "title": "What's actually banned (and the new 2026 rule)",
+          "ife": false
+        },
+        {
+          "t": "1:38",
+          "sec": 98,
+          "title": "60 seconds inside a burning cell",
+          "ife": false
+        },
+        {
+          "t": "3:10",
+          "sec": 190,
+          "title": "Air Busan: why the bin is the worst place",
+          "ife": false
+        },
+        {
+          "t": "4:02",
+          "sec": 242,
+          "title": "Myth: \"it's the lithium\"",
+          "ife": false
+        },
+        {
+          "t": "4:53",
+          "sec": 293,
+          "title": "The bill: one fire every four days",
+          "ife": false
+        },
+        {
+          "t": "5:25",
+          "sec": 325,
+          "title": "The twist: why big banks stop at 27,000 mAh",
+          "ife": false
+        },
+        {
+          "t": "6:28",
+          "sec": 388,
+          "title": "Case closed: do this today",
+          "ife": false
+        }
+      ],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "indigo",
+          "mentions": 3
+        },
+        {
+          "keyword": "klm",
+          "mentions": 2
+        },
+        {
+          "keyword": "emirates",
+          "mentions": 1
+        },
+        {
+          "keyword": "british airways",
+          "mentions": 1
+        },
+        {
+          "keyword": "delta",
+          "mentions": 1
+        }
+      ],
+      "aircraft_mentioned": [
+        {
+          "keyword": "a321",
+          "mentions": 1
+        },
+        {
+          "keyword": "airbus",
+          "mentions": 1
+        }
+      ],
+      "ife_features": {
+        "seat": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": "description"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=OwGrTQ5nNvY",
+      "title": "Airbus Built the A380 for a World That Disappeared",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-13T08:45:29Z",
+      "duration_seconds": 1052,
+      "is_short": false,
+      "channel_title": "Airframe",
+      "view_count": 496,
+      "like_count": 2,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Emirates ICE",
+      "chapters": [
+        {
+          "t": "0:00",
+          "sec": 0,
+          "title": "Three things that broke the \"too big\" story",
+          "ife": false
+        },
+        {
+          "t": "2:12",
+          "sec": 132,
+          "title": "The forecast that launched the A380",
+          "ife": false
+        },
+        {
+          "t": "5:06",
+          "sec": 306,
+          "title": "Explanation 1: the hubs",
+          "ife": false
+        },
+        {
+          "t": "7:36",
+          "sec": 456,
+          "title": "Explanation 2: the twins",
+          "ife": false
+        },
+        {
+          "t": "10:15",
+          "sec": 615,
+          "title": "Explanation 3: fuel in 2026",
+          "ife": false
+        },
+        {
+          "t": "13:26",
+          "sec": 806,
+          "title": "The factor outside the airplane",
+          "ife": false
+        },
+        {
+          "t": "15:20",
+          "sec": 920,
+          "title": "The proof",
+          "ife": false
+        },
+        {
+          "t": "17:54",
+          "sec": 1074,
+          "title": "What happens next",
+          "ife": false
+        }
+      ],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "emirates",
+          "mentions": 6
+        },
+        {
+          "keyword": "qantas",
+          "mentions": 3
+        },
+        {
+          "keyword": "etihad",
+          "mentions": 2
+        }
+      ],
+      "aircraft_mentioned": [
+        {
+          "keyword": "a380",
+          "mentions": 13
+        },
+        {
+          "keyword": "airbus",
+          "mentions": 11
+        },
+        {
+          "keyword": "a350",
+          "mentions": 2
+        },
+        {
+          "keyword": "boeing",
+          "mentions": 1
+        }
+      ],
+      "ife_features": {
+        "seat": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": "description"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=hxWKLSWTtE0",
+      "title": "American Airlines 737 MAX 8 Flight Sound and Cabin View",
+      "title_en": null,
+      "year": 2026,
+      "published_at": "2026-10-14T15:36:41Z",
+      "duration_seconds": 1029,
+      "is_short": false,
+      "channel_title": "First Travel",
+      "view_count": 21,
+      "like_count": 3,
+      "ife_system": null,
+      "ife_system_inferred": false,
+      "ife_system_guess": "Panasonic eX3",
+      "chapters": [
+        {
+          "t": "00:00",
+          "sec": 0,
+          "title": "Takeoff from Washington Reagan National (DCA)",
+          "ife": false
+        },
+        {
+          "t": "00:52",
+          "sec": 52,
+          "title": "Climb and Transition to Cruise Altitude",
+          "ife": false
+        },
+        {
+          "t": "03:10",
+          "sec": 190,
+          "title": "Cruising Above the Clouds",
+          "ife": false
+        },
+        {
+          "t": "10:00",
+          "sec": 600,
+          "title": "Beginning Descent",
+          "ife": false
+        },
+        {
+          "t": "13:10",
+          "sec": 790,
+          "title": "Final Approach and Landing at Dallas Fort Worth (DFW)",
+          "ife": false
+        },
+        {
+          "t": "14:43",
+          "sec": 883,
+          "title": "Taxiing to the Terminal Gate",
+          "ife": false
+        }
+      ],
+      "media_type": "video",
+      "airlines_mentioned": [
+        {
+          "keyword": "american airlines",
+          "mentions": 4
+        }
+      ],
+      "aircraft_mentioned": [
+        {
+          "keyword": "737",
+          "mentions": 4
+        },
+        {
+          "keyword": "737 max",
+          "mentions": 4
+        },
+        {
+          "keyword": "boeing",
+          "mentions": 2
+        }
+      ],
+      "ife_features": {
+        "content": true,
+        "seat": true
+      },
+      "ife_specs": {},
+      "transcript_available": false,
+      "transcript_excerpt": null,
+      "captions": [],
+      "transcript_full": "",
+      "source_tier": 2,
+      "source_name": "Creator",
+      "chapters_source": "description"
     }
   ],
-  "last_updated": "2026-10-14T11:01:17.895947"
+  "last_updated": "2026-10-15T08:03:22.537019"
 }
