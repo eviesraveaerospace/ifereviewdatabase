@@ -283,7 +283,7 @@ svg{display:block}
 .mdelf{cursor:pointer;font-family:var(--f);color:#a12b2b!important;border-color:#e6b4b4!important}
 .vchaps{display:flex;flex-wrap:wrap;gap:6px;padding:8px 20px 0}.vtrans{display:flex;flex-direction:column;gap:4px;padding:10px 20px 0;max-height:160px;overflow-y:auto}.vtrans .vchap{justify-content:flex-start;text-align:left;border-color:transparent;background:transparent;padding:2px 4px}.vtrans .vchap:hover{background:#fff;border-color:var(--line2)}.vchap{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line2);background:#fff;border-radius:7px;padding:3px 8px;font:500 11.5px var(--f);color:var(--ink2);cursor:pointer}.vchap:hover{border-color:var(--red)}.vchap .cts{font-size:11px;font-weight:600;color:var(--red)}
 .cap.chap{border-radius:7px}.cap.scr.vch{margin-left:22px}.cap.scr.rec{font-weight:600;color:var(--ink)}.cap.scr.on{background:#fff;box-shadow:inset 3px 0 0 var(--red)}.scr-n{font-style:normal;color:var(--gray);font-weight:600;font-size:11px}
-.cap.chap.ife{background:#fff5f4}
+.cap.chap.ife{background:#fff5f4}.cap.chap.sys{margin-left:22px;background:#fff;border-left:3px solid #e0a800;border-radius:0 6px 6px 0}.cap.chap.sys span:last-child{color:var(--ink);font-weight:600}
 .cap.chap.ife span:last-child{color:var(--red);font-weight:600}
 .ife-key{font-size:9px;color:var(--red);background:#fff5f4;border:1px solid #f0cdd1;border-radius:999px;padding:1px 6px;font-weight:600;margin-left:6px}
 .tag.chap{border-color:#c7a900;color:#7a6800;background:#fff6cf;font-weight:700}
@@ -827,7 +827,7 @@ function recentItem(r){
   const thumb=vid?'<div class="rthumb"><img src="https://i.ytimg.com/vi/'+vid+'/mqdefault.jpg" loading="lazy" onerror="this.remove()">'+(r.transcript_available?'<span class="cc">CC</span>':'')+'</div>':(photo?'<div class="rthumb"><img src="'+esc(photo)+'" loading="lazy" onerror="this.remove()">'+(isArt?'<span class="artbadge">ARTICLE</span>':'')+(med.total>1?'<span class="mcnt">1 / '+med.total+'</span>':'')+(med.thumbVideo?'<span class="mplay">▶</span>':'')+'</div>':(isArt?'<div class="rthumb doc">'+docSvg+'<span class="dom">'+esc(host(r.url))+'</span></div>':'<div class="rthumb art">'+esc(r.media_type==='internal'?ini(r.internal_author||r.channel_title||'T'):((host(r.url)[0]||'?').toUpperCase()))+'</div>'));
   const nc=(S.notes&&S.notes[r.url]&&S.notes[r.url].length)||0;
   const hasIfeChap=(r.chapters||[]).some(c=>c.ife);
-  const chips=(isArt?'<span class="tag article">Article</span>':'')+mediaChips(med)+(isShortRow(r)?'<span class="tag short">Short</span>':'')+(r.media_type==='internal'?'<span class="tag internal">Internal'+(r.internal_rating?' · '+'★'.repeat(r.internal_rating):'')+'</span>':'')+(nc?'<span class="tag note">'+nc+' note'+(nc>1?'s':'')+'</span>':'')+(hasIfeChap?'<span class="tag chap">✦ IFE chapter</span>':'')+(r.ife_system?'<span class="tag">'+esc(r.ife_system)+'</span>':'')+(air?'<span class="tag soft">'+esc(air)+'</span>':'');
+  const chips=(isArt?'<span class="tag article">Article</span>':'')+mediaChips(med)+(isShortRow(r)?'<span class="tag short">Short</span>':'')+(r.media_type==='internal'?'<span class="tag internal">Internal'+(r.internal_rating?' · '+'★'.repeat(r.internal_rating):'')+'</span>':'')+(nc?'<span class="tag note">'+nc+' note'+(nc>1?'s':'')+'</span>':'')+(hasIfeChap?'<span class="tag chap">✦ IFE chapter</span>':(r.chapters||[]).length?'<span class="tag soft">'+(r.chapters||[]).length+' chapters</span>':'')+(r.ife_system?'<span class="tag">'+esc(r.ife_system)+'</span>':'')+(air?'<span class="tag soft">'+esc(air)+'</span>':'');
   const sub=(isArt?[host(r.url),r.source_name||'Press',r.year]:[r.channel_title||r.source_name||'Creator',views,r.year]).filter(Boolean).join(' · ');
   el.innerHTML=thumb+'<div class="rb">'+
     '<div class="rtop"><div class="rtt"'+(r.title_en?' title="Original: '+esc(r.title)+'"':'')+'>'+esc(dispTitle(r))+'</div>'+
@@ -1443,7 +1443,23 @@ function openModal(idx,rows){
   const chaps=r.chapters||[];
   if(chaps.length){
     side+='<div class="sh">Chapters'+(chaps.some(c=>c.ife)?' <span class="ife-key">✦ IFE</span>':'')+'</div>';
-    side+=chaps.map(ch=>'<div class="cap chap'+(ch.ife?' ife':'')+'" data-s="'+(ch.sec!=null?ch.sec:'')+'"><span class="cts">'+esc(ch.t||'')+'</span><span>'+(ch.ife?'✦ ':'')+esc(ch.title)+'</span></div>').join('');
+    // The detected system (>= 80% confidence only) sits as a sub-section under the
+    // IFE chapter it was seen in; clicking it seeks to where the name appears.
+    const sysAt=(r.ife_system&&r.ife_system_at!=null)?+r.ife_system_at:null;
+    const ifeIdx=chaps.map((c,i)=>c.ife?i:-1).filter(i=>i>=0);
+    let sysChap=-1;
+    if(r.ife_system&&ifeIdx.length){
+      sysChap=ifeIdx[0];
+      if(sysAt!=null){const k=chaps.findIndex((c,i)=>c.ife&&sysAt>=c.sec&&(i+1>=chaps.length||sysAt<chaps[i+1].sec));if(k>=0)sysChap=k;}
+    }
+    side+=chaps.map((ch,i)=>{
+      let h='<div class="cap chap'+(ch.ife?' ife':'')+'" data-s="'+(ch.sec!=null?ch.sec:'')+'"><span class="cts">'+esc(ch.t||'')+'</span><span>'+(ch.ife?'✦ ':'')+esc(ch.title)+'</span></div>';
+      if(i===sysChap){
+        const s=sysAt!=null?sysAt:ch.sec, pct=r.ife_system_confidence!=null?Math.round(r.ife_system_confidence*100)+'%':'';
+        h+='<div class="cap chap sys" data-s="'+(s!=null?s:'')+'" title="Jump to the system'+(sysAt!=null?' mention':'')+'"><span class="cts">'+esc(fmtSec(s))+'</span><span>System · '+esc(r.ife_system)+(pct?' <em class="scr-n">'+pct+'</em>':'')+'</span></div>';
+      }
+      return h;
+    }).join('');
     side+='<div class="sh" style="margin-top:16px">Transcript — IFE moments</div>';
   } else {
     side+='<div class="sh">Transcript — IFE moments</div>';

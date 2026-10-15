@@ -672,6 +672,41 @@ IFE_SYSTEM_PATTERNS = {
 }
 
 
+SYSTEM_CONFIDENCE_MIN = 0.8   # a system tag below this is dropped to a guess
+
+
+def system_confidence(r: dict):
+    """(confidence, seconds) for a review's detected IFE system, from where the
+    system's name actually appears. Title, repeated captions, or an OCR'd screen
+    are solid; a single caption or transcript hit is borderline; a name seen only
+    in the video description is below the display threshold."""
+    name = r.get("ife_system")
+    if not name:
+        return 0.0, None
+    if r.get("ife_system_manual"):
+        return 1.0, None
+    pats = [p.strip().lower() for p in IFE_SYSTEM_PATTERNS.get(name, [name.lower()])]
+    hit = lambda text: any(p in (text or "").lower() for p in pats)
+    at = None
+    for c in r.get("captions") or []:
+        if hit(c.get("text_en") or c.get("text")):
+            at = c.get("start_seconds")
+            break
+    cap_hits = sum(1 for c in r.get("captions") or [] if hit(c.get("text_en") or c.get("text")))
+    chap_at = next((c.get("sec") for c in r.get("chapters") or []
+                    if hit(c.get("title")) or any(hit(t) for t in c.get("tags") or [])), None)
+    if at is None:
+        at = chap_at
+    if hit(r.get("title")) or hit(r.get("title_en")):
+        return 0.95, at
+    if cap_hits >= 2 or chap_at is not None or any(hit(t) for t in r.get("screen_tags") or []):
+        return 0.9, at
+    tr_hits = sum((r.get("transcript_full") or "").lower().count(p) for p in pats)
+    if cap_hits == 1 or tr_hits:
+        return (0.85 if tr_hits >= 2 else 0.8), at
+    return 0.6, at
+
+
 # ── IFE feature detection ─────────────────────────────────────────────────────
 IFE_FEATURE_KEYWORDS = {
     "entertainment_system": ["entertainment system", "ife", "in-flight entertainment", "seatback screen", "vod",

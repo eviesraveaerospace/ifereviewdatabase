@@ -143,7 +143,8 @@ class IFEDataManager:
 
     def _backfill_fields(self):
         """Add default values for fields introduced after initial seed."""
-        from ife_crawler import infer_ife_system, source_tier as compute_tier, is_official_promo
+        from ife_crawler import (infer_ife_system, source_tier as compute_tier, is_official_promo,
+                                 system_confidence, SYSTEM_CONFIDENCE_MIN)
         for r in self.data.get("reviews", []):
             r.setdefault("ife_specs", {})
             r.setdefault("ife_system_inferred", False)
@@ -171,6 +172,18 @@ class IFEDataManager:
             # Records with no detected system keep the airline-based inference
             # as a *guess* only — never shown as the system tag. Uncertain
             # systems stay untagged; manual tags come via /api/review-system.
+            # Confidence in the detected system, from where its name appears.
+            # Below the threshold the tag is demoted to a guess (kept, not shown).
+            if r.get("ife_system") and not r.get("ife_system_manual"):
+                conf, at = system_confidence(r)
+                r["ife_system_confidence"] = conf
+                r["ife_system_at"] = at
+                if conf < SYSTEM_CONFIDENCE_MIN:
+                    r["ife_system_guess"] = r["ife_system"]
+                    r["ife_system"] = None
+                    r["ife_system_dropped"] = "low_confidence"
+            elif r.get("ife_system_manual"):
+                r["ife_system_confidence"] = 1.0
             if not r.get("ife_system") and "ife_system_guess" not in r:
                 r["ife_system_guess"] = infer_ife_system(
                     r.get("airlines_mentioned", []),
