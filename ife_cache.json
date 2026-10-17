@@ -63746,14 +63746,8 @@
         {
           "t": "06:22",
           "sec": 382,
-          "title": "In-Flight Entertainment",
+          "title": "In-Flight Entertainment & Legroom Review",
           "ife": true
-        },
-        {
-          "t": "06:37",
-          "sec": 397,
-          "title": "Economy Class Legroom Review",
-          "ife": false
         },
         {
           "t": "06:40",
@@ -103228,7 +103222,7 @@
         {
           "t": "00:00",
           "sec": 0,
-          "title": "Boarding Qatar 777-300ER at Doha (DOH) and Cabin Tour",
+          "title": "Boarding Qatar 777-300ER at Doha (DOH)",
           "ife": false
         },
         {
@@ -103240,7 +103234,7 @@
         {
           "t": "04:04",
           "sec": 244,
-          "title": "Starlink In-Flight Wi-Fi Speed Test",
+          "title": "Starlink In-Flight Wi-Fi",
           "ife": true
         },
         {
@@ -103252,7 +103246,7 @@
         {
           "t": "04:57",
           "sec": 297,
-          "title": "Champagne and Warm Nuts Service",
+          "title": "Champagne and Warm Nuts",
           "ife": false
         },
         {
@@ -103264,7 +103258,7 @@
         {
           "t": "06:14",
           "sec": 374,
-          "title": "Dine-on-Demand Lunch Service and Steak Dinner",
+          "title": "Dine-on-Demand Lunch Service",
           "ife": false
         },
         {
@@ -118722,7 +118716,7 @@
         {
           "t": "02:01",
           "sec": 121,
-          "title": "Takeoff from Washington Reagan National (DCA)",
+          "title": "Takeoff from Washington Reagan National",
           "ife": false
         },
         {
@@ -145646,7 +145640,7 @@
         {
           "t": "02:21",
           "sec": 141,
-          "title": "USM Departure and Takeoff",
+          "title": "Departure and Takeoff",
           "ife": false
         },
         {
@@ -978462,7 +978456,80 @@
       "ife_system": null,
       "ife_system_inferred": false,
       "ife_system_guess": "Viasat (streaming)",
-      "chapters": [],
+      "chapters": [
+        {
+          "t": "00:00",
+          "sec": 0,
+          "title": "Introduction",
+          "ife": false
+        },
+        {
+          "t": "00:47",
+          "sec": 47,
+          "title": "Treviso Airport (TSF)",
+          "ife": false
+        },
+        {
+          "t": "02:30",
+          "sec": 150,
+          "title": "Boarding on Boeing 737 MAX 8",
+          "ife": false
+        },
+        {
+          "t": "02:59",
+          "sec": 179,
+          "title": "Pushback & Engine Start",
+          "ife": false
+        },
+        {
+          "t": "04:17",
+          "sec": 257,
+          "title": "Taxi to Runway 07",
+          "ife": false
+        },
+        {
+          "t": "04:54",
+          "sec": 294,
+          "title": "Backtracking on Runway 25",
+          "ife": false
+        },
+        {
+          "t": "06:03",
+          "sec": 363,
+          "title": "Take-off from Treviso",
+          "ife": false
+        },
+        {
+          "t": "07:04",
+          "sec": 424,
+          "title": "Climbing & Cruise",
+          "ife": false
+        },
+        {
+          "t": "08:48",
+          "sec": 528,
+          "title": "Starting descent & approaching to MLA",
+          "ife": false
+        },
+        {
+          "t": "10:12",
+          "sec": 612,
+          "title": "Landing at Malta Int. airport (MLA)",
+          "ife": false
+        },
+        {
+          "t": "11:13",
+          "sec": 673,
+          "title": "Taxi to Stand",
+          "ife": false
+        },
+        {
+          "t": "11:30",
+          "sec": 690,
+          "title": "Flight Review & Final Thoughts",
+          "ife": false
+        }
+      ],
       "media_type": "video",
       "airlines_mentioned": [
         {
@@ -978499,7 +978566,7 @@
       "discovered_by": "channel:Welcome on Board",
       "sentiment": "neutral",
       "sentiment_score": 0.0,
-      "chapters_source": null,
+      "chapters_source": "description",
       "title_lang": "en"
     },
     {
