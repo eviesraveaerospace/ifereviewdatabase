@@ -83,7 +83,7 @@ else
     git commit -q -m "data: nightly transcripts + OCR screen tags (VM)" >> "$LOG" 2>&1
     if ! git push origin main >> "$LOG" 2>&1; then
         log "push rejected; rebasing onto origin/main and retrying"
-        if ! git pull --rebase origin main >> "$LOG" 2>&1; then
+        if ! git pull --rebase --autostash origin main >> "$LOG" 2>&1; then
             # Two writers to one JSON (cloud crawl + this box): merge the cache by
             # URL instead of giving up, then continue the rebase.
             if "$PY" resolve_cache_conflict.py >> "$LOG" 2>&1 && GIT_EDITOR=true git rebase --continue >> "$LOG" 2>&1; then
