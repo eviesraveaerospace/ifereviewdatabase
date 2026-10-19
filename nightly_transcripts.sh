@@ -59,10 +59,13 @@ if [ -x "$OCR_PY" ] && [ -f "$OCR_REPO/ocr_video_chapters.py" ]; then
     IFE_OCR_REPO="$OCR_REPO" "$OCR_PY" -u tag_internal_media.py >> "$LOG" 2>&1
     if "$OCR_PY" -c "import yt_dlp" 2>/dev/null; then
         IFE_OCR_REPO="$OCR_REPO" MAX_RUNTIME_MIN="${SHORTS_OCR_MIN:-60}" "$OCR_PY" -u gather_short_chapters.py >> "$LOG" 2>&1
-        # external full-length reviews without chapters, best IFE candidates first, 135 min cap
+        # every video with a description chapter flagged IFE: OCR just that chapter
+        # (ranged download) and keep its screen-tag detections, newest first, 60 min cap
+        IFE_OCR_REPO="$OCR_REPO" MAX_RUNTIME_MIN="${IFE_CHAPTER_OCR_MIN:-60}" "$OCR_PY" -u gather_short_chapters.py --ife-chapters --interval "${LONG_OCR_INTERVAL:-4}" >> "$LOG" 2>&1
+        # external full-length reviews without chapters, best IFE candidates first, 75 min cap
         # (the Shorts pass finishes in seconds now that every Short is done, so its hour moved here).
         # 4 s frame interval: ~4x faster than 2 s with the same tags and ~1 chapter fewer per video.
-        IFE_OCR_REPO="$OCR_REPO" MAX_RUNTIME_MIN="${LONG_OCR_MIN:-135}" "$OCR_PY" -u gather_short_chapters.py --long --interval "${LONG_OCR_INTERVAL:-4}" >> "$LOG" 2>&1
+        IFE_OCR_REPO="$OCR_REPO" MAX_RUNTIME_MIN="${LONG_OCR_MIN:-75}" "$OCR_PY" -u gather_short_chapters.py --long --interval "${LONG_OCR_INTERVAL:-4}" >> "$LOG" 2>&1
     else
         log "yt_dlp missing in $OCR_PY - skipping Shorts OCR chapters"
     fi

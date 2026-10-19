@@ -684,6 +684,52 @@ IFE_SYSTEM_PATTERNS = {
 
 SYSTEM_CONFIDENCE_MIN = 0.8   # a system tag below this is dropped to a guess
 
+# Feature keywords that are specific enough for a single caption line to count
+# as a detection of that feature at that moment (the broad ones — "content",
+# "music", "games" — need the OCR pass to confirm a screen).
+_CAPTION_TAG_KEYWORDS = {
+    "moving_map":      ["moving map", "flight map", "the map", "flight tracker", "flight path"],
+    "connectivity":    ["wifi", "wi-fi", "starlink", "internet"],
+    "tail_camera":     ["tail camera", "tail cam", "belly camera", "external camera"],
+    "bluetooth_audio": ["bluetooth"],
+    "usb_power":       ["usb", "power outlet", "charging port"],
+    "4k_display":      ["4k", "oled", "hdr"],
+    "quality":         ["resolution", "touchscreen", "touch screen", "responsive", "laggy"],
+    "content":         ["movie selection", "content library", "movies and tv", "movie library",
+                        "box sets", "new releases"],
+    "entertainment_system": ["entertainment system", "ife system", "seatback screen", "seat-back screen",
+                             "personal screen"],
+    "watch_party":     ["watch party"],
+    "seat_chat":       ["seat chat", "seat-to-seat"],
+}
+CAPTION_TAG_LABELS = {
+    "moving_map": "Map", "connectivity": "Connectivity", "tail_camera": "Camera",
+    "bluetooth_audio": "Audio", "usb_power": "Cabin & seat features", "4k_display": "Display",
+    "quality": "Display", "content": "Media Navigation", "entertainment_system": "IFE System",
+    "watch_party": "Chat & sharing", "seat_chat": "Chat & sharing",
+}
+
+
+def caption_tag_detections(r: dict):
+    """Timestamped feature mentions from the transcript, one per feature at its
+    first mention: [{"tag","t","sec","conf","source":"caption"}]. Specific
+    phrases only, so each is a 0.8 detection; the OCR pass supplies the 0.9s."""
+    out, seen = [], set()
+    for c in r.get("captions") or []:
+        sec = c.get("start_seconds")
+        if sec is None:
+            continue
+        text = (c.get("text_en") or c.get("text") or "")
+        for feat, kws in _CAPTION_TAG_KEYWORDS.items():
+            if feat in seen:
+                continue
+            if any(_keyword_re(kw).search(text) for kw in kws):
+                seen.add(feat)
+                s = int(sec)
+                out.append({"tag": CAPTION_TAG_LABELS[feat], "feature": feat,
+                            "t": f"{s // 60}:{s % 60:02d}", "sec": s, "conf": 0.8, "source": "caption"})
+    return out
+
 
 def system_confidence(r: dict):
     """(confidence, seconds) for a review's detected IFE system, from where the

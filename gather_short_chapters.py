@@ -145,8 +145,10 @@ def _cookies_from_env():
         COOKIES.write_bytes(base64.b64decode(b64))
 
 
-def download(video_id: str, workdir: str):
-    """→ (path | None, status) where status ∈ ok / skip / block / fail."""
+def download(video_id: str, workdir: str, ranges=None):
+    """→ (path | None, status) where status ∈ ok / skip / block / fail.
+    ranges=[(start_sec, end_sec)] downloads only those sections (ffmpeg cut at
+    keyframes), so tagging one IFE chapter costs seconds, not the whole video."""
     import yt_dlp
     logger = _SilentLogger()
     opts = {
@@ -155,6 +157,10 @@ def download(video_id: str, workdir: str):
         "quiet": True, "no_warnings": True, "nocheckcertificate": True, "logger": logger,
         "extractor_args": {"youtube": {"player_client": ["tv", "android", "web_safari"]}},
     }
+    if ranges:
+        from yt_dlp.utils import download_range_func
+        opts["download_ranges"] = download_range_func(None, [(float(a), float(b)) for a, b in ranges])
+        opts["force_keyframes_at_cuts"] = True
     if COOKIES.exists():
         opts["cookiefile"] = str(COOKIES)
     try:
@@ -221,6 +227,41 @@ def to_dashboard(raw_chapters, long_form=False, gap=8):
     return rows
 
 
+# ── IFE chapter → tag detections ─────────────────────────────────────────────
+IFE_SPAN_MAX = 8 * 60      # cap per chapter: an "IFE" chapter rarely runs longer
+TAG_CONF_MIN = 0.8         # a screen seen in one sampled frame only is not shown
+
+
+def ife_spans(r):
+    """[(chapter_index, start, end)] for each description chapter flagged IFE."""
+    chs = r.get("chapters") or []
+    out = []
+    for i, c in enumerate(chs):
+        if not c.get("ife") or c.get("sec") is None:
+            continue
+        nxt = chs[i + 1]["sec"] if i + 1 < len(chs) and chs[i + 1].get("sec") is not None else None
+        end = min(nxt if nxt is not None else c["sec"] + IFE_SPAN_MAX, c["sec"] + IFE_SPAN_MAX)
+        if end > c["sec"]:
+            out.append((i, c["sec"], end))
+    return out
+
+
+def tag_detections(rows, offset, chapter_idx, interval):
+    """OCR rows of one chapter clip → one detection per tag run, offset to the
+    video's own clock. Confidence is persistence: a screen held across two or
+    more sampled frames is solid; a single frame is dropped."""
+    out = []
+    for row in rows:
+        conf = 0.9 if row["end"] - row["sec"] >= interval else 0.6
+        if conf < TAG_CONF_MIN:
+            continue
+        for tag in row["tags"]:
+            sec = int(round(row["sec"] + offset))
+            out.append({"tag": tag, "t": fmt_ts(sec), "sec": sec, "end": int(round(row["end"] + offset)),
+                        "conf": conf, "chapter": chapter_idx, "source": "ocr"})
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=0, help="stop after N videos (0 = all)")
@@ -231,6 +272,9 @@ def main():
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--long", action="store_true",
                     help="full-length videos (not Shorts) that have no chapters at all, newest first")
+    ap.add_argument("--ife-chapters", action="store_true",
+                    help="videos with a description chapter flagged IFE: OCR just that chapter and "
+                         "store its screen-tag detections as ife_tags (newest first)")
     a = ap.parse_args()
     _cookies_from_env()
 
@@ -240,6 +284,12 @@ def main():
         # An explicit URL may be any video (OCR works on full-length reviews
         # too — it is just slower), not only a Short.
         todo = [r for r in rows if r.get("url") == a.url and _yt_id(r.get("url"))]
+    elif a.ife_chapters:
+        # Every incoming review with an IFE chapter gets that chapter tagged;
+        # a video that already failed is not retried every night.
+        todo = [r for r in rows if r.get("media_type") == "video" and _yt_id(r.get("url"))
+                and r.get("chapters_source") == "description" and ife_spans(r) and not r.get("ife_tags_status")]
+        todo.sort(key=lambda r: r.get("published_at") or "", reverse=True)
     elif a.long:
         # Full-length external reviews without description chapters: OCR gives
         # them tag-only chapters (long_form merge rules). Newest first, and a
@@ -257,7 +307,7 @@ def main():
                 or (a.retag and r.get("chapters_source") == "ocr")]
     if a.limit:
         todo = todo[:a.limit]
-    print(f"OCR repo: {REPO}\n{len(todo)} {'full-length videos' if a.long else 'Shorts'} to chapter")
+    print(f"OCR repo: {REPO}\n{len(todo)} {'IFE chapters' if a.ife_chapters else 'full-length videos' if a.long else 'Shorts'} to tag")
     if a.dry_run or not todo:
         return
 
@@ -268,7 +318,8 @@ def main():
     done = failed = 0
     stats = {"ok": 0, "skip": 0, "fail": 0, "block": 0}
 
-    OWN = ("chapters", "chapters_source", "chapters_ocr_status", "screen_tags", "screen_tag_source", "ife_features")
+    OWN = ("chapters", "chapters_source", "chapters_ocr_status", "screen_tags", "screen_tag_source", "ife_features",
+           "ife_tags", "ife_tags_status")
     touched = {}
 
     def save():
@@ -291,6 +342,46 @@ def main():
             break
         vid = _yt_id(r["url"])
         print(f"\n[{n}/{len(todo)}] {vid}  {r.get('title', '')[:70]}")
+        if a.ife_chapters:
+            dets, status = [], "ok"
+            for ci, start, end in ife_spans(r):
+                with tempfile.TemporaryDirectory() as tmp:
+                    path, status = download(vid, tmp, ranges=[(start, end)])
+                    if status == "block" or not path:
+                        break
+                    try:
+                        rows_ = ocr_chapters(path, ocr, a.interval, os.path.join(tmp, "out"), long_form=True)
+                    except Exception as exc:  # noqa: BLE001
+                        print(f"  OCR failed: {exc}")
+                        status = "ocr-error"
+                        break
+                dets += tag_detections(rows_, start, ci, a.interval)
+            stats[status if status in stats else "fail"] += 1
+            if status == "block":
+                print("  YouTube is rate-limiting/bot-checking downloads — stopping this run.")
+                break
+            if status != "ok":
+                print(f"  {status}")
+                r["ife_tags_status"] = status
+                touched[r["url"]] = r
+                failed += 1
+                continue
+            r["ife_tags"] = dets
+            r["ife_tags_status"] = "done" if dets else "none"
+            tags = sorted({d["tag"] for d in dets} | set(r.get("screen_tags") or []))
+            if tags:
+                r["screen_tags"] = tags
+                r.setdefault("screen_tag_source", "ocr-ife-chapter")
+                r["ife_features"] = to_ife_features(tags, r.get("ife_features") or {})
+            touched[r["url"]] = r
+            done += 1
+            for d in dets:
+                print(f"  {d['t']:>6}  {d['tag']}  ({int(d['conf'] * 100)}%)")
+            if not dets:
+                print("  (no readable IFE screens in the IFE chapter)")
+            if done % 10 == 0:
+                save()
+            continue
         with tempfile.TemporaryDirectory() as tmp:
             path, status = download(vid, tmp)
             stats[status] += 1

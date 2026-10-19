@@ -283,7 +283,7 @@ svg{display:block}
 .mdelf{cursor:pointer;font-family:var(--f);color:#a12b2b!important;border-color:#e6b4b4!important}
 .vchaps{display:flex;flex-wrap:wrap;gap:6px;padding:8px 20px 0}.vtrans{display:flex;flex-direction:column;gap:4px;padding:10px 20px 0;max-height:160px;overflow-y:auto}.vtrans .vchap{justify-content:flex-start;text-align:left;border-color:transparent;background:transparent;padding:2px 4px}.vtrans .vchap:hover{background:#fff;border-color:var(--line2)}.vchap{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line2);background:#fff;border-radius:7px;padding:3px 8px;font:500 11.5px var(--f);color:var(--ink2);cursor:pointer}.vchap:hover{border-color:var(--red)}.vchap .cts{font-size:11px;font-weight:600;color:var(--red)}
 .cap.chap{border-radius:7px}.cap.scr.vch{margin-left:22px}.cap.scr.rec{font-weight:600;color:var(--ink)}.cap.scr.on{background:#fff;box-shadow:inset 3px 0 0 var(--red)}.scr-n{font-style:normal;color:var(--gray);font-weight:600;font-size:11px}
-.cap.chap.ife{background:#fff5f4}.cap.chap.sys{margin-left:22px;background:#fff;border-left:3px solid #e0a800;border-radius:0 6px 6px 0}.cap.chap.sys span:last-child{color:var(--ink);font-weight:600}
+.cap.chap.ife{background:#fff5f4}.cap.chap.sys{margin-left:22px;background:#fff;border-left:3px solid #e0a800;border-radius:0 6px 6px 0}.cap.chap.sys span:last-child{color:var(--ink);font-weight:600}.cap.chap.tagd{border-left-color:#c7a900}.cap.chap.tagd span:last-child{font-weight:500}
 .cap.chap.ife span:last-child{color:var(--red);font-weight:600}
 .ife-key{font-size:9px;color:var(--red);background:#fff5f4;border:1px solid #f0cdd1;border-radius:999px;padding:1px 6px;font-weight:600;margin-left:6px}
 .tag.chap{border-color:#c7a900;color:#7a6800;background:#fff6cf;font-weight:700}
@@ -1452,14 +1452,25 @@ function openModal(idx,rows){
       sysChap=ifeIdx[0];
       if(sysAt!=null){const k=chaps.findIndex((c,i)=>c.ife&&sysAt>=c.sec&&(i+1>=chaps.length||sysAt<chaps[i+1].sec));if(k>=0)sysChap=k;}
     }
+    // Tag detections (OCR'd screens from the IFE-chapter pass, plus transcript
+    // mentions) become sub-rows of the IFE chapter they fall in: one row per
+    // tag at its first sighting, >= 80% confidence only, click to jump there.
+    const dets=[...(r.ife_tags||[]),...(r.caption_tags||[])].filter(d=>d.sec!=null&&(d.conf==null||d.conf>=0.8));
+    const chapOf=sec=>{let k=-1;chaps.forEach((c,i)=>{if(c.sec!=null&&sec>=c.sec)k=i;});return k;};
+    const byChap={};
+    dets.sort((a,b)=>a.sec-b.sec).forEach(d=>{const k=d.chapter!=null?d.chapter:chapOf(d.sec);if(k<0||!chaps[k].ife)return;(byChap[k]=byChap[k]||[]);if(!byChap[k].some(x=>x.tag===d.tag))byChap[k].push(d);});
     side+=chaps.map((ch,i)=>{
       let h='<div class="cap chap'+(ch.ife?' ife':'')+'" data-s="'+(ch.sec!=null?ch.sec:'')+'"><span class="cts">'+esc(ch.t||'')+'</span><span>'+(ch.ife?'✦ ':'')+esc(ch.title)+'</span></div>';
       if(i===sysChap){
         const s=sysAt!=null?sysAt:ch.sec, pct=r.ife_system_confidence!=null?Math.round(r.ife_system_confidence*100)+'%':'';
         h+='<div class="cap chap sys" data-s="'+(s!=null?s:'')+'" title="Jump to the system'+(sysAt!=null?' mention':'')+'"><span class="cts">'+esc(fmtSec(s))+'</span><span>System · '+esc(r.ife_system)+(pct?' <em class="scr-n">'+pct+'</em>':'')+'</span></div>';
       }
+      (byChap[i]||[]).forEach(d=>{
+        h+='<div class="cap chap sys tagd" data-s="'+d.sec+'" title="'+(d.source==='ocr'?'Seen on screen':'Mentioned in the transcript')+' at '+esc(d.t||fmtSec(d.sec))+'"><span class="cts">'+esc(d.t||fmtSec(d.sec))+'</span><span>'+(d.source==='ocr'?'▣ ':'❝ ')+esc(d.tag)+(d.conf!=null?' <em class="scr-n">'+Math.round(d.conf*100)+'%</em>':'')+'</span></div>';
+      });
       return h;
     }).join('');
+    if(r.chapters_source==='description'&&chaps.some(c=>c.ife)&&!(r.ife_tags||[]).length&&!r.ife_tags_status)side+='<div class="t11" style="margin-left:22px">Screen tags for the IFE chapter arrive with the nightly OCR pass.</div>';
     side+='<div class="sh" style="margin-top:16px">Transcript — IFE moments</div>';
   } else {
     side+='<div class="sh">Transcript — IFE moments</div>';
