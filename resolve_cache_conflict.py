@@ -20,7 +20,11 @@ def _stage(n):
     out = subprocess.run(["git", "show", f":{n}:{CACHE}"], capture_output=True)
     if out.returncode != 0:
         return None
-    return json.loads(out.stdout.decode("utf-8"))
+    blob = out.stdout
+    # The cache is in Git LFS: the index holds a pointer; smudge it to content.
+    if blob.startswith(b"version https://git-lfs"):
+        blob = subprocess.run(["git", "lfs", "smudge"], input=blob, capture_output=True, check=True).stdout
+    return json.loads(blob.decode("utf-8"))
 
 
 def _richness(r):
