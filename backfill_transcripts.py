@@ -88,6 +88,10 @@ def enrich_from_transcript(r):
     r["aircraft_mentioned"] = _analyzer._mentions(text, AIRCRAFT_KEYWORDS)
     if not r.get("ife_system"):
         r["ife_system_guess"] = infer_ife_system(r["airlines_mentioned"], r["aircraft_mentioned"])
+    # A transcript that names the entertainment system gives the video an IFE
+    # chapter when the description had none (ife_crawler.transcript_ife_chapter).
+    from ife_crawler import add_transcript_ife_chapter
+    add_transcript_ife_chapter(r)
 
 
 def fetch_yt_segs(video_id, cookies_path=None):
@@ -255,7 +259,15 @@ def main():
     ]
     # Shorts are under 3 minutes, so a whole night of them transcribes hundreds of
     # reels; do them before the long-form backlog.
-    targets.sort(key=lambda r: not (r.get("is_short") or "/shorts/" in r.get("url", "")))
+    # Then the videos most likely to be IFE reviews (a description chapter flagged
+    # IFE, a named system, several IFE features), newest first — not cache order,
+    # which left recent reviews behind a years-old backlog.
+    def _prio(r):
+        feats = {k for k in (r.get("ife_features") or {}) if k != "seat"}
+        return (bool(r.get("is_short") or "/shorts/" in r.get("url", "")),
+                any(c.get("ife") for c in r.get("chapters") or []),
+                bool(r.get("ife_system")), min(len(feats), 3), r.get("published_at") or "")
+    targets.sort(key=_prio, reverse=True)
     print(f"Videos without transcript: {len(targets)}")
 
     # Set up cookies (bypasses IP block on GitHub Actions datacenter IPs)
@@ -293,7 +305,7 @@ def main():
                 if u in processed and u in by_url:
                     tgt = by_url[u]
                     for k in ("transcript_available", "transcript_excerpt", "captions",
-                              "transcript_full", "transcript_source") + ENRICH_KEYS:
+                              "transcript_full", "transcript_source", "chapters", "chapters_source") + ENRICH_KEYS:
                         if k in rr:
                             tgt[k] = rr[k]
             if to_remove:

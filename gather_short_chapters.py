@@ -240,6 +240,8 @@ def ife_spans(r):
         if not c.get("ife") or c.get("sec") is None:
             continue
         nxt = chs[i + 1]["sec"] if i + 1 < len(chs) and chs[i + 1].get("sec") is not None else None
+        if c.get("end"):            # transcript-derived chapters carry their own end
+            nxt = c["end"] if nxt is None else min(nxt, c["end"])
         end = min(nxt if nxt is not None else c["sec"] + IFE_SPAN_MAX, c["sec"] + IFE_SPAN_MAX)
         if end > c["sec"]:
             out.append((i, c["sec"], end))
@@ -288,7 +290,8 @@ def main():
         # Every incoming review with an IFE chapter gets that chapter tagged;
         # a video that already failed is not retried every night.
         todo = [r for r in rows if r.get("media_type") == "video" and _yt_id(r.get("url"))
-                and r.get("chapters_source") == "description" and ife_spans(r) and not r.get("ife_tags_status")]
+                and r.get("chapters_source") in ("description", "transcript") and ife_spans(r)
+                and not r.get("ife_tags_status")]
         todo.sort(key=lambda r: r.get("published_at") or "", reverse=True)
     elif a.long:
         # Full-length external reviews without description chapters: OCR gives

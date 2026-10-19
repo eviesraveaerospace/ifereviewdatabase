@@ -710,6 +710,57 @@ CAPTION_TAG_LABELS = {
 }
 
 
+# Caption lines that mean the reviewer is now on the IFE: these open a
+# transcript-derived IFE chapter when the description gave none.
+_TRANSCRIPT_IFE_RE = re.compile(
+    r"entertainment system|in-?flight entertainment|\bife\b|seat-?back screen|personal screen|"
+    r"entertainment screen|\bife system|the screen (?:is|has|here)|"
+    r"機[上内內]娛樂|娛樂系統|娱乐系统|机上娱乐|機内エンタ|エンターテイメント|エンターテインメント|"
+    r"기내 ?엔터테인먼트|엔터테인먼트 시스템|hệ thống giải trí|sistem hiburan|ระบบความบันเทิง|"
+    r"système de divertissement|unterhaltungssystem|sistema de entretenimiento|sistema di intrattenimento|"
+    r"نظام الترفيه", re.I)
+TRANSCRIPT_IFE_WINDOW = 120   # a second mention this close keeps the chapter open
+
+
+def transcript_ife_chapter(r: dict):
+    """Build an IFE chapter from the transcript when no chapter is flagged IFE:
+    starts at the first caption that names the entertainment system, ends 30 s
+    after the last mention in the same stretch. None if nothing qualifies."""
+    chs = r.get("chapters") or []
+    if any(c.get("ife") for c in chs):
+        return None
+    hits = [int(c["start_seconds"]) for c in r.get("captions") or []
+            if c.get("start_seconds") is not None and _TRANSCRIPT_IFE_RE.search(c.get("text_en") or c.get("text") or "")]
+    if not hits:
+        return None
+    start = max(0, hits[0] - 3)
+    end = hits[0]
+    for h in hits[1:]:
+        if h - end > TRANSCRIPT_IFE_WINDOW:
+            break
+        end = h
+    end += 30
+    s = start
+    return {"t": (f"{s // 3600}:{(s % 3600) // 60:02d}:{s % 60:02d}" if s >= 3600 else f"{s // 60}:{s % 60:02d}"),
+            "sec": s, "end": end, "title": "In-flight entertainment", "ife": True, "source": "transcript",
+            "mentions": len([h for h in hits if h <= end])}
+
+
+def add_transcript_ife_chapter(r: dict) -> bool:
+    """Insert the transcript-derived IFE chapter into r['chapters'] in time
+    order. Returns True when one was added."""
+    ch = transcript_ife_chapter(r)
+    if not ch:
+        return False
+    chs = [c for c in (r.get("chapters") or []) if c.get("source") != "transcript"]
+    chs.append(ch)
+    chs.sort(key=lambda c: c.get("sec") if c.get("sec") is not None else 0)
+    r["chapters"] = chs
+    if not r.get("chapters_source"):
+        r["chapters_source"] = "transcript"
+    return True
+
+
 def caption_tag_detections(r: dict):
     """Timestamped feature mentions from the transcript, one per feature at its
     first mention: [{"tag","t","sec","conf","source":"caption"}]. Specific

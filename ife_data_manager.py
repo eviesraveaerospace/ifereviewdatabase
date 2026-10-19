@@ -144,7 +144,8 @@ class IFEDataManager:
     def _backfill_fields(self):
         """Add default values for fields introduced after initial seed."""
         from ife_crawler import (infer_ife_system, source_tier as compute_tier, is_official_promo,
-                                 system_confidence, SYSTEM_CONFIDENCE_MIN, caption_tag_detections)
+                                 system_confidence, SYSTEM_CONFIDENCE_MIN, caption_tag_detections,
+                                 add_transcript_ife_chapter)
         for r in self.data.get("reviews", []):
             r.setdefault("ife_specs", {})
             r.setdefault("ife_system_inferred", False)
@@ -176,6 +177,10 @@ class IFEDataManager:
             # detections under the IFE chapter alongside the OCR ones.
             if r.get("media_type") == "video" and r.get("captions"):
                 r["caption_tags"] = caption_tag_detections(r)
+                # No chapter flagged IFE but the reviewer talks about the
+                # system: the transcript opens one, so the OCR pass and the
+                # popup have an IFE chapter to hang detections on.
+                add_transcript_ife_chapter(r)
             # Confidence in the detected system, from where its name appears.
             # Below the threshold the tag is demoted to a guess (kept, not shown).
             if r.get("ife_system") and not r.get("ife_system_manual"):
