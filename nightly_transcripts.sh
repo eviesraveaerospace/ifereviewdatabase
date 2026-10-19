@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+export PATH="$HOME/.local/bin:$PATH"   # user-local git-lfs for the cache
 # Nightly transcript backfill + translation on the VM, then commit and push
 # the enriched cache so the cloud crawl (03:00 UTC) and this box stop
 # diverging. Scheduled at 06:00 UTC from the user crontab; the cloud chapter
