@@ -178123,5 +178123,151 @@
   "transcript_lang": "en",
   "screen_tags": [],
   "screen_tag_source": "ocr-video"
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=zthXD-vRGnc",
+  "title": "Greece Athens International Airport (Eleftherios Venizelos) | Airport Duty Free, Facilities, Food",
+  "title_en": null,
+  "year": 2025,
+  "published_at": "2025-02-19T09:01:21Z",
+  "duration_seconds": 228,
+  "is_short": false,
+  "channel_title": "Travel Reviews",
+  "view_count": 26255,
+  "like_count": 158,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": null,
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [],
+  "aircraft_mentioned": [],
+  "ife_features": {
+   "entertainment_system": true
+  },
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "discovered_by": "channel:Travel Reviews",
+  "sentiment": "positive",
+  "sentiment_score": 0.511,
+  "chapters_source": null,
+  "title_lang": "en"
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=aZ-jiBxZkxo",
+  "title": "SPIRIT AIRLINES Ceases Operations | Flights Becoming More Expensive",
+  "title_en": null,
+  "year": 2026,
+  "published_at": "2026-05-04T13:07:35Z",
+  "duration_seconds": 597,
+  "is_short": false,
+  "channel_title": "AS Aviation",
+  "view_count": 3233,
+  "like_count": 156,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": "Viasat (streaming)",
+  "chapters": [
+   {
+    "t": "00:00",
+    "sec": 0,
+    "title": "Intro",
+    "ife": false
+   },
+   {
+    "t": "00:30",
+    "sec": 30,
+    "title": "Background",
+    "ife": false
+   },
+   {
+    "t": "04:52",
+    "sec": 292,
+    "title": "Farewell Spirit ;(",
+    "ife": false
+   }
+  ],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "spirit airlines",
+    "mentions": 2
+   },
+   {
+    "keyword": "jetblue",
+    "mentions": 1
+   }
+  ],
+  "aircraft_mentioned": [
+   {
+    "keyword": "a321",
+    "mentions": 1
+   },
+   {
+    "keyword": "a320",
+    "mentions": 1
+   },
+   {
+    "keyword": "airbus",
+    "mentions": 1
+   }
+  ],
+  "ife_features": {
+   "entertainment_system": true
+  },
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "discovered_by": "channel:AS Aviation",
+  "sentiment": "positive",
+  "sentiment_score": 0.347,
+  "chapters_source": "description",
+  "title_lang": "en"
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=xlkhuKunaXs",
+  "title": "TRANSFER AT BANGKOK Suvarnabhumi Airport - A Very Long Walk!",
+  "title_en": null,
+  "year": 2026,
+  "published_at": "2026-04-19T08:11:18Z",
+  "duration_seconds": 1914,
+  "is_short": false,
+  "channel_title": "Traveller - Maxi & Maro",
+  "view_count": 28127,
+  "like_count": 721,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": "Thales AVANT",
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "thai airways",
+    "mentions": 1
+   }
+  ],
+  "aircraft_mentioned": [],
+  "ife_features": {},
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "discovered_by": "channel:Traveller - Maxi & Maro",
+  "chapters_source": null,
+  "sentiment": "neutral",
+  "sentiment_score": 0.0,
+  "title_lang": "en"
  }
 ]

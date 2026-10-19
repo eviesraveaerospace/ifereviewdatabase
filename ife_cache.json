@@ -53312,57 +53312,6 @@
       "ife_system_dropped": "low_confidence"
     },
     {
-      "url": "https://www.youtube.com/watch?v=sPikW6-ZdQs",
-      "title": "Traveling from Bangkok to Abu Dhabi by Etihad Boeing 787 || Flight takeoff and landing",
-      "year": 2026,
-      "published_at": "2026-07-16T07:15:10Z",
-      "channel_title": "No Limit",
-      "view_count": 77,
-      "ife_system": null,
-      "ife_system_inferred": false,
-      "media_type": "video",
-      "airlines_mentioned": [
-        {
-          "keyword": "etihad",
-          "mentions": 1
-        }
-      ],
-      "aircraft_mentioned": [
-        {
-          "keyword": "787",
-          "mentions": 1
-        },
-        {
-          "keyword": "boeing",
-          "mentions": 1
-        }
-      ],
-      "ife_features": {
-        "entertainment_system": true,
-        "seat": true
-      },
-      "ife_specs": {},
-      "transcript_available": true,
-      "transcript_excerpt": "다��까지…",
-      "captions": [],
-      "source_tier": 2,
-      "source_name": "Creator",
-      "sentiment": "neutral",
-      "sentiment_score": 0.0,
-      "title_lang": "en",
-      "chapters": [],
-      "duration_seconds": 1303,
-      "is_short": false,
-      "chapters_source": null,
-      "transcript_full": " 다��까지  제목이  너너 prz birth  � Federal Reserve  The  와, 이 ад  einer  그  왔�네요  인템 4가  ede hacen pompson 예정  상상  cables  도 מד compelled  Breaks  자루  그 races  외우고  fare  고Joe  순� Hag gent  solving  호영 stanbul tles  Gil  Nor feeling  gratifying currency  Gal  Se barber  보호 pf  Deliver  r Но  subscribe  like",
-      "transcript_source": "whisper",
-      "transcript_lang": "en",
-      "ife_system_confidence": 0.6,
-      "ife_system_at": null,
-      "ife_system_guess": "Oryx One",
-      "ife_system_dropped": "low_confidence"
-    },
-    {
       "url": "https://www.youtube.com/watch?v=R8xCUA_PIQk",
       "title": "I tried FINNAIR A350 PREMIUM ECONOMY on a short flight within Europe 🇪🇺",
       "year": 2026,
@@ -68645,127 +68594,6 @@
       "duration_seconds": 1508,
       "is_short": false,
       "chapters_source": null
-    },
-    {
-      "url": "https://www.youtube.com/watch?v=v2Z4-wffwgs",
-      "title": "パナソニックは家電メーカーだと思っていたら、世界の空を支配していた",
-      "year": 2026,
-      "published_at": "2026-07-04T22:15:01Z",
-      "channel_title": "ゴールドインサイト",
-      "view_count": 120,
-      "ife_system": null,
-      "ife_system_inferred": false,
-      "media_type": "video",
-      "airlines_mentioned": [
-        {
-          "keyword": "jal",
-          "mentions": 2
-        },
-        {
-          "keyword": "emirates",
-          "mentions": 1
-        },
-        {
-          "keyword": "singapore airlines",
-          "mentions": 1
-        },
-        {
-          "keyword": "ana",
-          "mentions": 1
-        },
-        {
-          "keyword": "air canada",
-          "mentions": 1
-        }
-      ],
-      "aircraft_mentioned": [
-        {
-          "keyword": "boeing",
-          "mentions": 1
-        }
-      ],
-      "ife_features": {
-        "connectivity": true,
-        "4k_display": true,
-        "entertainment_system": true,
-        "content": true,
-        "quality": true,
-        "seat": true,
-        "moving_map": true
-      },
-      "ife_specs": {
-        "wifi_type": "Starlink"
-      },
-      "transcript_available": true,
-      "transcript_excerpt": "Yes, I think that there are many people who have touched the monitor for time crushing in the viewpoint of overseas travel.…",
-      "captions": [
-        {
-          "timestamp": "0:10",
-          "start_seconds": 10,
-          "text": "Yes, I think that there are many people who have touched the monitor for time crushing in the viewpoint of overseas travel.",
-          "lang": "en"
-        },
-        {
-          "timestamp": "1:30",
-          "start_seconds": 90,
-          "text": "More than 100 airlines in the world adopt Panasonic’s unique entertainment system.",
-          "lang": "en"
-        },
-        {
-          "timestamp": "4:30",
-          "start_seconds": 270,
-          "text": "In 1997, he developed the world's first choice system for movies that I like for each seat.",
-          "lang": "en"
-        },
-        {
-          "timestamp": "9:00",
-          "start_seconds": 540,
-          "text": "Let’s focus on the competition with Starlink.",
-          "lang": "en"
-        },
-        {
-          "timestamp": "11:05",
-          "start_seconds": 665,
-          "text": "And Panasonic makes up new products.",
-          "lang": "en"
-        }
-      ],
-      "source_tier": 2,
-      "source_name": "Creator",
-      "sentiment": "neutral",
-      "sentiment_score": 0.0,
-      "like_count": 2,
-      "chapters": [
-        {
-          "t": "9:54",
-          "sec": 594,
-          "end": 596,
-          "title": "Connectivity",
-          "tags": [
-            "Connectivity"
-          ],
-          "ife": true,
-          "source": "ocr"
-        }
-      ],
-      "yt_comments": [],
-      "transcript_full": "飛行機の座席の前についているモニター、 あれ実はある日本企業が世界の70%以上 を作っています。でもその会社の名前を 聞いたら多分こう思うはずです。え、あの 会社がと海外旅行の機内で暇つぶしにあの モニターを触ったことがある方多いんじゃ ないかと思います。映画を選んだり、 フライトマップを眺めたり、機内WyFY についで見たり、離陸してすぐに映画を 選んで気づいたら何本を見えていたなんて 経験がある方もいるはずです。あれだけ 長い時間毎回お世話になっているのに作っ ている会社のことは誰も知らない。こ れってちょっと変な話だと思いませんか? 答えはパナソニックです よね。分かります。パナソニックって冷蔵 庫や洗濯機テレビを作る会社ですよね。 リビングにはパナソニックのテレビがあり 、キッチンには冷蔵庫、洗面所には洗濯機 、毎日使っているのにこの会社を未来の 主役として思い浮かべることはあまりあり ません。ソニーといえば反動体、投資場と いえば先端メモリー、そういうイメージが すぐに浮かぶのにパナソニックと聞くと まず家電が浮かぶんですよね。でも実は その電メーカーが世界の空の下でずっと 動いていたんです。って言いたくなります よね。分かります。その気持ち めちゃくちゃ分かるんですよ。 私たちの生活の中でパナソニックはあまり にも身近すぎて逆に本当の姿が見えにくく なっているんですよね。 毎日使っているのにその内部に込められた 技術の深さを真剣に見つめることはあまり ないんです。 冷蔵庫はただ食品を冷やす箱に見えるし、 洗濯機はただいる類を洗う機械に見える。 ブランドイメージやなんとなくの印象だけ でその会社を判断してしまっているのかも しれません。でも実は違うんです。世界の 航空会社に100社以上がパナソニックの 機内エンターテインメントシステムを採用 しています。市場シェアは70%を超えて います。JAL、ANAユナイテッド航空 エミレーツ航空シンガポール航空 世界中の主要航空会社がパナソニックの 技術に頼っているんです。 考えてみれば私たちが海外旅行の度に何気 なく触っているあの画面は実はとんでも ない規模のビジネスの入り口だったという ことなんですよね。 家電メーカーだと思っていたら実は世界の 空を支配していた。今日はその理由を皆 さんと一緒に見ていきたいと思います。 知れば知るほど次に飛行機に乗る時の景色 が少し変わってくるんじゃないかと思って います。皆さんは飛行機の座席モニターが どこの会社の製品か意識したことありまし たか?コメントで教えてもらえると嬉しい です。それでは始めていきましょう。ここ であまり注目されていないもう1つの側面 を見ていきたいと思います。 それはこの事業がどうやって始まったのか という話です。始まりは意外なところに ありました。 1976年パナソニックの全身でアルマし た電気産業は胸ポケットに入る証拠が たらじをペーパーを発売しました。当時 テレビの対当でラジオ氏は縮小していたん ですよね。 このままではラジオ事業の先行が見えない そんな状況でした。 そんな中で表面実装技術を活用して開発さ れたこの小さなラジオは100万台以上を 売上る大ヒットとなります。胸ポケットに 入るくらい小さくて薄い。それが最大の 売りだったんですよね。 この子が高軽量化の技術をどこか別の分野 でかせないか。車内でそうしていた時期が あったそうです。そして見つけたのが航空 機産量でした。飛行機の中は重さも大きさ も徹底的に切り詰めなければならない特殊 な環境です。 ラジオで培った技術はまさにこの環境に ぴったりだったんですよね。 1978年この技術を応用した機内 オーディオシステムがJALにされます。 これがパナソニックのアビオニクス事業の 原点なんです。ちなみに今でも パナソニックの航空関連の部品にはRDと いう型番が使われることが多いそうです。 これはラジオを意味するRADIOから来 ているんですよね。 50年近く前の事業の記憶が今も片番の中 に残っているというのはなんだか考慨深い 話だと思います。 小さな道具を極限まで磨き上げた職人が 全く違う分野で急に頼りにされる。 こんな話を聞いたことはありませんか? ラジオを作っていた技術が飛行機の中へ。 一見繋がらないように見える2つの分野が 小型かという1本の糸で繋がっていたん ですよね。この発想の転換こそが今の巨大 な事業の出発点だったわけです。 それから40年以上、パナソニックはこの 分野で静かに実績を積み重ねてきました。 1980年にはボーイング767に オーディオシステムが採用されます。 1997年には座席ごとに好きな映画を 選べるシステムを世界で初めて開発しまし た。いや、これすごい話ですよね。今では 当たり前になったこの仕組みも最初に作っ たのはパナソニックだったんです。誰もが 使っているのに誰が最初に作ったの可愛い と知られていない。 そんな技術が実は身近なところにたくさん あるんですよね。 座席前で映画を選ぶという今では当たり前 すぎて誰も気にしない行動。この裏側に こういう歴史があったと知ると少し見方が 変わってきませんか? テレビの対当でラジオが植えなくなった時 その技術を諦めるのではなく別の場所で 生かす道を探した。この判断ができたか どうかがその後の40年を大きく分けたん だと思います。ただここで大事なのはこの 事業がその後どこまで大きくなったかと いうことなんです。ではここからそんな 事業で実際どれくらいの規模になっている のか見ていきましょう。現在パナソニック の機内エンターテインメントシステムは 世界200社以上の航空会社に採用されて います。 設置されているシステムの数は 1万4730 以上です。これがどれほどの規模なのか 分かりますよね。 世界中の主要空港に保守修理のための拠点 が50箇所以上あります。20年以上前の 製品でもメンテナンスや修理に対応できる 体制を維持しているんです。 古い製品を切り捨てずに長く付き合い 続ける。これは簡単なようで実際には とても手間もコストもかかることなんです よね。 売って終わりではなくその後何十年も面倒 を見続ける。この姿勢が航空会社からの 信頼につがっているんだと思います。 長期間にわって安定して動き続けること。 これが航空会社がパナソニックを選び 続ける理由の1つだと思います。 考えてみれば航空会社に取ってきない システムの導入は簡単にたへ乗り換え られるものではありません。 1度導入すれば何年何十年という単位で 使い続けることになります。だからこそ 最初にどこを選ぶかがその後の安心感を 大きく左右するんですよね。 200社以上がパナソニックを選び続けて いるという事実は単に性能が良いという だけでなくこの長期的な信頼関係が 積み重なった結果なんだと思います。 そして今パナソニックが力を入れているの が機内WIFIです。 飛行機は上空1万mを飛んでいますよね。 地上の基地局からの電波は届きません。だ からこそ衛星を使った通信が必要になるん です。パナソニックは正式同衛星と定期 同衛星を組み合わせたハイブリッド ネットワークを使っています。これ例える ならこういうことです。 目的地まで行くのに遠回りでも安定した 高速道路と近道だけど込み一般道を状況に 応じて組み合わせて使うようなものなん ですよね。 正式同衛星は地球の時点と同じ速度で回っ ているので常に同じ場所の上空にあります 。一方定機道衛星は地球に近い分け通信の 遅延が少なくて済みます。 この2つを組み合わせることで世界重毒を 飛んでいても安定した接続を実現している んです。片方だけに頼らず状況に応じて 使い分ける。この柔軟差が長距離の フライトでも安定した通信を支えているん です。 太平洋のど真ん中を飛んでいる時も北極権 に近いルートを飛んでいる時も状況に応じ て最適な衛星を選べる。 これは1つの技術だけにかけるよりはかに 手間のかかるやり方です。でもその手間 こそが安定訂性という結果につがっている んだと思います。 年にはEUAT 社のONEWという低動衛星ネットワーク に接続する新しいアンテナシステムも発表 しました。選択肢を増やすことでより多く の航空会社のニーズに答えられるようにし ているんですよね。 特定の一社の衛星に頼りきるのではなく 複数の選択肢を用意しておく。 これも長年の業界で生き残ってきた パナソニックらしいやり方だと思ってい ます。 私がこの事業に注目している理由はここに もあるんです。派手な発表もなければ話題 になることも少ない。デでデモに10年 以上のメンテナンス体制を維持しながら 着実に技術を更新し続けている。これって 実はすごく難しいことだと思うんですよね 。 新しい技術を追いかけるだけなら誰でも できます。でも古いものを守りながら 新しいものも取り入れる。このバランス 感覚こそが長く選ばれ続ける理由なんじゃ ないかと思っています。 皆さんが乗った飛行機でパナソニックの モニターだったなと思い出せる経験あり ますか?ただここで大事なのはこの安定し た地位が今大きな競争にさらされていると いうことなんです。ここからは少し スターリンクとの競争に注目してみ ましょう。ここで気になるのがスペースX のスターリンクです。 スターリンクは定期動に大量の衛星を 打ち上げて高速なインターネットを提供し ています。航空業界でも急速にシェアを 伸ばしていて、実際に多くの航空会社が スターリングへの切り替えを進めているん ですよね。 ここが結構大きな別れ道になっているん ですよね。パナゾニックにとってこれは 間違いなく大きな競争相手です。 今までの安定がそのまま続く保証はどこに もありません。 新しい技術がどんどん登場する中で古く からの実績だけでは生き残れない世界でも あるんですよね。ではパナソニックは負け てしまったのでしょうか? 2026年アメリカン航空UR決定を発表 しました。 ARASA321NEOを含む500機 以上の中短距離用の機体にはスターリンク を導入する。 しかし長距離用の大型については既損の VIASとパナソニックのサービスを継続 する。いや、これすごい話ですよね。 つまり飛行機の種類によってあえて パナソニックを選び続けているんです。 全てを失ったわけじゃない。長距離の国際 線では何時間も安定した接続が求められ ます。実績のある通信猛と長年の星体制。 これが大型においては今も評価されている ということなんですよね。 短距離のフライトなら多少のトラブルが あっても目的地まで我慢できるかもしれ ません。でも太平洋や体制用を横断する ような長距離フライトで通信が不安定に なればそれはビジネス客にとっても大きな ストレスになります。だからこそ実績の ある通信が今も選ばれ続けているんだと 思うんですね。 新しいものが常に全てを塗り換えるわけ じゃない。 用途によって選ばれ方が変わるという 当たり前だけど見落としがちな真実がここ にあると思います。 スターリンクが強いのは間違いありません 。でも強いからと言ってあらゆる場面で 選ばれるとは限らない。長距離の国際線と いう特定の条件では実績と保守体制が物を 言う。そういうことなんですよね。そして パナソニックは新しい製品でも構成をかけ ています。 年に発表された次世代の機内 エンターテインインベント アストローバ 4系OLEDディスプレイを採用し、これ までの製品よりが質が大きく向上しました 。モニターや周辺機器を部品ごとに交換 できる設計になっていて、最新の ソフトウェアやアプリに対応し続けられ ます。重さも従来品より30%軽くなり ました。 飛行機が軽くなれば燃費も良くなりますよ ね。このアストローバは2025年12月 時点で30社以上の航空会社から100件 のプロジェクトを受注しています。 めちゃくちゃ大きい話だと個人的には思っ ています。 これはパナソニックがこれまで販売してき た製品の中で最も早いペースで採用が 広がっている製品なんです。 20214年にはアイスランド航空が世界 で初めて導入し、その後もエアカナダなど 多くの航空会社が採用を決めています。 派手な発表もなければ話題になることも 少ない でも確実に選ばれ続けている。私はそう 思います。 これがパナソニックのアビオニクス事業の 実態なんですよね。ではここからはこの 技術を実際に作っているのがどこなのか見 ていきましょう。これらの製品を実際に 作っているのは日本国内の向場です。 大阪深にある拠点で設計、製造、品質保障 までを一貫していっています。 アメリカ日本社がアルパナソニック アビオニクス車の製品ですが、その物づり の中核は今も基本にあるんですよね。 FAAアメリカ連邦航空局の厳しい要求 事項をクリアしなければなりません。 航空宇宙文の品質マネジ地面と企画も維持 しなければなりません。 安全性が何よりも優先される航空業界で 日本の品質管理の力が発揮されているん です。 独自の信頼権や徹底したトレーサビリティ 管理によって製品の品質を確保している そうです。派手な再先端技術というより 地道な信頼の積み重ねが評価されている。 これもこの事業の大きな特徴だと思ってい ます。 海外日本社がある事業なのに物づりの確信 部分は日本に置き続ける。これって実は そんなに当たり前のことじゃないんですよ ね。 コストだけを考えればもっと別の場所に 生産拠点を移すという選択肢もあったはず です。 それでもという場所を選び続けているのは そこでしか実現できない品質があるから何 だと思います。 最後に今日1番伝えたいことだけシンプル に話させてくださいけ。私たちは普段 パナソニックという名前を聞いても冷蔵庫 やテレビを思い浮かべます。でもその裏側 で世界中の空を静かにそして確実に支えて いる事業があります。日本の工場でこれ だけの製品が作られていて世界200社 以上の航空会社に選ばれている。これは 1番もったいないことだと思っています。 こんなにすごいことをやっているのに日本 ではほとんど知られていない。これって すごくもったいないことなんですよね。 派手な広告もなければ大きな話題になる こともない。でも世界の航空会社に100 社以上がその技術を信頼して選んでいる。 これこそがパナソニックという会社の本当 の姿なのかもしれません。私はそう思い ます。目立つことだけが強さじゃない。 静かにでも確実に必要とされ続けること。 そういう強さもあるんだということをこの 事業は教えてくれる気がします。 皆さんは次に飛行機に乗る時、座席も ニターの裏側にある子の物語が思い出して もらえたら嬉しいです。そこには ラジオ作りから始まった50年近い歴史が 詰まっているはずです。 胸ポケットに入る小さなラジオから世界の 空を支える事業へ。 その積み重ねを知るといつもの当たり前の 景色が少しだけ特別なものに見えてくるん じゃないかと思います。 一緒にこういう視点を持ち続けていき ましょう。",
-      "title_lang": "ja",
-      "title_en": "I thought Panasonic was a home appliance manufacturer, but it actually rules the skies around the world.",
-      "transcript_full_en": "In fact, Japanese companies are making more than 70% of the world. But if you hear the name of the company, you might think. Yes, I think that there are many people who have touched the monitor for time crushing in the viewpoint of overseas travel. Some people have experience in choosing movies, enjoying flight maps, watching movies on the fly, or choosing movies right away. No one knows what the company is making every time. Why don’t you think it’s a bit strange? The answer is Panasonic. Contact Us Panasonic is a company that makes a refrigerator and washing machine TV. There is a panasonic TV in the living room, the kitchen is equipped with a refrigerator, a washing machine in the toilet, and even though it is used daily, it is rare to think about this company as the main role of the future. If you hear that Sony’s rebound body and investor point, it’s the first thing that comes to home appliances. But actually, the electric manufacturer was moving in the sky of the world. I want to say. Contact Us That feeling, I know. In our lives, Panasonic is too familiar to us, and it is difficult to see the real figure. I don’t see the depth of the technology that was put into the inside even though I use it every day. The refrigerator looks just a box to cool the food, and the washing machine looks like a machine to wash the food. You may be determining the company with only the brand image and the impression. However, it is different. More than 100 airlines in the world adopt Panasonic’s unique entertainment system. market share exceeds 70%. JAL, ANA United Airlines Emirates Airlines Singapore Airlines The leading airlines worldwide rely on Panasonic technology. If you think about it, the screen that we are touching every time we travel overseas is actually the entrance to a business of a scale that we are not actually. When I knew that it was a consumer electronics manufacturer, I actually managed the world sky. I would like to see this reason together. The more you know, the more you will see, the more you will see, the more you will see when you board the plane. Where did you think about the company’s products? I'm glad that you can tell me by comment. Let’s start. I would like to see another aspect that is not so much attention here. This is how this business began. The beginning was unexpected. In 1976, the whole body of Panasonic was ALMA, and the proof of entering the chest pocket was released. At that time, radio was shrinking on TV. It was such a situation that the advance of the radio business can not be seen. This small radio developed by using surface mounting technology is a huge hit that sells more than 1 million units. Small and thin enough to enter the chest pocket. It was the biggest selling. Is it possible to use this child's high-lightening technology somewhere else? There was a time when I was doing it in the car. Then I found the aircraft production. It is a special environment that must be cut thoroughly by weight and size in the airplane. The technology used on the radio is exactly the perfect environment. In 1978, the オーディオ audio system is JAL. This is the origin of Panasonic’s Avionics business. By the way, it seems that RD and model number are often used for parts related to Panasonic aviation. This is coming from IOIO, which means radio. I think that it is a deep story that the memories of the business that I had before事業 50 years are still in one place. A craftsman who 道具s small tools to the extreme is urgently asked in a completely different field. Do you have any questions? The technology that made a radio is in the plane. There are two fields that seem to be unconnected at first g . It was the starting point of today’s huge business. For more than 40 years, Panasonic has gained experience in this field. In 1980, Boeing 767 adopted the audio system. In 1997, he developed the world's first choice system for movies that I like for each seat. It’s a great story. Now, it was a panasonic that I made this mechanism that was natural. It is not known to be a cute one who made it first, even though everyone is using it. There is a lot of such technology in the familiar world. It’s a good idea to choose a movie in front of the seat. If you know that there is such a history on the back side of this page, will you see a little change? When the radio was no longer planted due to TV counter。s, I found a way to use it in another place instead of giving up the technology. I think that this decision has been divided into 40 years after that. However, what is important here is the fact that the business has become bigger. Let’s look at how large the business is actually. Panasonic’s unique entertainment system has been adopted by more than 200 airlines worldwide. The number of installed systems is 14730 or higher. I know how big this is. More than 50 locations for maintenance and repair at major airports worldwide. More than 20 years ago, we maintain a system that can respond to maintenance and repair. Keep in touch with old products for a long time. This seems to be simple, but it is very expensive. I will continue to take care of the decades after selling. I think this attitude leads to the trust of the airline. Keeping moving stably for a long time. This is one of the reasons why the airline continues to select Panasonic. If you think, the introduction of a system that cannot be taken by the airline is not easy to change. If you install once, you will continue to use it in units of decades for years. That’s why the first place to choose depends on the sense of security. I think that the fact that more than 200 companies choose Panasonic is not only good performance, but also this long-term relationship of trust has been stacked. And now, Panasonic is WIFI。. The airplane is flying 10,000m above the sky. Radio waves from the ground base stations are not delivered. That’s why we need to communicate with satellites. Panasonic uses a hybrid network that combines the same satellite and the same satellite. This is what you can do. Even if you go to the destination, it is stable even if you go far, but it is like using it in conjunction with the general situation. The satellite is always at the top of the same place as the Earth's point. On the other hand, the satellite has a low delay in separate communications close to the earth. By飛 these two, we realize stable connection without flying the world heavy poison. Use according to the situation without relying on only one way. This flexible difference is stable even on long-di  flights. Even if you fly in the middle of the Pacific Ocean, you can choose the best satellite depending on the situation. This is a way to take care of only one technology. However, I think that the reason is that it leads to stable revision. We also announced a new antenna system that connects to EUAT’s ONEW low-act satellite network. You can answer more airline needs by increasing your choice. Prepare multiple options instead of relying on a specific satellite. I think this is a panasonic way that has survived for many years. I’m interested in this business. If there is no fancy announcement, it can be a topic. We continue to update our technology stead。 while maintaining a maintenance system of more than 10 years in the demo. I think this is actually very difficult. Anyone can chase new technologies. However, it is possible to use new things while keeping old ones. I think this balance is the reason why the senses continue to be chosen for a long time. Have you ever remembered that you were a Panasonic monitor on your flight? However, what is important here is that this stable position is now exposed to a big competition. Let’s focus on the competition with Starlink. Space X Starlink Starlink launches a large number of satellites on a regular basis and provides fast internet. In the aviation industry, there is a rapid increase in share, and many airlines are actually切り替え to sterling. This is quite a big road. This is definitely a big  for Panasonic. There is no guarantee that the stability of the past continues. It is a world that can survive only by the実績s from old while new technologies emerge. Is Panasonic losing? 2026 Announcement of American Airlines UR decision A Starlink is introduced to the medium- and short-range aircraft including ARASA321NEO. However, for large-scale long-di  use, we will continue the services of VIAS and Panasonic. It’s a great story. In other words, I keep choosing Panasonic depending on the type of airplane. I lost everything. Long-di  international lines require stable connections for hours. A long-standing star system with proven communication. That’s why it’s still being evaluated in large size. If you have a short flight, you may not be able to endure the destination even if you have some trouble. However, if communication is unstable on long-di。 flights such as crossing the Pacific Ocean or system, it will be a great stress for business customers. That’s why I think that some communication has been selected for the past. The new one is not always refilled. I think that the truth is here that it is common but tends to overlook that the way chosen depends on the application. There is no doubt that the star link is strong. However, it is not limited to 。 in any situation. A long-di  international line and a specific condition tells you the track record and maintenance system. That’s right. And Panasonic makes up new products. The next-generation OLED entertain invent astroba 4 inch OLED display, which was announced in the year, has greatly improved the quality of the products. It is designed to replace monitors and peri als for each part, and it can continue to support the latest software and apps. Weight is 30% lighter than conventional products. If the plane becomes light, the fuel economy will be better. As of December 2025, we have received 100 projects from more than 30 airlines. I personally think it is a big story. This is a product that Panasonic has expanded its adoption at the earliest pace among the products sold so far. In 20214, Iceland Airlines introduced the world’s first airlines, including Air Canada. Even though there is no fancy announcement, it will be a hot topic, it is sure to be selected. I think. This is the actual situation of Panasonic’s Avionics business. Now let’s see where this technology is actually making. These products are made in Japan. Design, manufacturing and quality assurance at our base in Osaka. The U.S.-Japan head office is a product of ALPANASONIC ABIONICS, but the core of the product is still the basis. FAA must clear the strict requirements of the United States Aviation Bureau. The quality of the aerospace statement must be maintained on the ground and planning. Safety is the power of quality control in Japan in the aviation industry. It is said that the quality of the product is ensured by proprietary trust and thorough traceability management. It has been evaluated to build local trust rather than派 re-advanced technology. This is also a big feature of this business. Even though it is a business with overseas head office, the confidence part of the thing remains in Japan. This is actually not that common. If you think only the cost, you should have a choice to move your business to another location. I think that there is a quality that can only be realized because I continue to select a place that is still. Lastly, let’s talk to the simplest thing you want to tell the first. We usually hear the name Panasonic, but we can think of the refrigerator and TV. However, there is a business that supports the world and reliably. In Japan, more than 200 airlines have been selected. I think this is not the first. It is rarely known in Japan because it is doing such a great thing. That’s it. There is no big topic without派. But more than 100 airlines in the world trust their technology. This may be the true form of a company called Panasonic. I think so. It is not only strong to stand out. Be sure to be required even during pregnancy. I think this business will tell you that there is such a strength. I hope you will remember the story of the child behind the Nitta when you fly next. There is a 50-year history that began with radio production. To support the world's sky from small radios entering the chest pocket. If you know the stack, you will see the usual scenery slightly special. Let’s continue with this perspective.",
-      "transcript_lang": "ja",
-      "transcript_excerpt_orig": "そして今パナソニックが力を入れているの…",
-      "duration_seconds": 1303,
-      "is_short": false,
-      "chapters_source": "ocr",
-      "screen_tags": [
-        "Connectivity"
-      ],
-      "screen_tag_source": "ocr-video",
-      "ife_system_confidence": 0.6,
-      "ife_system_at": null,
-      "ife_system_guess": "Viasat (streaming)",
-      "ife_system_dropped": "low_confidence"
     },
     {
       "url": "https://www.youtube.com/watch?v=oGdICeFpTcU",
@@ -333296,57 +333124,6 @@
         "Navigation Menu"
       ],
       "screen_tag_source": "ocr-video"
-    },
-    {
-      "url": "https://www.youtube.com/watch?v=rJbErD-m5jo",
-      "title": "B:E Aerospace Diamonds.mp4",
-      "year": 2025,
-      "ife_system": null,
-      "media_type": "video",
-      "airlines_mentioned": [
-        {
-          "keyword": "ana",
-          "mentions": 1
-        }
-      ],
-      "aircraft_mentioned": [
-        {
-          "keyword": "777",
-          "mentions": 1
-        },
-        {
-          "keyword": "boeing",
-          "mentions": 1
-        }
-      ],
-      "ife_features": {
-        "entertainment_system": true,
-        "seat": true
-      },
-      "transcript_available": false,
-      "transcript_excerpt": null,
-      "captions": [],
-      "ife_specs": {},
-      "source_tier": 2,
-      "source_name": "Creator",
-      "ife_system_inferred": false,
-      "sentiment": "neutral",
-      "sentiment_score": 0.0,
-      "like_count": 1,
-      "view_count": 53,
-      "chapters": [],
-      "yt_comments": [],
-      "title_lang": "en",
-      "published_at": "2025-02-27T14:19:02Z",
-      "duration_seconds": 6,
-      "is_short": true,
-      "chapters_source": "ocr",
-      "screen_tags": [],
-      "screen_tag_source": "ocr-video",
-      "ife_system_confidence": 0.6,
-      "ife_system_at": null,
-      "ife_system_guess": "Panasonic eX3",
-      "ife_system_dropped": "low_confidence"
     },
     {
       "url": "https://www.youtube.com/watch?v=tRuBUl5nKOM",
@@ -992276,95 +992053,6 @@
       "title_lang": "en"
     },
     {
-      "url": "https://www.youtube.com/watch?v=poU_OdokfIA",
-      "title": "The Gogo Quality Lab assures Wi-Fi system performance and reliability",
-      "title_en": null,
-      "year": 2024,
-      "published_at": "2024-07-30T20:02:52Z",
-      "duration_seconds": 184,
-      "is_short": false,
-      "channel_title": "Gogo",
-      "view_count": 31,
-      "like_count": 1,
-      "ife_system": null,
-      "ife_system_inferred": false,
-      "ife_system_guess": "Gogo Avance",
-      "chapters": [],
-      "media_type": "video",
-      "airlines_mentioned": [],
-      "aircraft_mentioned": [],
-      "ife_features": {
-        "connectivity": true
-      },
-      "ife_specs": {
-        "wifi_type": "Wi-Fi"
-      },
-      "transcript_available": false,
-      "transcript_excerpt": null,
-      "captions": [],
-      "transcript_full": "",
-      "source_tier": 2,
-      "source_name": "Creator",
-      "discovered_by": "channel:Gogo",
-      "sentiment": "positive",
-      "sentiment_score": 0.318,
-      "chapters_source": null,
-      "title_lang": "en",
-      "ife_system_confidence": 0.6,
-      "ife_system_at": null,
-      "ife_system_dropped": "low_confidence"
-    },
-    {
-      "url": "https://www.youtube.com/watch?v=2EnMT8mNR7I",
-      "title": "Upgrading from ATG to AVANCE",
-      "title_en": null,
-      "year": 2024,
-      "published_at": "2024-07-26T19:42:16Z",
-      "duration_seconds": 105,
-      "is_short": true,
-      "channel_title": "Gogo",
-      "view_count": 54,
-      "like_count": 0,
-      "ife_system": null,
-      "ife_system_inferred": false,
-      "ife_system_guess": null,
-      "chapters": [],
-      "media_type": "video",
-      "airlines_mentioned": [],
-      "aircraft_mentioned": [],
-      "ife_features": {
-        "connectivity": true
-      },
-      "ife_specs": {
-        "wifi_type": "Wi-Fi"
-      },
-      "transcript_available": true,
-      "transcript_excerpt": "We have the GOGO Advanced L3 Wi-Fi installed.…",
-      "captions": [
-        {
-          "timestamp": "0:46",
-          "start_seconds": 46,
-          "text": "We have the GOGO Advanced L3 Wi-Fi installed.",
-          "lang": "en"
-        }
-      ],
-      "transcript_full": " We upgraded from the ATG 5000 to the L5 about two years ago.  The upgrade to the L3 Advanced Plus system, 100% worth it.  I heavily recommend it.  I do personally to anybody that I know that has it, you know, friends of mine colleagues  that are, you know, in other aircraft that are flying with the GOGO system and nobody  has been disappointed, yet.  Obviously flying an ATG 5000, the system is a little slow for what we do today.  We're looking forward to the upgrade to the L5 and the increased speed.  L5 I think that's going to change and they're going to be doing a lot more surfing.  I've already had some requests for faster file transfers and those sorts of things.  So I know they'll be doing a lot more work with it.  We have the GOGO Advanced L3 Wi-Fi installed.  It's an outstanding 21st century Wi-Fi product.  Upgrading to L5 it was a immediate noticeable difference.  Our passengers in the notice did it right away.  It was definitely worth it upgrading from the old system and it handles multiple devices  very, very well.  The performance has been rock solid.  Our history proves a lot, hundreds and hundreds of installations and kits, but it's the people,  you know, the consistency of the leadership and their strategy, you know, that we've, you  know, and technology changes through every day, every year.  But yeah, our long-term relationship with GOGO has been really good for ultimately the  customer.  And so that's what we touch.  We appreciate it.  And we appreciate the trust that we have with GOGO as well.",
-      "source_tier": 2,
-      "source_name": "Creator",
-      "discovered_by": "channel:Gogo",
-      "sentiment": "neutral",
-      "sentiment_score": 0.0,
-      "chapters_source": "ocr",
-      "title_lang": "en",
-      "ife_system_confidence": 0.6,
-      "ife_system_at": null,
-      "ife_system_dropped": "low_confidence",
-      "transcript_source": "whisper",
-      "transcript_lang": "en",
-      "screen_tags": [],
-      "screen_tag_source": "ocr-video"
-    },
-    {
       "url": "https://www.youtube.com/watch?v=9rUA6BoqJiI",
       "title": "Top 2023 Winner Aviation Ground Operation Customer Experience Awards",
       "title_en": null,
@@ -1086432,40 +1086120,6 @@
       "title_lang": "en"
     },
     {
-      "url": "https://www.youtube.com/watch?v=zthXD-vRGnc",
-      "title": "Greece Athens International Airport (Eleftherios Venizelos) | Airport Duty Free, Facilities, Food",
-      "title_en": null,
-      "year": 2025,
-      "published_at": "2025-02-19T09:01:21Z",
-      "duration_seconds": 228,
-      "is_short": false,
-      "channel_title": "Travel Reviews",
-      "view_count": 26255,
-      "like_count": 158,
-      "ife_system": null,
-      "ife_system_inferred": false,
-      "ife_system_guess": null,
-      "chapters": [],
-      "media_type": "video",
-      "airlines_mentioned": [],
-      "aircraft_mentioned": [],
-      "ife_features": {
-        "entertainment_system": true
-      },
-      "ife_specs": {},
-      "transcript_available": false,
-      "transcript_excerpt": null,
-      "captions": [],
-      "transcript_full": "",
-      "source_tier": 2,
-      "source_name": "Creator",
-      "discovered_by": "channel:Travel Reviews",
-      "sentiment": "positive",
-      "sentiment_score": 0.511,
-      "chapters_source": null,
-      "title_lang": "en"
-    },
-    {
       "url": "https://www.youtube.com/watch?v=ShUVeO0c13M",
       "title": "Istanbul International Airport Flying from Sabiha Gokcen Airport Asia Side | FULL Walk Though",
       "title_en": null,
@@ -1151639,81 +1151293,6 @@
       "title_lang": "en"
     },
     {
-      "url": "https://www.youtube.com/watch?v=aZ-jiBxZkxo",
-      "title": "SPIRIT AIRLINES Ceases Operations | Flights Becoming More Expensive",
-      "title_en": null,
-      "year": 2026,
-      "published_at": "2026-05-04T13:07:35Z",
-      "duration_seconds": 597,
-      "is_short": false,
-      "channel_title": "AS Aviation",
-      "view_count": 3233,
-      "like_count": 156,
-      "ife_system": null,
-      "ife_system_inferred": false,
-      "ife_system_guess": "Viasat (streaming)",
-      "chapters": [
-        {
-          "t": "00:00",
-          "sec": 0,
-          "title": "Intro",
-          "ife": false
-        },
-        {
-          "t": "00:30",
-          "sec": 30,
-          "title": "Background",
-          "ife": false
-        },
-        {
-          "t": "04:52",
-          "sec": 292,
-          "title": "Farewell Spirit ;(",
-          "ife": false
-        }
-      ],
-      "media_type": "video",
-      "airlines_mentioned": [
-        {
-          "keyword": "spirit airlines",
-          "mentions": 2
-        },
-        {
-          "keyword": "jetblue",
-          "mentions": 1
-        }
-      ],
-      "aircraft_mentioned": [
-        {
-          "keyword": "a321",
-          "mentions": 1
-        },
-        {
-          "keyword": "a320",
-          "mentions": 1
-        },
-        {
-          "keyword": "airbus",
-          "mentions": 1
-        }
-      ],
-      "ife_features": {
-        "entertainment_system": true
-      },
-      "ife_specs": {},
-      "transcript_available": false,
-      "transcript_excerpt": null,
-      "captions": [],
-      "transcript_full": "",
-      "source_tier": 2,
-      "source_name": "Creator",
-      "discovered_by": "channel:AS Aviation",
-      "sentiment": "positive",
-      "sentiment_score": 0.347,
-      "chapters_source": "description",
-      "title_lang": "en"
-    },
-    {
       "url": "https://www.youtube.com/watch?v=SPjVIngDPug",
       "title": "Flying United's Brand New A321neo | Newark to Chicago",
       "title_en": null,
@@ -1178634,43 +1178213,6 @@
       "title_lang": "en"
     },
     {
-      "url": "https://www.youtube.com/watch?v=xlkhuKunaXs",
-      "title": "TRANSFER AT BANGKOK Suvarnabhumi Airport - A Very Long Walk!",
-      "title_en": null,
-      "year": 2026,
-      "published_at": "2026-04-19T08:11:18Z",
-      "duration_seconds": 1914,
-      "is_short": false,
-      "channel_title": "Traveller - Maxi & Maro",
-      "view_count": 28127,
-      "like_count": 721,
-      "ife_system": null,
-      "ife_system_inferred": false,
-      "ife_system_guess": "Thales AVANT",
-      "chapters": [],
-      "media_type": "video",
-      "airlines_mentioned": [
-        {
-          "keyword": "thai airways",
-          "mentions": 1
-        }
-      ],
-      "aircraft_mentioned": [],
-      "ife_features": {},
-      "ife_specs": {},
-      "transcript_available": false,
-      "transcript_excerpt": null,
-      "captions": [],
-      "transcript_full": "",
-      "source_tier": 2,
-      "source_name": "Creator",
-      "discovered_by": "channel:Traveller - Maxi & Maro",
-      "chapters_source": null,
-      "sentiment": "neutral",
-      "sentiment_score": 0.0,
-      "title_lang": "en"
-    },
-    {
       "url": "https://www.youtube.com/watch?v=YRRvB3C-SYE",
       "title": "Copenhagen Airport Business Class Departure 🇩🇰 Finnair Lounge, Check-In & Boarding Walk to Gate",
       "title_en": null,
@@ -1181332,50 +1180874,6 @@
       "sentiment_score": 0.637
     },
     {
-      "url": "https://www.youtube.com/watch?v=mLQuTG0srB4",
-      "title": "大韓航空波音737-900測評：十佳航司的老舊客機與難吃飛機餐｜Korean Air Boeing 737-900 Review: Old Cabin & Bad Food #大韓航空 #波音737",
-      "title_en": null,
-      "year": 2026,
-      "published_at": "2026-09-23T23:00:22Z",
-      "duration_seconds": 476,
-      "is_short": false,
-      "channel_title": "Everyday Flyer 草根航评",
-      "view_count": 7726,
-      "like_count": 28,
-      "ife_system": null,
-      "ife_system_inferred": false,
-      "ife_system_guess": "Panasonic eX3",
-      "chapters": [],
-      "media_type": "video",
-      "airlines_mentioned": [
-        {
-          "keyword": "korean air",
-          "mentions": 1
-        }
-      ],
-      "aircraft_mentioned": [
-        {
-          "keyword": "737",
-          "mentions": 2
-        },
-        {
-          "keyword": "boeing",
-          "mentions": 1
-        }
-      ],
-      "ife_features": {},
-      "ife_specs": {},
-      "transcript_available": false,
-      "transcript_excerpt": null,
-      "captions": [],
-      "transcript_full": "",
-      "source_tier": 2,
-      "source_name": "Creator",
-      "chapters_source": null,
-      "sentiment": "negative",
-      "sentiment_score": -0.542
-    },
-    {
       "url": "https://www.youtube.com/watch?v=CrB5Vo1CA9k",
       "title": "What I Ate on a 13-Hour Air France Flight 🍱 Economy #shorts #airfrance #a350",
       "title_en": null,
@@ -1181723,195 +1181221,6 @@
       "source_tier": 2,
       "source_name": "Creator",
       "chapters_source": null,
-      "sentiment": "neutral",
-      "sentiment_score": 0.0
-    },
-    {
-      "url": "https://www.youtube.com/watch?v=RM_W5XMTUGk",
-      "title": "#飛行 121 新加坡航空A350-900商務艙開箱！香港直飛新加坡，直擊傳奇Book the Cook預選餐點，金貝貝深度對標國泰航空，兩大頂尖航司巔峰對決！ #新加坡航空 #商務艙",
-      "title_en": null,
-      "year": 2026,
-      "published_at": "2026-10-09T08:00:20Z",
-      "duration_seconds": 2264,
-      "is_short": false,
-      "channel_title": "金貝貝微服私訪 Gold Private Travel",
-      "view_count": 13095,
-      "like_count": 144,
-      "ife_system": null,
-      "ife_system_inferred": false,
-      "ife_system_guess": "KrisWorld",
-      "chapters": [
-        {
-          "t": "00:00",
-          "sec": 0,
-          "title": "本集預告",
-          "ife": false
-        },
-        {
-          "t": "00:17",
-          "sec": 17,
-          "title": "片頭",
-          "ife": false
-        },
-        {
-          "t": "00:40",
-          "sec": 40,
-          "title": "開場｜新航 A350-900 商務艙",
-          "ife": false
-        },
-        {
-          "t": "01:12",
-          "sec": 72,
-          "title": "機艙＆商務艙座位開箱",
-          "ife": false
-        },
-        {
-          "t": "02:42",
-          "sec": 162,
-          "title": "A350-900 三種機型介紹",
-          "ife": false
-        },
-        {
-          "t": "03:30",
-          "sec": 210,
-          "title": "新航 vs 國泰／華航／星宇",
-          "ife": false
-        },
-        {
-          "t": "05:27",
-          "sec": 327,
-          "title": "迎賓飲料＆座椅體驗",
-          "ife": false
-        },
-        {
-          "t": "07:12",
-          "sec": 432,
-          "title": "機上 Menu＆餐點介紹",
-          "ife": false
-        },
-        {
-          "t": "07:54",
-          "sec": 474,
-          "title": "新航 Book the Cook",
-          "ife": false
-        },
-        {
-          "t": "09:38",
-          "sec": 578,
-          "title": "新航酒單＆飲品",
-          "ife": false
-        },
-        {
-          "t": "12:05",
-          "sec": 725,
-          "title": "起飛囉｜香港→新加坡",
-          "ife": false
-        },
-        {
-          "t": "12:38",
-          "sec": 758,
-          "title": "新航安全示範影片",
-          "ife": false
-        },
-        {
-          "t": "14:00",
-          "sec": 840,
-          "title": "新加坡樟宜機場＆母港優勢",
-          "ife": false
-        },
-        {
-          "t": "15:00",
-          "sec": 900,
-          "title": "機上餐點實測",
-          "ife": false
-        },
-        {
-          "t": "25:59",
-          "sec": 1559,
-          "title": "商務艙餐食總評",
-          "ife": false
-        },
-        {
-          "t": "26:08",
-          "sec": 1568,
-          "title": "座椅平躺＆睡眠體驗",
-          "ife": false
-        },
-        {
-          "t": "28:03",
-          "sec": 1683,
-          "title": "機上 Wi-Fi＆座椅心得",
-          "ife": true
-        },
-        {
-          "t": "30:01",
-          "sec": 1801,
-          "title": "反魚骨 vs 新航座椅",
-          "ife": false
-        },
-        {
-          "t": "32:02",
-          "sec": 1922,
-          "title": "新航 vs 國泰總評",
-          "ife": false
-        },
-        {
-          "t": "33:01",
-          "sec": 1981,
-          "title": "隱藏版座位｜11排＆19排",
-          "ife": false
-        },
-        {
-          "t": "35:18",
-          "sec": 2118,
-          "title": "新加坡機場延誤＆盤旋",
-          "ife": false
-        },
-        {
-          "t": "36:42",
-          "sec": 2202,
-          "title": "抵達新加坡｜",
-          "ife": false
-        },
-        {
-          "t": "37:02",
-          "sec": 2222,
-          "title": "片尾",
-          "ife": false
-        },
-        {
-          "t": "37:19",
-          "sec": 2239,
-          "title": "下一集預告",
-          "ife": false
-        }
-      ],
-      "media_type": "video",
-      "airlines_mentioned": [
-        {
-          "keyword": "singapore airlines",
-          "mentions": 1
-        }
-      ],
-      "aircraft_mentioned": [
-        {
-          "keyword": "a350-900",
-          "mentions": 4
-        }
-      ],
-      "ife_features": {
-        "connectivity": true
-      },
-      "ife_specs": {
-        "wifi_type": "Wi-Fi"
-      },
-      "transcript_available": false,
-      "transcript_excerpt": null,
-      "captions": [],
-      "transcript_full": "",
-      "source_tier": 2,
-      "source_name": "Creator",
-      "chapters_source": "description",
       "sentiment": "neutral",
       "sentiment_score": 0.0
     },
@@ -1182824,7 +1182133,7 @@
     {
       "url": "https://www.youtube.com/watch?v=4irB6Og3i60",
       "title": "オマーン航空　ビジネスクラス　Oman Air business class",
-      "title_en": null,
+      "title_en": "Oman Air Business Class",
       "year": 2026,
       "published_at": "2026-10-09T08:45:21Z",
       "duration_seconds": 23,
@@ -1183402,7 +1182711,7 @@
     {
       "url": "https://www.youtube.com/watch?v=fmPOmzBGqR8",
       "title": "Singapore Airlines Business Class｜What’s It Like on the Shortest Route?【 新加坡航空最短航線｜A350商務艙｜吉隆坡－新加坡 】",
-      "title_en": null,
+      "title_en": "Singapore Airlines Business It Like on the Shortest Route?",
       "year": 2026,
       "published_at": "2026-10-17T04:00:14Z",
       "duration_seconds": 603,
@@ -1184094,7 +1183403,7 @@
     {
       "url": "https://www.youtube.com/watch?v=PPTlRFvBRCo",
       "title": "德威航空正式走入歷史！🇰🇷｜泰瑞航空B737-800 vs A330-300完整開箱！｜NRT-ICN-YVR",
-      "title_en": null,
+      "title_en": "Dewey Air is officially in history!",
       "year": 2026,
       "published_at": "2026-10-16T09:03:09Z",
       "duration_seconds": 1446,
@@ -1185067,7 +1184376,7 @@
     {
       "url": "https://www.youtube.com/watch?v=PUSb8rr6xiU",
       "title": "델타 프리미엄 셀렉트, +$400 업그레이드 돈값 할까? | Delta Premium Select Review",
-      "title_en": null,
+      "title_en": "Delta Premium Select, +$400 Upgrade Money? Delta Premium Review",
       "year": 2026,
       "published_at": "2026-10-17T02:04:50Z",
       "duration_seconds": 67,
@@ -1187598,7 +1186907,7 @@
     {
       "url": "https://www.youtube.com/watch?v=ZhCRoZys4WA",
       "title": "Is This the Best Business Class to Japan? | Etihad A350-1000 (エティハド航空)",
-      "title_en": null,
+      "title_en": "Etihad A350-1000",
       "year": 2026,
       "published_at": "2026-10-17T08:00:01Z",
       "duration_seconds": 1748,
@@ -1189545,7 +1188854,7 @@
     {
       "url": "https://www.youtube.com/watch?v=BQ65-dWYhjQ",
       "title": "카타르항공 승무원도 설레는 Qsuite 탑승 후기💜 | Qatar Airways Cabin Crew Qsuite Review",
-      "title_en": null,
+      "title_en": "Qatar Airways Cabin Crew Qsuite Review",
       "year": 2026,
       "published_at": "2026-10-14T10:05:16Z",
       "duration_seconds": 48,
@@ -1190968,7 +1190277,7 @@
     {
       "url": "https://www.youtube.com/watch?v=lTdt1XllnDw",
       "title": "【エアチャイナ搭乗記】家族4人で日本一時帰国｜料金・機内食・北京乗り継ぎをレビュー",
-      "title_en": null,
+      "title_en": "[Air China boarding record] 4 families return to Japan temporarily   Review of rates, meals and boarding of Beijing",
       "year": 2026,
       "published_at": "2026-09-21T22:00:19Z",
       "duration_seconds": 868,
@@ -1191706,7 +1191015,7 @@
     {
       "url": "https://www.youtube.com/watch?v=Jw49j21NX8o",
       "title": "【現役CA】自社のエティハド航空ビジネスクラスに乗ってみた",
-      "title_en": null,
+      "title_en": "[Current CA] I tried to ride my Etihad Aviation Business Class",
       "year": 2026,
       "published_at": "2026-10-18T08:03:32Z",
       "duration_seconds": 1051,
@@ -1191825,7 +1191134,7 @@
     {
       "url": "https://www.youtube.com/watch?v=yGZWyK6rAtU",
       "title": "全球最便宜的阿联酋航空商务舱体验航线？我称他为旅游打卡航线｜Cheapest Emirates A380 Business Class Route in the World",
-      "title_en": null,
+      "title_en": "The world's cheapest UAE airway experience? I call him Cheapest Emirates A380 Business Class Road in the World",
       "year": 2026,
       "published_at": "2026-10-18T23:11:34Z",
       "duration_seconds": 1340,
