@@ -182284,7 +182284,7 @@
         {
           "t": "03:05",
           "sec": 185,
-          "title": "Philadelphia Airport Takeoff",
+          "title": "Takeoff for Doha",
           "ife": false
         },
         {
@@ -182332,7 +182332,7 @@
         {
           "t": "08:04",
           "sec": 484,
-          "title": "Final Verdict",
+          "title": "Landing at Doha - Final Verdict",
           "ife": false
         }
       ],
@@ -669334,13 +669334,7 @@
         {
           "t": "00:00",
           "sec": 0,
-          "title": "Start",
-          "ife": false
-        },
-        {
-          "t": "01:10",
-          "sec": 70,
-          "title": "Route Explanation",
+          "title": "Route explanation",
           "ife": false
         },
         {
