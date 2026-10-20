@@ -95,12 +95,14 @@ def enrich_from_transcript(r):
 
 
 LAST_FETCH_BLOCKED = False   # set when YouTube refused the request rather than lacking captions
+LAST_FETCH_DEFINITIVE = False  # set when YouTube said outright there are no captions
+_NO_CAPTION_ERRORS = ("TranscriptsDisabled", "NoTranscriptFound", "VideoUnavailable", "VideoUnplayable")
 
 
 def fetch_yt_segs(video_id, cookies_path=None):
     """Try YouTube transcript API (manual → auto-generated → any language)."""
-    global LAST_FETCH_BLOCKED
-    LAST_FETCH_BLOCKED = False
+    global LAST_FETCH_BLOCKED, LAST_FETCH_DEFINITIVE
+    LAST_FETCH_BLOCKED = LAST_FETCH_DEFINITIVE = False
     try:
         api = YouTubeTranscriptApi(cookies=cookies_path) if cookies_path else YouTubeTranscriptApi()
     except TypeError:
@@ -126,6 +128,7 @@ def fetch_yt_segs(video_id, cookies_path=None):
     except Exception as exc:
         name = type(exc).__name__
         LAST_FETCH_BLOCKED = "Blocked" in name or "TooMany" in name or "429" in str(exc)
+        LAST_FETCH_DEFINITIVE = name in _NO_CAPTION_ERRORS
     return None
 
 
@@ -360,6 +363,12 @@ def main():
         elif captions_only and LAST_FETCH_BLOCKED:
             print(f"[{idx}/{len(targets)}] BLOCKED  {vid_id}  — YouTube is refusing caption requests; stopping this run.")
             break
+
+        elif captions_only and not LAST_FETCH_DEFINITIVE:
+            # A track exists but the fetch failed (transient): leave it unmarked so
+            # the next night retries instead of handing it to Whisper.
+            failed += 1
+            print(f"[{idx}/{len(targets)}] RETRY    {vid_id}  (caption fetch failed)")
 
         elif captions_only:
             r["yt_captions"] = "none"
