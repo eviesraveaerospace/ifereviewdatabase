@@ -12,6 +12,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pruned_urls
+
 sys.stdout.reconfigure(encoding="utf-8")
 CACHE = "ife_cache.json"
 
@@ -45,13 +47,17 @@ def main():
                 continue
             if u not in merged or _richness(r) > _richness(merged[u]):
                 merged[u] = r
+    # Rows the prune removed on purpose must not come back from the other side.
+    kept = pruned_urls.drop_pruned(merged.values())
+    dropped = len(merged) - len(kept)
+    merged = {r["url"]: r for r in kept}
     base = dict(ours)
     base["reviews"] = list(merged.values())
     base["last_updated"] = max(ours.get("last_updated") or "", theirs.get("last_updated") or "")
     Path(CACHE).write_text(json.dumps(base, indent=2, ensure_ascii=False), encoding="utf-8")
     subprocess.run(["git", "add", CACHE], check=True)
     print(f"resolve_cache_conflict: ours={len(ours.get('reviews', []))} theirs={len(theirs.get('reviews', []))} "
-          f"merged={len(base['reviews'])}")
+          f"merged={len(base['reviews'])} (pruned rows kept out: {dropped})")
     return 0
 
 

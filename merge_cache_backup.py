@@ -18,6 +18,7 @@ from datetime import datetime
 from pathlib import Path
 
 import ife_crawler as _ic
+import pruned_urls
 from ife_data_manager import IFEDataManager
 
 sys.stdout.reconfigure(encoding="utf-8")
@@ -63,13 +64,16 @@ def main():
     by_url = {r.get("url"): r for r in cur if r.get("url")}
 
     added, enriched, skipped = [], [], []
+    PRUNED_URLS = pruned_urls.load()
     for b in brows:
         url = b.get("url")
         if not url:
             continue
         c = by_url.get(url)
         if c is None:
-            if _passes_gate(b):
+            if url in PRUNED_URLS:
+                skipped.append(b)
+            elif _passes_gate(b):
                 cur.append(b); by_url[url] = b; added.append(b)
             else:
                 skipped.append(b)

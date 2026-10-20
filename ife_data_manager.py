@@ -123,9 +123,11 @@ class IFEDataManager:
 
     def known_urls(self):
         """URLs the crawler must not add again: everything cached plus
-        reviews an admin deleted from the dashboard."""
+        reviews an admin deleted from the dashboard or the prune removed."""
+        import pruned_urls
         urls = {r.get("url") for r in self.data.get("reviews", [])}
         urls.update(self.data.get("deleted_urls") or [])
+        urls.update(pruned_urls.load())
         return urls
 
     def reload_from_disk(self):

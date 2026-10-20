@@ -83,7 +83,7 @@ fi
 
 # Publish: cache + team notes/bookmarks + uploaded photos. Retry once after a
 # rebase in case CI or a teammate pushed while Whisper was running.
-git add ife_cache.json notes.json flags.json >> "$LOG" 2>&1
+git add ife_cache.json notes.json flags.json pruned_offtopic.json >> "$LOG" 2>&1
 [ -d static/uploads ] && git add static/uploads >> "$LOG" 2>&1
 if git diff --staged --quiet; then
     log "nothing to commit"

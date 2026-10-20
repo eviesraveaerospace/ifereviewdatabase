@@ -21,6 +21,7 @@ from pathlib import Path
 sys.stdout.reconfigure(encoding="utf-8")
 os.environ.setdefault("IFE_NO_TRANSLATE", "1")   # gate on the raw title; no network
 
+import pruned_urls  # noqa: E402
 from ife_crawler import (IFECrawler, _is_offtopic_video, _is_trusted_channel, _gate_title,  # noqa: E402
                          AIRLINE_KEYWORDS, GLOBAL_AIRLINES)
 
@@ -82,19 +83,26 @@ def main():
     data = json.loads(CACHE.read_text(encoding="utf-8"))
     rows = data.get("reviews", [])
     gone = [r for r in rows if should_prune(r)]
-    print(f"{len(gone)} of {len(rows)} entries would be pruned")
+    # Rows already in the pruned list that a cache merge brought back: drop them
+    # again (the list already holds their copy).
+    listed = pruned_urls.load()
+    gone_urls = {r["url"] for r in gone}
+    resurrected = [r for r in rows if r.get("url") in listed and r["url"] not in gone_urls
+                   and r.get("media_type") != "internal"]
+    print(f"{len(gone)} of {len(rows)} entries would be pruned; {len(resurrected)} more are back from the pruned list")
     for r in gone[:60]:
         print(f"  {r.get('year')}  {(r.get('channel_title') or '')[:24]:24s}  {(r.get('title') or '')[:70]}")
     if len(gone) > 60:
         print(f"  ... and {len(gone) - 60} more")
     if not a.apply:
         return
-    urls = {r["url"] for r in gone}
+    urls = gone_urls | {r["url"] for r in resurrected}
     data["reviews"] = [r for r in rows if r["url"] not in urls]
     old = json.loads(PRUNED.read_text(encoding="utf-8")) if PRUNED.exists() else []
-    PRUNED.write_text(json.dumps(old + gone, indent=1, ensure_ascii=False), encoding="utf-8")
+    PRUNED.write_text(json.dumps(old + [r for r in gone if r["url"] not in listed], indent=1, ensure_ascii=False),
+                      encoding="utf-8")
     CACHE.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
-    print(f"removed {len(gone)}; {len(data['reviews'])} remain; copies in {PRUNED.name}")
+    print(f"removed {len(urls)}; {len(data['reviews'])} remain; copies in {PRUNED.name}")
 
 
 if __name__ == "__main__":

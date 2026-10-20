@@ -23,6 +23,7 @@ except ImportError:
     pass
 
 import ife_crawler
+import pruned_urls
 ife_crawler.TRANSCRIPTS_AVAILABLE = False  # skip transcript fetch during this pass
 from ife_crawler import IFECrawler, KNOWN_IFE_CHANNELS
 
@@ -37,7 +38,7 @@ def main():
 
     data = json.loads(CACHE.read_text(encoding="utf-8"))
     reviews = data.setdefault("reviews", [])
-    existing = {r.get("url") for r in reviews}
+    existing = {r.get("url") for r in reviews} | pruned_urls.load()
 
     crawler = IFECrawler(verify_ssl=False, api_key=KEY)
     channels = {n: c for n, c in KNOWN_IFE_CHANNELS.items() if "(official)" not in n.lower()}
