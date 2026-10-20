@@ -225,10 +225,12 @@ def to_dashboard(raw_chapters, long_form=False, gap=8):
         rows.append({"t": fmt_ts(ch["start"]), "sec": int(round(ch["start"])), "end": int(round(ch["end"])),
                      "title": title[:90], "tags": tags, "ife": bool(tags), "source": "ocr"})
     if long_form:
-        # Same bar as the IFE-chapter pass: a screen seen in one sampled frame
-        # is not a chapter. A lounge sign full of airline logos reads as a
-        # "Navigation Menu" for one frame; a real IFE screen stays up for several.
-        rows = [r for r in rows if r["end"] > r["sec"]]
+        # "Navigation Menu" is the OCR taxonomy's catch-all: any frame whose text
+        # hits several tag groups collapses to it, so a lounge sign full of
+        # airline logos or a boarding pass reads as one for a single frame. A
+        # real hub screen stays up across sampled frames; specific screens
+        # (Map, Games, Media player) are kept even from one frame.
+        rows = [r for r in rows if r["end"] > r["sec"] or r["tags"] != ["Navigation Menu"]]
     return rows
 
 
@@ -259,7 +261,10 @@ def tag_detections(rows, offset, chapter_idx, interval):
     more sampled frames is solid; a single frame is dropped."""
     out = []
     for row in rows:
-        conf = 0.9 if row["end"] - row["sec"] >= interval else 0.6
+        # Held across frames: solid. One frame: fine for a specific screen,
+        # not for the catch-all "Navigation Menu" (see to_dashboard).
+        held = row["end"] - row["sec"] >= interval
+        conf = 0.9 if held else (0.6 if row["tags"] == ["Navigation Menu"] else 0.8)
         if conf < TAG_CONF_MIN:
             continue
         for tag in row["tags"]:
