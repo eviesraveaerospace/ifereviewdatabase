@@ -224,6 +224,11 @@ def to_dashboard(raw_chapters, long_form=False, gap=8):
             continue
         rows.append({"t": fmt_ts(ch["start"]), "sec": int(round(ch["start"])), "end": int(round(ch["end"])),
                      "title": title[:90], "tags": tags, "ife": bool(tags), "source": "ocr"})
+    if long_form:
+        # Same bar as the IFE-chapter pass: a screen seen in one sampled frame
+        # is not a chapter. A lounge sign full of airline logos reads as a
+        # "Navigation Menu" for one frame; a real IFE screen stays up for several.
+        rows = [r for r in rows if r["end"] > r["sec"]]
     return rows
 
 
