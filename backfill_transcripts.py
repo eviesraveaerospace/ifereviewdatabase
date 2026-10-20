@@ -94,8 +94,13 @@ def enrich_from_transcript(r):
     add_transcript_ife_chapter(r)
 
 
+LAST_FETCH_BLOCKED = False   # set when YouTube refused the request rather than lacking captions
+
+
 def fetch_yt_segs(video_id, cookies_path=None):
     """Try YouTube transcript API (manual → auto-generated → any language)."""
+    global LAST_FETCH_BLOCKED
+    LAST_FETCH_BLOCKED = False
     try:
         api = YouTubeTranscriptApi(cookies=cookies_path) if cookies_path else YouTubeTranscriptApi()
     except TypeError:
@@ -118,8 +123,9 @@ def fetch_yt_segs(video_id, cookies_path=None):
                     return segs
             except Exception:
                 continue
-    except Exception:
-        pass
+    except Exception as exc:
+        name = type(exc).__name__
+        LAST_FETCH_BLOCKED = "Blocked" in name or "TooMany" in name or "429" in str(exc)
     return None
 
 
@@ -268,6 +274,16 @@ def main():
                 any(c.get("ife") for c in r.get("chapters") or []),
                 bool(r.get("ife_system")), min(len(feats), 3), r.get("published_at") or "")
     targets.sort(key=_prio, reverse=True)
+    # CAPTIONS_ONLY=1 (the laptop, whose egress YouTube serves captions to):
+    # YouTube captions only, no Whisper; a video with none is marked so the
+    # VM's Whisper night takes those first and never re-tries ones with captions.
+    captions_only = os.environ.get("CAPTIONS_ONLY", "").strip() not in ("", "0")
+    if captions_only:
+        targets = [r for r in targets if r.get("yt_captions") != "none"]
+        print(f"Captions-only mode: {len(targets)} videos not yet checked")
+    else:
+        # Whisper is slow: spend it where captions are known to be absent first.
+        targets.sort(key=lambda r: r.get("yt_captions") != "none")
     print(f"Videos without transcript: {len(targets)}")
 
     # Set up cookies (bypasses IP block on GitHub Actions datacenter IPs)
@@ -283,7 +299,7 @@ def main():
         else:
             print("  No cookies available (no YOUTUBE_COOKIES_B64, no usable local browser profile) — some videos may be IP-blocked.")
 
-    whisper_model = load_whisper_model()
+    whisper_model = None if captions_only else load_whisper_model()
     yt_ok = whisper_ok = skipped = blocked = failed = 0
     to_remove = []   # private / unavailable video URLs
     processed = set()  # urls whose transcript fields we set this run
@@ -305,7 +321,8 @@ def main():
                 if u in processed and u in by_url:
                     tgt = by_url[u]
                     for k in ("transcript_available", "transcript_excerpt", "captions",
-                              "transcript_full", "transcript_source", "chapters", "chapters_source") + ENRICH_KEYS:
+                              "transcript_full", "transcript_source", "chapters", "chapters_source",
+                              "yt_captions") + ENRICH_KEYS:
                         if k in rr:
                             tgt[k] = rr[k]
             if to_remove:
@@ -333,10 +350,22 @@ def main():
             r["transcript_excerpt"] = excerpt
             r["captions"] = caps
             r["transcript_full"] = full
+            r["transcript_source"] = "youtube"
+            r["yt_captions"] = "ok"
             enrich_from_transcript(r)
             processed.add(r["url"])
             yt_ok += 1
-            print(f"[{idx}/{len(targets)}] YT-OK    {vid_id}")
+            print(f"[{idx}/{len(targets)}] YT-OK    {vid_id}  ({len(caps)} caps)")
+
+        elif captions_only and LAST_FETCH_BLOCKED:
+            print(f"[{idx}/{len(targets)}] BLOCKED  {vid_id}  — YouTube is refusing caption requests; stopping this run.")
+            break
+
+        elif captions_only:
+            r["yt_captions"] = "none"
+            processed.add(r["url"])
+            failed += 1
+            print(f"[{idx}/{len(targets)}] NO-CAPS  {vid_id}")
 
         elif whisper_blocked:
             failed += 1
@@ -374,7 +403,7 @@ def main():
             merge_save()
             print(f"  -- checkpoint: YT={yt_ok} Whisper={whisper_ok} removed={skipped} fail={failed} --")
 
-        time.sleep(0.5)
+        time.sleep(0.2 if captions_only else 0.5)
 
     if to_remove:
         print(f"\nPurging {len(set(to_remove))} private/unavailable videos.")

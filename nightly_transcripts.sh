@@ -61,11 +61,15 @@ if [ -x "$OCR_PY" ] && [ -f "$OCR_REPO/ocr_video_chapters.py" ]; then
         IFE_OCR_REPO="$OCR_REPO" MAX_RUNTIME_MIN="${SHORTS_OCR_MIN:-60}" "$OCR_PY" -u gather_short_chapters.py >> "$LOG" 2>&1
         # every video with a description chapter flagged IFE: OCR just that chapter
         # (ranged download) and keep its screen-tag detections, newest first, 60 min cap
-        IFE_OCR_REPO="$OCR_REPO" MAX_RUNTIME_MIN="${IFE_CHAPTER_OCR_MIN:-60}" "$OCR_PY" -u gather_short_chapters.py --ife-chapters --interval "${LONG_OCR_INTERVAL:-4}" >> "$LOG" 2>&1
-        # external full-length reviews without chapters, best IFE candidates first, 75 min cap
+        # Two shards in parallel (4 cores); 6 s frames: a screen held two frames is the bar anyway.
+        IFE_OCR_REPO="$OCR_REPO" MAX_RUNTIME_MIN="${IFE_CHAPTER_OCR_MIN:-60}" "$OCR_PY" -u gather_short_chapters.py --ife-chapters --interval "${IFE_OCR_INTERVAL:-6}" --shard 0/2 >> "$LOG" 2>&1 &
+        IFE_OCR_REPO="$OCR_REPO" MAX_RUNTIME_MIN="${IFE_CHAPTER_OCR_MIN:-60}" "$OCR_PY" -u gather_short_chapters.py --ife-chapters --interval "${IFE_OCR_INTERVAL:-6}" --shard 1/2 >> "$LOG" 2>&1 &
+        wait
+        # external full-length reviews without chapters, best IFE candidates first, 30 min cap
+        # (transcripts now open IFE chapters for most of these, which the targeted pass covers)
         # (the Shorts pass finishes in seconds now that every Short is done, so its hour moved here).
         # 4 s frame interval: ~4x faster than 2 s with the same tags and ~1 chapter fewer per video.
-        IFE_OCR_REPO="$OCR_REPO" MAX_RUNTIME_MIN="${LONG_OCR_MIN:-75}" "$OCR_PY" -u gather_short_chapters.py --long --interval "${LONG_OCR_INTERVAL:-4}" >> "$LOG" 2>&1
+        IFE_OCR_REPO="$OCR_REPO" MAX_RUNTIME_MIN="${LONG_OCR_MIN:-30}" "$OCR_PY" -u gather_short_chapters.py --long --interval "${LONG_OCR_INTERVAL:-4}" >> "$LOG" 2>&1
     else
         log "yt_dlp missing in $OCR_PY - skipping Shorts OCR chapters"
     fi

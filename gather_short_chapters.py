@@ -228,7 +228,7 @@ def to_dashboard(raw_chapters, long_form=False, gap=8):
 
 
 # ── IFE chapter → tag detections ─────────────────────────────────────────────
-IFE_SPAN_MAX = 8 * 60      # cap per chapter: an "IFE" chapter rarely runs longer
+IFE_SPAN_MAX = 5 * 60      # cap per chapter: the IFE talk is in the first minutes
 TAG_CONF_MIN = 0.8         # a screen seen in one sampled frame only is not shown
 
 
@@ -264,6 +264,26 @@ def tag_detections(rows, offset, chapter_idx, interval):
     return out
 
 
+import contextlib
+
+
+@contextlib.contextmanager
+def _cache_lock():
+    """Serialise cache writes between parallel shards (POSIX flock; no-op on Windows)."""
+    lock = CACHE.with_suffix(".lock")
+    try:
+        import fcntl
+    except ImportError:
+        yield
+        return
+    with open(lock, "w") as fh:
+        fcntl.flock(fh, fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            fcntl.flock(fh, fcntl.LOCK_UN)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=0, help="stop after N videos (0 = all)")
@@ -272,6 +292,7 @@ def main():
     ap.add_argument("--interval", type=float, default=2.0, help="seconds between sampled frames")
     ap.add_argument("--max-runtime-min", type=float, default=float(os.environ.get("MAX_RUNTIME_MIN", 0) or 0))
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--shard", default="", help="K/N: process every Nth video starting at K (parallel workers)")
     ap.add_argument("--long", action="store_true",
                     help="full-length videos (not Shorts) that have no chapters at all, newest first")
     ap.add_argument("--ife-chapters", action="store_true",
@@ -308,6 +329,9 @@ def main():
         # A Short already OCR'd (possibly to zero chapters) is not redone unless --retag.
         todo = [r for r in todo if (not r.get("chapters") and r.get("chapters_source") != "ocr")
                 or (a.retag and r.get("chapters_source") == "ocr")]
+    if a.shard:
+        k, n_sh = (int(x) for x in a.shard.split("/"))
+        todo = todo[k::n_sh]
     if a.limit:
         todo = todo[:a.limit]
     print(f"OCR repo: {REPO}\n{len(todo)} {'IFE chapters' if a.ife_chapters else 'full-length videos' if a.long else 'Shorts'} to tag")
@@ -326,18 +350,20 @@ def main():
     touched = {}
 
     def save():
-        # Merge, don't overwrite: the transcript backfill / media fetch may have
-        # written the cache since we loaded it. Re-read and apply only our fields.
-        fresh = json.loads(CACHE.read_text(encoding="utf-8"))
-        for row in fresh.get("reviews", []):
-            src = touched.get(row.get("url"))
-            if src is not None:
-                for k in OWN:
-                    if k in src:
-                        row[k] = src[k]
-                    else:
-                        row.pop(k, None)
-        CACHE.write_text(json.dumps(fresh, indent=2, ensure_ascii=False), encoding="utf-8")
+        # Merge, don't overwrite: the transcript backfill / media fetch / a
+        # parallel shard may have written the cache since we loaded it. Re-read
+        # under a lock and apply only our fields.
+        with _cache_lock():
+            fresh = json.loads(CACHE.read_text(encoding="utf-8"))
+            for row in fresh.get("reviews", []):
+                src = touched.get(row.get("url"))
+                if src is not None:
+                    for k in OWN:
+                        if k in src:
+                            row[k] = src[k]
+                        else:
+                            row.pop(k, None)
+            CACHE.write_text(json.dumps(fresh, indent=2, ensure_ascii=False), encoding="utf-8")
 
     for n, r in enumerate(todo, 1):
         if a.max_runtime_min and (time.time() - t0) / 60 > a.max_runtime_min:
