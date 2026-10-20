@@ -475,7 +475,7 @@ _HOBBY_SIM_RE = re.compile(
     r'|\bplane\s*spotting\b|\bspotting\b|\bspotters?\b|\barrivals\b|\bdepartures\b'
     r'|\btakes?\s+off\s+from\b|\btake-?off\s+(?:and|&)\s+landing\b|\blanding\s+at\b|\bscenic\s+landing\b'
     r'|\bdiecast\b|\bdie-cast\b|\b1:[2-5]00\b|\bunboxing\b|\bcockpit\s+(?:full\s+flight|view|magic|video|footage|only)\b|\bfrom\s+the\s+cockpit\b|\b(?:live|with)\s+atc\b|\bapproach\s+at\b'
-    r'|\baerodrome\b|\bairfield\b|\bair\s+legend\b|\bstarship\b|\bnavy\b|\bbombers?\b|\bufo\b',
+    r'|\baerodrome\b|\bairfield\b|\bair\s+legend\b|\bstarship\b|\bnavy\b|\bbombers?\b|\bufos?\b|\buaps?\b|\bunidentified\b|\blights\s+in\s+formation\b|\bsightings?\b',
     re.IGNORECASE,
 )
 
@@ -532,7 +532,7 @@ _DOC_TITLE_RE = re.compile(
     re.IGNORECASE,
 )
 _DOC_CHANNEL_RE = re.compile(
-    r'\bexplain\w*\b|\bdrama\b|\bmovies?\b|\bjet\s+vault\b|\bmustard\b|\bwendover\b'
+    r'\bexplain\w*\b|\bdrama\b|\bmovies?\b|\bsequence\s+of\s+events\b|\bjet\s+vault\b|\bmustard\b|\bwendover\b'
     r'|\breal\s+engineering\b|\bmegaprojects\b|\bmentour\b|\bcoby\s+explanes\b|\baerospace,?\s+casually\b'
     r'|\b(?:arsenal|chelsea|real\s+madrid|paris\s+saint-germain|psg|ac\s+milan|benfica|hamburger\s+sv|olympique)\b',
     re.IGNORECASE,
