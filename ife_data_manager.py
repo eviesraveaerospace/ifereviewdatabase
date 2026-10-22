@@ -118,8 +118,12 @@ class IFEDataManager:
     def save_cache(self):
         self._dedupe_reviews()
         self.data["last_updated"] = datetime.now().isoformat()
-        with open(self.cache_file, "w", encoding="utf-8") as f:
+        # Write beside, then rename: the OCR tagger the dashboard triggers reads and
+        # writes this file while requests are served, and must never see half of it.
+        tmp = f"{self.cache_file}.tmp{os.getpid()}"
+        with open(tmp, "w", encoding="utf-8") as f:
             json.dump(self.data, f, indent=2, ensure_ascii=False)
+        os.replace(tmp, self.cache_file)
 
     def known_urls(self):
         """URLs the crawler must not add again: everything cached plus

@@ -19,6 +19,7 @@ def load(path=PRUNED):
 
 
 def drop_pruned(rows, pruned=None):
-    """rows without pruned YouTube entries; team-entered (internal) rows are never dropped."""
+    """rows whose URL is in the pruned list. Internal (team-entered) rows are only
+    dropped when listed explicitly, which prune_offtopic.py never does for them."""
     pruned = load() if pruned is None else pruned
-    return [r for r in rows if r.get("media_type") == "internal" or r.get("url") not in pruned]
+    return [r for r in rows if r.get("url") not in pruned]

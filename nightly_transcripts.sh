@@ -25,6 +25,19 @@ if ! git pull --rebase --autostash origin main >> "$LOG" 2>&1; then
     git rebase --abort >> "$LOG" 2>&1
 fi
 
+# The ios-screen-recording-ocr checkout (~/ife) and its venv (~/ife-venv: torch-cpu,
+# open_clip, rapidocr, yt-dlp); every OCR step below is skipped when absent.
+OCR_REPO="${IFE_OCR_REPO:-$HOME/ife}"
+OCR_PY="${IFE_OCR_PY:-$HOME/ife-venv/bin/python}"
+
+# New videos first: whatever the crawl added in the last 2 weeks that no OCR pass has
+# read yet (Short, chaptered or long) gets its screen detections tonight, ahead of the
+# backlog passes and of the transcript grind below, which can take 5 hours.
+if [ -x "$OCR_PY" ] && [ -f "$OCR_REPO/ocr_video_chapters.py" ] && "$OCR_PY" -c "import yt_dlp" 2>/dev/null \
+        && grep -qE '^YOUTUBE_COOKIES_B64=.+' .env 2>/dev/null; then
+    IFE_OCR_REPO="$OCR_REPO" MAX_RUNTIME_MIN="${NEW_OCR_MIN:-45}" "$OCR_PY" -u gather_short_chapters.py --new --interval "${NEW_OCR_INTERVAL:-4}" >> "$LOG" 2>&1
+fi
+
 if grep -qE '^YOUTUBE_COOKIES_B64=.+' .env 2>/dev/null; then
     MAX_RUNTIME_MIN="${MAX_RUNTIME_MIN:-300}" "$PY" -u backfill_transcripts.py >> "$LOG" 2>&1
     "$PY" -u translate_captions.py >> "$LOG" 2>&1
@@ -50,11 +63,10 @@ fi
 # OCR screen tagging. Uses the ios-screen-recording-ocr checkout (~/ife) and
 # its venv (~/ife-venv: torch-cpu, open_clip, rapidocr); skipped when absent.
 #  - internal reviews' own photos/recordings -> tags, verified tags, chapters
-#    (resumable: only files without ocr_done are processed, so new Forms
-#    imports get tagged the night after they land)
+#    (resumable: only files without detections are processed. The dashboard
+#    already runs this on every upload/import (app.py _trigger_ocr); tonight's
+#    run is the safety net for anything that trigger missed)
 #  - Shorts without description chapters -> OCR chapters, 60 min cap
-OCR_REPO="${IFE_OCR_REPO:-$HOME/ife}"
-OCR_PY="${IFE_OCR_PY:-$HOME/ife-venv/bin/python}"
 if [ -x "$OCR_PY" ] && [ -f "$OCR_REPO/ocr_video_chapters.py" ]; then
     IFE_OCR_REPO="$OCR_REPO" "$OCR_PY" -u tag_internal_media.py >> "$LOG" 2>&1
     if "$OCR_PY" -c "import yt_dlp" 2>/dev/null; then

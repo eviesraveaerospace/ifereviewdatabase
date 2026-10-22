@@ -36,14 +36,17 @@ def _richness(r):
 
 # OCR results one machine computed must survive the other machine winning the
 # row on transcript/captions (two machines now run the IFE-chapter pass).
-_OCR_KEYS = ("ife_tags", "ife_tags_status", "ife_tags_scope", "chapters_ocr_status")
+_OCR_KEYS = ("ife_tags", "ife_tags_status", "ife_tags_scope", "ocr_tagger_v", "chapters_ocr_status")
 
 
 def _carry_ocr(win, lose):
-    if lose.get("ife_tags_status") and not win.get("ife_tags_status"):
+    newer = (lose.get("ocr_tagger_v") or 0) > (win.get("ocr_tagger_v") or 0)
+    if lose.get("ife_tags_status") and (not win.get("ife_tags_status") or newer):
         for k in _OCR_KEYS:
             if k in lose:
                 win[k] = lose[k]
+            elif newer:
+                win.pop(k, None)
         tags = sorted(set(win.get("screen_tags") or []) | set(lose.get("screen_tags") or []))
         if tags:
             win["screen_tags"] = tags

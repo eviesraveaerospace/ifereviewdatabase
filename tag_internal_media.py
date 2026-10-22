@@ -46,7 +46,23 @@ import gather_short_chapters as gsc  # noqa: E402  (inserts the OCR repo on sys.
 from manual_review_tagger import predict_frame_tags, to_ife_features  # noqa: E402
 
 OWN_ITEM = ("tags", "tags_sheet", "ocr_tags", "ocr_visual", "chapters", "ocr_done", "tags_verified")
-OWN_REVIEW = ("screen_tags", "screen_tag_source", "ife_features")
+OWN_REVIEW = ("screen_tags", "screen_tag_source", "ife_features")   # photo_tags is merged separately
+
+
+def _read_cache():
+    """The app rewrites this file while requests run; retry a read that catches it mid-swap."""
+    for attempt in range(5):
+        try:
+            return json.loads(CACHE.read_text(encoding="utf-8"))
+        except ValueError:
+            time.sleep(0.5)
+    return json.loads(CACHE.read_text(encoding="utf-8"))
+
+
+def _write_cache(data):
+    tmp = CACHE.with_name(CACHE.name + f".tmp{os.getpid()}")
+    tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+    os.replace(tmp, CACHE)
 
 
 def _local_path(item):
@@ -119,7 +135,7 @@ def tag_recording(item, ocr, interval):
 
 
 def report():
-    data = json.loads(CACHE.read_text(encoding="utf-8"))
+    data = _read_cache()
     rows = [r for r in data.get("reviews", []) if r.get("media_type") == "internal"]
     per_tag = {}          # sheet tag -> [agreed, total]
     extra = {}            # OCR tags the sheet never mentioned
@@ -137,7 +153,7 @@ def report():
             for t in it.get("ocr_tags") or []:
                 if t.lower() not in {x.lower() for x in it.get("tags_sheet") or []}:
                     extra[t] = extra.get(t, 0) + 1
-    CACHE.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+    _write_cache(data)
     print(f"{n_files} OCR'd files; {n_agree} have at least one sheet tag the OCR confirmed")
     print()
     print("sheet tag                  confirmed / files")
@@ -147,6 +163,58 @@ def report():
     print("OCR tags not in the sheet (most common):")
     for t, n in sorted(extra.items(), key=lambda kv: -kv[1])[:15]:
         print(f"  {t:<24} {n}")
+
+
+def tag_uploaded(r, item, ocr, tagger):
+    """A photo attached through the dashboard (review['photos'] is a list of paths):
+    detections go in review['photo_tags'][path] since there is no images[] item."""
+    local = _local_path(item)
+    if not local:
+        return False
+    tags, visual = predict_frame_tags(str(local), ocr, tagger)
+    r.setdefault("photo_tags", {})[item["_photo"]] = {
+        "tags": sorted(tags), "ocr_visual": bool(visual), "ocr_done": datetime.now().isoformat(timespec="seconds")}
+    return True
+
+
+def _pending(a):
+    """(data, todo): files with no detections yet. A todo entry is (review, item); an uploaded
+    photo is represented by a {'_photo': path, 'local': path} stand-in."""
+    data = _read_cache()
+    rows = [r for r in data.get("reviews", []) if r.get("media_type") == "internal"]
+    if a.url:
+        rows = [r for r in rows if r.get("url") == a.url]
+    todo = []
+    for r in rows:
+        for item in r.get("images") or []:
+            if _local_path(item) and (a.force or not item.get("ocr_done")):
+                todo.append((r, item))
+        done = r.get("photo_tags") or {}
+        for p in r.get("photos") or []:
+            stand_in = {"_photo": p, "local": p}
+            if _local_path(stand_in) and (a.force or p not in done):
+                todo.append((r, stand_in))
+    if a.limit:
+        todo = todo[:a.limit]
+    return data, todo
+
+
+def _single_instance():
+    """Lock held for the life of the process; None when another tagging run is active
+    (it rescans for new files before it exits, so a second trigger can simply leave)."""
+    fh = open(HERE / "ife_internal_ocr.lock", "a+")
+    try:
+        if os.name == "nt":
+            import msvcrt
+            fh.seek(0)
+            msvcrt.locking(fh.fileno(), msvcrt.LK_NBLCK, 1)
+        else:
+            import fcntl
+            fcntl.flock(fh, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        fh.close()
+        return None
+    return fh
 
 
 def main():
@@ -162,20 +230,14 @@ def main():
     if a.report:
         return report()
 
-    data = json.loads(CACHE.read_text(encoding="utf-8"))
-    rows = [r for r in data.get("reviews", []) if r.get("media_type") == "internal"]
-    if a.url:
-        rows = [r for r in rows if r.get("url") == a.url]
-    todo = []
-    for r in rows:
-        for item in r.get("images") or []:
-            if not _local_path(item):
-                continue
-            if item.get("ocr_done") and not a.force:
-                continue
-            todo.append((r, item))
-    if a.limit:
-        todo = todo[:a.limit]
+    lock = None
+    if not a.dry_run:
+        lock = _single_instance()
+        if lock is None:
+            print("another internal-media tagging run is active; it rescans before it exits")
+            return
+
+    data, todo = _pending(a)
     n_vid = sum(1 for _, it in todo if it.get("video"))
     print(f"OCR repo: {gsc.REPO}\n{len(todo)} files to tag ({n_vid} recordings) across {len({id(r) for r, _ in todo})} reviews")
     if a.dry_run or not todo:
@@ -197,15 +259,17 @@ def main():
     touched = {}
 
     def finish_review(r):
-        tags = sorted({t for it in r.get("images") or [] for t in (it.get("tags") or [])})
-        r["screen_tags"] = tags
+        tags = {t for it in r.get("images") or [] for t in (it.get("tags") or [])}
+        photos = set(r.get("photos") or [])
+        tags |= {t for p, v in (r.get("photo_tags") or {}).items() if p in photos for t in v.get("tags") or []}
+        r["screen_tags"] = sorted(tags)
         r["screen_tag_source"] = "ocr-internal"
-        r["ife_features"] = to_ife_features(tags, r.get("ife_features") or {})
+        r["ife_features"] = to_ife_features(r["screen_tags"], r.get("ife_features") or {})
         touched[r["url"]] = r
 
     def save():
         # Merge, never overwrite: the app may have written the cache meanwhile.
-        fresh = json.loads(CACHE.read_text(encoding="utf-8"))
+        fresh = _read_cache()
         for row in fresh.get("reviews", []):
             src = touched.get(row.get("url"))
             if src is None:
@@ -213,6 +277,10 @@ def main():
             for k in OWN_REVIEW:
                 if k in src:
                     row[k] = src[k]
+            if src.get("photo_tags"):
+                listed = set(row.get("photos") or [])        # a photo deleted meanwhile stays deleted
+                row["photo_tags"] = {p: v for p, v in {**(row.get("photo_tags") or {}), **src["photo_tags"]}.items()
+                                     if p in listed}
             by_src = {it.get("src"): it for it in src.get("images") or []}
             for it in row.get("images") or []:
                 s_it = by_src.get(it.get("src"))
@@ -221,31 +289,53 @@ def main():
                 for k in OWN_ITEM:
                     if k in s_it:
                         it[k] = s_it[k]
-        CACHE.write_text(json.dumps(fresh, indent=2, ensure_ascii=False), encoding="utf-8")
+        _write_cache(fresh)
 
-    t0, done, failed = time.time(), 0, 0
-    for n, (r, item) in enumerate(todo, 1):
-        name = (item.get("local") or "").rsplit("/", 1)[-1]
-        print(f"[{n}/{len(todo)}] {r.get('title', '')[:50]}  {name}", end="  ", flush=True)
-        try:
-            ok = tag_recording(item, ocr, a.interval) if item.get("video") else tag_photo(item, ocr, tagger)
-        except Exception as exc:  # noqa: BLE001
-            print(f"FAIL {type(exc).__name__}: {str(exc)[:80]}")
-            failed += 1
-            continue
-        if not ok:
-            print("skip (no local file)")
-            continue
-        item["ocr_done"] = datetime.now().isoformat(timespec="seconds")
-        done += 1
-        if item.get("video"):
-            print(f"{len(item['chapters'])} chapters: " + ", ".join(f"{c['t']} {c['title']}" for c in item["chapters"][:6]))
-        else:
-            print(", ".join(item["ocr_tags"]) or "(no tag)" + ("  [visual]" if item.get("ocr_visual") else ""))
-        finish_review(r)
-        if n % 10 == 0:
-            save()
-    save()
+    t0, done, failed, rounds = time.time(), 0, 0, 0
+    bad = set()                      # files that failed this run are not retried by the rescan
+
+    def _key(r, it):
+        return (r.get("url"), it.get("_photo") or it.get("src"))
+
+    while todo:
+        rounds += 1
+        for n, (r, item) in enumerate(todo, 1):
+            name = (item.get("local") or "").rsplit("/", 1)[-1]
+            print(f"[{n}/{len(todo)}] {r.get('title', '')[:50]}  {name}", end="  ", flush=True)
+            try:
+                if item.get("_photo"):
+                    ok = tag_uploaded(r, item, ocr, tagger)
+                elif item.get("video"):
+                    ok = tag_recording(item, ocr, a.interval)
+                else:
+                    ok = tag_photo(item, ocr, tagger)
+            except Exception as exc:  # noqa: BLE001
+                print(f"FAIL {type(exc).__name__}: {str(exc)[:80]}")
+                failed += 1
+                bad.add(_key(r, item))
+                continue
+            if not ok:
+                print("skip (no local file)")
+                bad.add(_key(r, item))
+                continue
+            if item.get("_photo"):
+                print(", ".join(r["photo_tags"][item["_photo"]]["tags"]) or "(no tag)")
+            else:
+                item["ocr_done"] = datetime.now().isoformat(timespec="seconds")
+                if item.get("video"):
+                    print(f"{len(item['chapters'])} chapters: " + ", ".join(f"{c['t']} {c['title']}" for c in item["chapters"][:6]))
+                else:
+                    print(", ".join(item["ocr_tags"]) or "(no tag)" + ("  [visual]" if item.get("ocr_visual") else ""))
+            done += 1
+            finish_review(r)
+            if n % 10 == 0:
+                save()
+        save()
+        # Files added while this ran (another upload fired a trigger that found the lock held).
+        if a.force or a.limit or rounds >= 5:
+            break
+        data, todo = _pending(a)
+        todo = [(r, it) for r, it in todo if _key(r, it) not in bad]
     print(f"\nDone: {done} tagged, {failed} failed in {(time.time() - t0) / 60:.1f} min")
 
 

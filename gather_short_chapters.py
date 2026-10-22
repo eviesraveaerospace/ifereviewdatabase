@@ -28,6 +28,7 @@ import re
 import sys
 import tempfile
 import time
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -243,7 +244,32 @@ TAG_CONF_MIN = 0.8         # a screen seen in one sampled frame only is not show
 # (tail and belly cameras, the map) and menu chapters (the meal menu on the IFE).
 # Keep in step with OCR_CAND_RE in templates/index.html.
 EXTRA_CHAPTER_RE = re.compile(r"\b(?:take[\s-]?off|landing|menu)\b", re.I)
-SCOPE_V = 2   # 1 = IFE-flagged chapters only; 2 = also takeoff/landing/menu chapters
+
+# Version of everything that decides what the OCR passes store: which chapters are
+# read, the sampling interval, and the tagger in ios-screen-recording-ocr. Every row
+# an OCR pass writes is stamped with it (ocr_tagger_v); a row stamped lower, or never
+# stamped, is read again after the never-tried ones. BUMP THIS whenever tagging
+# improves, so earlier results are redone instead of keeping their old mistakes.
+#   1 = IFE-flagged chapters only   2 = + takeoff/landing/menu chapters
+#   3 = glue/typo-tolerant keywords, title/tab-aware Games, km/mi map readout,
+#       paper-menu gate, 4 s (VM) / 2 s (laptop) sampling
+TAGGER_V = 3
+
+
+def _stale(r):
+    return (r.get("ocr_tagger_v") or 0) < TAGGER_V
+
+
+def _ocr_screen_tags(r):
+    """screen_tags rebuilt from what the OCR passes found, so a mistake from an
+    older tagger is dropped on re-run instead of being merged back in. Rows whose
+    tags came from elsewhere ('auto') keep them."""
+    tags = {d["tag"] for d in r.get("ife_tags") or []}
+    if r.get("chapters_source") == "ocr":
+        tags |= {t for c in r.get("chapters") or [] for t in c.get("tags") or []}
+    if r.get("screen_tag_source") not in (None, "ocr-ife-chapter", "ocr-video"):
+        tags |= set(r.get("screen_tags") or [])
+    return sorted(tags)
 
 
 def ife_spans(r, extra=True):
@@ -265,13 +291,22 @@ def ife_spans(r, extra=True):
     return out
 
 
+def _never_tried(r):
+    """No OCR pass has read this video yet, and one of them would: IFE chapters for a
+    chaptered video, the whole video for one without chapters (Shorts and long)."""
+    if r.get("chapters_ocr_status") or r.get("ife_tags_status") or r.get("chapters_source") == "ocr":
+        return False
+    if r.get("chapters_source") in ("description", "transcript"):
+        return bool(ife_spans(r))
+    return not r.get("chapters")
+
+
 def _needs_ife_ocr(r):
-    """Not yet tagged, or tagged before the takeoff/landing/menu chapters were included."""
+    """Not yet tagged, or tagged by an older tagger version. A failure is not retried."""
     st = r.get("ife_tags_status")
     if not st:
         return True
-    return (st in ("done", "none") and r.get("ife_tags_scope", 1) < SCOPE_V
-            and len(ife_spans(r)) > len(ife_spans(r, extra=False)))
+    return st in ("done", "none") and _stale(r)
 
 
 def tag_detections(rows, offset, chapter_idx, interval):
@@ -338,12 +373,22 @@ def main():
     ap.add_argument("--ife-chapters", action="store_true",
                     help="videos with a description chapter flagged IFE: OCR just that chapter and "
                          "store its screen-tag detections as ife_tags (newest first)")
+    ap.add_argument("--new", action="store_true",
+                    help="every video published in the last --since-days that no OCR pass has tried, "
+                         "whatever its kind (Short, chaptered, long), newest first: run first each night "
+                         "so a new video gets its detections ahead of the backlog")
+    ap.add_argument("--since-days", type=int, default=14)
     a = ap.parse_args()
     _cookies_from_env()
 
     data = json.loads(CACHE.read_text(encoding="utf-8"))
     rows = data.get("reviews", [])
-    if a.url:
+    if a.new:
+        cutoff = (datetime.now(timezone.utc) - timedelta(days=a.since_days)).strftime("%Y-%m-%d")
+        todo = [r for r in rows if r.get("media_type") == "video" and _yt_id(r.get("url"))
+                and (r.get("published_at") or "")[:10] >= cutoff and _never_tried(r)]
+        todo.sort(key=lambda r: r.get("published_at") or "", reverse=True)
+    elif a.url:
         # An explicit URL may be any video (OCR works on full-length reviews
         # too — it is just slower), not only a Short.
         todo = [r for r in rows if r.get("url") == a.url and _yt_id(r.get("url"))]
@@ -354,27 +399,33 @@ def main():
                 and r.get("chapters_source") in ("description", "transcript") and ife_spans(r)
                 and _needs_ife_ocr(r)]
         todo.sort(key=lambda r: r.get("published_at") or "", reverse=not a.oldest_first)
+        todo.sort(key=lambda r: bool(r.get("ife_tags_status")))     # never-tried first, then stale ones
     elif a.long:
         # Full-length external reviews without description chapters: OCR gives
         # them tag-only chapters (long_form merge rules). Newest first, and a
         # video that already failed is not retried every night.
         todo = [r for r in rows if r.get("media_type") == "video" and not _is_short(r) and _yt_id(r.get("url"))
-                and not r.get("chapters") and not r.get("chapters_ocr_status")]
-        # Best IFE-review candidates first (the backlog is thousands of videos
-        # and the nightly budget covers a few dozen), newest within a tier.
-        todo.sort(key=lambda r: (_long_priority(r), r.get("published_at") or ""), reverse=True)
+                and not r.get("chapters_ocr_status")
+                and (not r.get("chapters") or (r.get("chapters_source") == "ocr" and _stale(r)))]
+        # Never-tried first, then ones an older tagger version read. Best IFE-review
+        # candidates first within each (the backlog is thousands of videos and the
+        # nightly budget covers a few dozen), newest within a tier.
+        todo.sort(key=lambda r: (not r.get("chapters"), _long_priority(r), r.get("published_at") or ""), reverse=True)
     else:
         todo = [r for r in rows if _is_short(r) and _yt_id(r.get("url"))]
         # description chapters (YouTube's own) are authoritative — never replace them
         # A Short already OCR'd (possibly to zero chapters) is not redone unless --retag.
+        # ...except that a Short an older tagger version read is redone, after the never-tried ones.
         todo = [r for r in todo if (not r.get("chapters") and r.get("chapters_source") != "ocr")
-                or (a.retag and r.get("chapters_source") == "ocr")]
+                or (r.get("chapters_source") == "ocr" and (a.retag or (_stale(r) and not r.get("chapters_ocr_status"))))]
+        todo.sort(key=lambda r: r.get("chapters_source") == "ocr")
     if a.shard:
         k, n_sh = (int(x) for x in a.shard.split("/"))
         todo = todo[k::n_sh]
     if a.limit:
         todo = todo[:a.limit]
-    print(f"OCR repo: {REPO}\n{len(todo)} {'IFE chapters' if a.ife_chapters else 'full-length videos' if a.long else 'Shorts'} to tag")
+    kind = 'new videos' if a.new else 'IFE chapters' if a.ife_chapters else 'full-length videos' if a.long else 'Shorts'
+    print(f"OCR repo: {REPO}\n{len(todo)} {kind} to tag")
     if a.dry_run or not todo:
         return
 
@@ -386,7 +437,7 @@ def main():
     stats = {"ok": 0, "skip": 0, "fail": 0, "block": 0}
 
     OWN = ("chapters", "chapters_source", "chapters_ocr_status", "screen_tags", "screen_tag_source", "ife_features",
-           "ife_tags", "ife_tags_status", "ife_tags_scope")
+           "ife_tags", "ife_tags_status", "ife_tags_scope", "ocr_tagger_v")
     touched = {}
 
     def save():
@@ -411,7 +462,7 @@ def main():
             break
         vid = _yt_id(r["url"])
         print(f"\n[{n}/{len(todo)}] {vid}  {r.get('title', '')[:70]}")
-        if a.ife_chapters:
+        if a.ife_chapters or (a.new and r.get("chapters_source") in ("description", "transcript")):
             dets, status = [], "ok"
             for ci, start, end in ife_spans(r):
                 with tempfile.TemporaryDirectory() as tmp:
@@ -437,11 +488,12 @@ def main():
                 continue
             r["ife_tags"] = dets
             r["ife_tags_status"] = "done" if dets else "none"
-            r["ife_tags_scope"] = SCOPE_V
-            tags = sorted({d["tag"] for d in dets} | set(r.get("screen_tags") or []))
-            if tags:
-                r["screen_tags"] = tags
-                r.setdefault("screen_tag_source", "ocr-ife-chapter")
+            r["ocr_tagger_v"] = TAGGER_V
+            tags = _ocr_screen_tags(r)
+            if tags or r.get("screen_tags"):
+                r["screen_tags"] = tags          # rebuilt: an older tagger's mistakes do not survive
+                if tags:
+                    r.setdefault("screen_tag_source", "ocr-ife-chapter")
                 r["ife_features"] = to_ife_features(tags, r.get("ife_features") or {})
             touched[r["url"]] = r
             done += 1
@@ -474,6 +526,7 @@ def main():
                 continue
         r["chapters"] = chaps
         r["chapters_source"] = "ocr"
+        r["ocr_tagger_v"] = TAGGER_V
         r.pop("chapters_ocr_status", None)
         tags = sorted({t for c in chaps for t in c["tags"]})
         r["screen_tags"] = tags

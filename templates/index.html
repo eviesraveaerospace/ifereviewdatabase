@@ -1310,7 +1310,7 @@ function mediaList(r,o){
   else if(o.isArt)m.push({type:'article'});
   else if(!(r.images||[]).length&&!(r.photos||[]).length)m.push({type:'head'});
   (r.images||[]).forEach(im=>m.push({type:'image',src:im.local||im.src,origSrc:im.src,chapters:im.chapters||[],verified:im.tags_verified||[],transcript:(im.transcript&&im.transcript.text)?im.transcript:null,fallback:null,alt:im.alt||'',caption:im.caption||'',airline:im.airline,airlineSrc:im.airline_source,system:im.ife_system,tags:im.tags,visual:im.used_visual,external:!!im.external,video:!!im.video,poster:im.poster||null}));
-  (r.photos||[]).forEach(p=>m.push({type:'image',src:p,alt:'',caption:'',tags:[],uploaded:true}));
+  (r.photos||[]).forEach(p=>m.push({type:'image',src:p,alt:'',caption:'',tags:((r.photo_tags||{})[p]||{}).tags||[],uploaded:true}));
   return m;
 }
 function slideHTML(r,o,it){

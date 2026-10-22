@@ -32,3 +32,6 @@ tag_internal_log.txt
 ife_cache.lock
 ife_ocr_laptop_log.txt
 ife_ocr_shard*.txt
+ife_internal_ocr.lock
+ocr_trigger_log.txt
+ife_cache.json.tmp*

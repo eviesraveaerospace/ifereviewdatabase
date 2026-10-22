@@ -1471,6 +1471,8 @@ def _import_screenshot_db(rows, headers, tag_map):
             images.append({"src": str(link).strip(), "external": True, "alt": tag or "Screenshot",
                            "caption": tag, "tags": [tag] if tag else [], "airline": airline,
                            "airline_source": "sheet", "ife_system": system or None})
+        if not images:
+            continue         # a review with no screenshot has nothing to show or tag
         screen_tags = sorted({t for t in row_tags + [im["caption"] for im in images] if t})
         title = " · ".join(x for x in (airline, frame, seat, system) if x)
         text = (f"{source} IFE review of {airline}" + (f" {frame}" if frame else "") +
@@ -1526,6 +1528,7 @@ def import_forms():
                 app.logger.warning("internal media fetch skipped: %s", e)
             data_manager.data["reviews"].extend(new)
             data_manager.save_cache()
+            _trigger_ocr()
             return jsonify({"status": "success", "added": len(new), "skipped": len(recs) - len(new),
                             "media_fetched": fetched})
         m = _map_forms_headers(headers)
@@ -1618,6 +1621,7 @@ def add_review_photos():
         if saved:
             rev.setdefault("photos", []).extend(saved)
             data_manager.save_cache()
+            _trigger_ocr()
         return jsonify({"status": "success", "added": len(saved), "photos": rev.get("photos", [])})
     except Exception as e:
         return jsonify({"status": "error", "error": str(e)}), 500
@@ -1658,9 +1662,33 @@ def _unlink_local(web_path):
 
 
 def _recount_screen_tags(rev):
-    tags = sorted({t for it in rev.get("images") or [] for t in (it.get("tags") or [])})
+    tags = {t for it in rev.get("images") or [] for t in (it.get("tags") or [])}
+    photos = set(rev.get("photos") or [])
+    tags |= {t for p, v in (rev.get("photo_tags") or {}).items() if p in photos for t in v.get("tags") or []}
+    tags = sorted(tags)
     if tags or "screen_tags" in rev:
         rev["screen_tags"] = tags
+
+
+def _trigger_ocr():
+    """Run ios-screen-recording-ocr over files that have no detections yet (a new upload
+    or import). Background, one run at a time (tag_internal_media.py locks and rescans),
+    and a no-op where the OCR environment is not installed (laptop dev)."""
+    import subprocess
+    repo = Path(os.environ.get("IFE_OCR_REPO") or Path.home() / "ife")
+    py = Path(os.environ.get("IFE_OCR_PY") or Path.home() / "ife-venv" / "bin" / "python")
+    here = Path(__file__).parent
+    if not (py.exists() and (repo / "ocr_video_chapters.py").exists()):
+        return False
+    try:
+        log = open(here / "ocr_trigger_log.txt", "a")
+        subprocess.Popen([str(py), "-u", str(here / "tag_internal_media.py")], cwd=str(here),
+                         env={**os.environ, "IFE_OCR_REPO": str(repo)}, stdin=subprocess.DEVNULL,
+                         stdout=log, stderr=log, start_new_session=True)
+        return True
+    except OSError as e:
+        app.logger.warning("OCR trigger failed: %s", e)
+        return False
 
 
 @app.route("/api/admin-check")
@@ -1711,6 +1739,7 @@ def review_media_delete():
     rev["images"] = keep
     if not removed and src in (rev.get("photos") or []):
         rev["photos"] = [p for p in rev["photos"] if p != src]
+        (rev.get("photo_tags") or {}).pop(src, None)
         _unlink_local(src)
         removed = True
     if not removed:
