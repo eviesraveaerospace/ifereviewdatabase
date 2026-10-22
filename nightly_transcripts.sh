@@ -61,9 +61,9 @@ if [ -x "$OCR_PY" ] && [ -f "$OCR_REPO/ocr_video_chapters.py" ]; then
         IFE_OCR_REPO="$OCR_REPO" MAX_RUNTIME_MIN="${SHORTS_OCR_MIN:-60}" "$OCR_PY" -u gather_short_chapters.py >> "$LOG" 2>&1
         # every video with a description chapter flagged IFE: OCR just that chapter
         # (ranged download) and keep its screen-tag detections, newest first, 60 min cap
-        # Two shards in parallel (4 cores); 6 s frames: a screen held two frames is the bar anyway.
-        IFE_OCR_REPO="$OCR_REPO" MAX_RUNTIME_MIN="${IFE_CHAPTER_OCR_MIN:-60}" "$OCR_PY" -u gather_short_chapters.py --ife-chapters --interval "${IFE_OCR_INTERVAL:-6}" --shard 0/2 >> "$LOG" 2>&1 &
-        IFE_OCR_REPO="$OCR_REPO" MAX_RUNTIME_MIN="${IFE_CHAPTER_OCR_MIN:-60}" "$OCR_PY" -u gather_short_chapters.py --ife-chapters --interval "${IFE_OCR_INTERVAL:-6}" --shard 1/2 >> "$LOG" 2>&1 &
+        # Two shards in parallel (4 cores); 4 s frames (6 s missed a screen held ~10 s); a screen held two frames is the bar.
+        IFE_OCR_REPO="$OCR_REPO" MAX_RUNTIME_MIN="${IFE_CHAPTER_OCR_MIN:-60}" "$OCR_PY" -u gather_short_chapters.py --ife-chapters --interval "${IFE_OCR_INTERVAL:-4}" --shard 0/2 >> "$LOG" 2>&1 &
+        IFE_OCR_REPO="$OCR_REPO" MAX_RUNTIME_MIN="${IFE_CHAPTER_OCR_MIN:-60}" "$OCR_PY" -u gather_short_chapters.py --ife-chapters --interval "${IFE_OCR_INTERVAL:-4}" --shard 1/2 >> "$LOG" 2>&1 &
         wait
         # external full-length reviews without chapters, best IFE candidates first, 30 min cap
         # (transcripts now open IFE chapters for most of these, which the targeted pass covers)

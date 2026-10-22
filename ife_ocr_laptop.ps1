@@ -1,5 +1,5 @@
 # IFE-chapter OCR from the laptop: the same pass the VM runs nightly (60 min, newest
-# first, two shards) but oldest-first and with more shards, so the two machines work
+# first, two shards, 4 s frames) but oldest-first and with more shards, so the two machines work
 # from opposite ends of the backlog. Then commit and push like nightly_transcripts.cmd.
 #
 #   .\ife_ocr_laptop.ps1                         # 6 shards, 120 minutes, pushes to team
@@ -11,7 +11,7 @@
 param(
     [int]$Shards = 6,
     [int]$Minutes = 120,
-    [double]$Interval = 6,
+    [double]$Interval = 2,
     [switch]$NoPush
 )
 $ErrorActionPreference = "Continue"

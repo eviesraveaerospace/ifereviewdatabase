@@ -12,6 +12,7 @@ Env vars:
 """
 import base64
 import json
+import re
 import os
 import sys
 import time
@@ -256,6 +257,21 @@ def fetch_whisper_segs(model, video_id, cookies_path=None, browser_cookie_opts=N
         return _WHISPER_FAIL, None, str(e)[:200]
 
 
+def _junk_transcript(r):
+    """A YouTube transcript that says nothing about the review: mostly music tags
+    ("Heat.") or under 20 words a minute on a video of 5 min or more. Whisper
+    should redo it instead of the video counting as transcribed forever; a video
+    Whisper already failed on is left alone."""
+    if r.get("transcript_source") == "whisper" or r.get("whisper_status") == "fail":
+        return False
+    mins = (r.get("duration_seconds") or 0) / 60
+    if mins < 5:
+        return False
+    words = re.findall(r"[A-Za-z']+", r.get("transcript_full") or "")
+    heat = sum(w.lower() == "heat" for w in words)
+    return len(words) / mins < 20 or (len(words) >= 20 and heat / len(words) > 0.2)
+
+
 def main():
     with open("ife_cache.json", encoding="utf-8") as f:
         data = json.load(f)
@@ -264,7 +280,7 @@ def main():
     targets = [
         r for r in reviews
         if ("youtube.com/watch?v=" in r.get("url", "") or "/shorts/" in r.get("url", ""))
-        and not r.get("transcript_available")
+        and (not r.get("transcript_available") or _junk_transcript(r))
     ]
     # Shorts are under 3 minutes, so a whole night of them transcribes hundreds of
     # reels; do them before the long-form backlog.
@@ -282,11 +298,11 @@ def main():
     # VM's Whisper night takes those first and never re-tries ones with captions.
     captions_only = os.environ.get("CAPTIONS_ONLY", "").strip() not in ("", "0")
     if captions_only:
-        targets = [r for r in targets if r.get("yt_captions") != "none"]
+        targets = [r for r in targets if r.get("yt_captions") != "none" and not _junk_transcript(r)]
         print(f"Captions-only mode: {len(targets)} videos not yet checked")
     else:
         # Whisper is slow: spend it where captions are known to be absent first.
-        targets.sort(key=lambda r: r.get("yt_captions") != "none")
+        targets.sort(key=lambda r: not (r.get("yt_captions") == "none" or _junk_transcript(r)))
     print(f"Videos without transcript: {len(targets)}")
 
     # Set up cookies (bypasses IP block on GitHub Actions datacenter IPs)
@@ -325,7 +341,7 @@ def main():
                     tgt = by_url[u]
                     for k in ("transcript_available", "transcript_excerpt", "captions",
                               "transcript_full", "transcript_source", "chapters", "chapters_source",
-                              "yt_captions") + ENRICH_KEYS:
+                              "yt_captions", "whisper_status") + ENRICH_KEYS:
                         if k in rr:
                             tgt[k] = rr[k]
             if to_remove:
@@ -346,7 +362,7 @@ def main():
         vid_id = r["url"].split("watch?v=")[1].split("&")[0]
 
         # 1. YouTube transcript API
-        segs = fetch_yt_segs(vid_id, cookies_path=cookies_path)
+        segs = None if _junk_transcript(r) else fetch_yt_segs(vid_id, cookies_path=cookies_path)
         if segs:
             caps, excerpt, full = segs_to_result(segs)
             r["transcript_available"] = True
@@ -406,6 +422,9 @@ def main():
                 print(f"[{idx}/{len(targets)}] BOT-BLOCK {vid_id}  ({detail or 'Whisper disabled for this run'})")
             else:
                 failed += 1
+                if r.get("transcript_available"):      # a junk YouTube transcript Whisper could not improve
+                    r["whisper_status"] = "fail"
+                    processed.add(r["url"])
                 print(f"[{idx}/{len(targets)}] FAIL     {vid_id}  ({detail or 'unknown reason'})")
 
         if idx % 25 == 0:

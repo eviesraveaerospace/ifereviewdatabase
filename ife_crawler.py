@@ -700,13 +700,14 @@ _CAPTION_TAG_KEYWORDS = {
     "entertainment_system": ["entertainment system", "ife system", "seatback screen", "seat-back screen",
                              "personal screen"],
     "watch_party":     ["watch party"],
+    "games":           ["games", "play games", "video games"],
     "seat_chat":       ["seat chat", "seat-to-seat"],
 }
 CAPTION_TAG_LABELS = {
     "moving_map": "Map", "connectivity": "Connectivity", "tail_camera": "Camera",
     "bluetooth_audio": "Audio", "usb_power": "Cabin & seat features", "4k_display": "Display",
     "quality": "Display", "content": "Media Navigation", "entertainment_system": "IFE System",
-    "watch_party": "Chat & sharing", "seat_chat": "Chat & sharing",
+    "watch_party": "Chat & sharing", "seat_chat": "Chat & sharing", "games": "Games",
 }
 
 
