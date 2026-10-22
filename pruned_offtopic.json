@@ -203947,5 +203947,816 @@
   "transcript_source": "whisper",
   "screen_tags": [],
   "screen_tag_source": "ocr-video"
+ },
+ {
+  "url": "internal://aa69f8417150839a",
+  "title": "tester",
+  "year": 2026,
+  "published_at": "2026-07-22T00:00:00Z",
+  "channel_title": "Evie",
+  "view_count": 0,
+  "like_count": 0,
+  "ife_system": "Emirates ICE",
+  "ife_system_manual": true,
+  "ife_system_inferred": false,
+  "media_type": "internal",
+  "airlines_mentioned": [
+   {
+    "keyword": "ana tester",
+    "mentions": 1
+   }
+  ],
+  "aircraft_mentioned": [
+   {
+    "keyword": "777x",
+    "mentions": 1
+   }
+  ],
+  "ife_features": {},
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": "it was amazing.",
+  "internal_text": "it was amazing.",
+  "internal_rating": 3,
+  "internal_author": "Evie",
+  "captions": [],
+  "chapters": [],
+  "source_tier": 1,
+  "source_name": "Internal",
+  "sentiment": "neutral",
+  "title_lang": "en",
+  "ife_system_confidence": 1.0,
+  "pruned_reason": "internal review with 0 screenshots"
+ },
+ {
+  "url": "internal://021e1f94eb437461",
+  "title": "Malaysian Airlines · B737-800 · Economy · Panasonic Unknown",
+  "year": 2023,
+  "published_at": "2023-01-01T00:00:00Z",
+  "channel_title": "Mani Thackeray",
+  "view_count": 0,
+  "like_count": 0,
+  "ife_system": "Panasonic Unknown",
+  "ife_system_manual": true,
+  "ife_system_inferred": false,
+  "media_type": "internal",
+  "airlines_mentioned": [
+   {
+    "keyword": "malaysian airlines",
+    "mentions": 1
+   }
+  ],
+  "aircraft_mentioned": [
+   {
+    "keyword": "b737-800",
+    "mentions": 1
+   }
+  ],
+  "ife_features": {
+   "entertainment_system": true
+  },
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": "Online IFE review of Malaysian Airlines B737-800 (Economy) on Panasonic Unknown. Screens captured: Auxiliary IFE (Remote), Guides & Pages, PA. 2 screenshots on SharePoint.",
+  "internal_text": "Online IFE review of Malaysian Airlines B737-800 (Economy) on Panasonic Unknown. Screens captured: Auxiliary IFE (Remote), Guides & Pages, PA. 0 screenshots.",
+  "internal_rating": null,
+  "internal_author": "Mani Thackeray",
+  "captions": [],
+  "chapters": [],
+  "source_tier": 1,
+  "source_name": "Internal",
+  "sentiment": "neutral",
+  "images": [],
+  "screen_tags": [
+   "Auxiliary IFE (Remote)",
+   "Guides & Pages",
+   "PA"
+  ],
+  "screen_tag_source": "manual",
+  "seat_class": "Economy",
+  "internal_source": "Online",
+  "internal_email": "mani.thackeray@zii.aero",
+  "title_lang": "en",
+  "images_missing": [
+   {
+    "src": "https://zodiacii.sharepoint.com/sites/RAVESoftwareProducts/Internal%20Documentation/Forms/AllItems.aspx?id=%2Fsites%2FRAVESoftwareProducts%2FInternal%20Documentation%2FAirline%20Auxiliary IFE%20Research%20Database%2FAirlines%2FMalaysian%20Airlines%2FEconomy%2FB737%2D800%2FMalaysian%20Airlines%2DEconomy%2DEntertainment%20Menu%2Ejpg&viewid=c651d6c1%2D0057%2D494f%2D95ce%2D5d19b8c7e565&parent=%2Fsites%2FRAVESoftwareProducts%2FInternal%20Documentation%2FAirline%20Auxiliary IFE%20Research%20Database%2FAirlines%2FMalaysian%20Airlines%2FEconomy%2FB737%2D800",
+    "caption": "Guides & Pages",
+    "reason": "file no longer on SharePoint (checked Oct 1, 2026)"
+   },
+   {
+    "src": "https://zodiacii.sharepoint.com/sites/RAVESoftwareProducts/Internal%20Documentation/Forms/AllItems.aspx?id=%2Fsites%2FRAVESoftwareProducts%2FInternal%20Documentation%2FAirline%20Auxiliary IFE%20Research%20Database%2FAirlines%2FMalaysian%20Airlines%2FEconomy%2FB737%2D800%2FMalaysian%20Airlines%2DEconomy%2DStart%20Menu%2Ejpg&viewid=c651d6c1%2D0057%2D494f%2D95ce%2D5d19b8c7e565&parent=%2Fsites%2FRAVESoftwareProducts%2FInternal%20Documentation%2FAirline%20Auxiliary IFE%20Research%20Database%2FAirlines%2FMalaysian%20Airlines%2FEconomy%2FB737%2D800",
+    "caption": "PA",
+    "reason": "file no longer on SharePoint (checked Oct 1, 2026)"
+   }
+  ],
+  "ife_system_confidence": 1.0,
+  "pruned_reason": "internal review with 0 screenshots"
+ },
+ {
+  "url": "internal://d2fdd6042b0d4b96",
+  "title": "Singapore Airlines · A380 · First · Panasonic eX2",
+  "year": 2023,
+  "published_at": "2023-01-01T00:00:00Z",
+  "channel_title": "Mani Thackeray",
+  "view_count": 0,
+  "like_count": 0,
+  "ife_system": "Panasonic eX2",
+  "ife_system_manual": true,
+  "ife_system_inferred": false,
+  "media_type": "internal",
+  "airlines_mentioned": [
+   {
+    "keyword": "singapore airlines",
+    "mentions": 1
+   }
+  ],
+  "aircraft_mentioned": [
+   {
+    "keyword": "a380",
+    "mentions": 1
+   }
+  ],
+  "ife_features": {
+   "entertainment_system": true,
+   "seat": true
+  },
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": "Online IFE review of Singapore Airlines A380 (First) on Panasonic eX2. Screens captured: Auxiliary IFE (Remote), Cabin & Seat Features, Guides & Pages, Remote, Seat presents, Welcome Screen (Hybrid Auxiliary IFE). 3 screenshots on SharePoint.",
+  "internal_text": "Online IFE review of Singapore Airlines A380 (First) on Panasonic eX2. Screens captured: Auxiliary IFE (Remote), Cabin & Seat Features, Guides & Pages, Remote, Seat presents, Welcome Screen (Hybrid Auxiliary IFE). 0 screenshots.",
+  "internal_rating": null,
+  "internal_author": "Mani Thackeray",
+  "captions": [],
+  "chapters": [],
+  "source_tier": 1,
+  "source_name": "Internal",
+  "sentiment": "neutral",
+  "images": [],
+  "screen_tags": [
+   "Auxiliary IFE (Remote)",
+   "Cabin & Seat Features",
+   "Guides & Pages",
+   "Remote, Seat presents",
+   "Welcome Screen (Hybrid Auxiliary IFE)"
+  ],
+  "screen_tag_source": "manual",
+  "seat_class": "First",
+  "internal_source": "Online",
+  "internal_email": "mani.thackeray@zii.aero",
+  "title_lang": "en",
+  "images_missing": [
+   {
+    "src": "https://zodiacii.sharepoint.com/sites/RAVESoftwareProducts/Internal%20Documentation/Forms/AllItems.aspx?id=%2Fsites%2FRAVESoftwareProducts%2FInternal%20Documentation%2FAirline%20Auxiliary IFE%20Research%20Database%2FAirlines%2FSingapore%20Airlines%2FFirst%2FA380%2F2023%2FSingapore%20Airlines%2DEconomy%2DHybrid%20Auxiliary IFE%20%28Entertainment%20Menu%29%2Ejpeg&viewid=c651d6c1%2D0057%2D494f%2D95ce%2D5d19b8c7e565&parent=%2Fsites%2FRAVESoftwareProducts%2FInternal%20Documentation%2FAirline%20Auxiliary IFE%20Research%20Database%2FAirlines%2FSingapore%20Airlines%2FFirst%2FA380%2F2023",
+    "caption": "Welcome Screen (Hybrid Auxiliary IFE)",
+    "reason": "file no longer on SharePoint (checked Oct 1, 2026)"
+   },
+   {
+    "src": "https://zodiacii.sharepoint.com/sites/RAVESoftwareProducts/Internal%20Documentation/Forms/AllItems.aspx?id=%2Fsites%2FRAVESoftwareProducts%2FInternal%20Documentation%2FAirline%20Auxiliary IFE%20Research%20Database%2FAirlines%2FSingapore%20Airlines%2FFirst%2FA380%2F2023%2FSingapore%20Airlines%2DFirst%2DHybrid%20Auxiliary IFE%2Ejpeg&viewid=c651d6c1%2D0057%2D494f%2D95ce%2D5d19b8c7e565&parent=%2Fsites%2FRAVESoftwareProducts%2FInternal%20Documentation%2FAirline%20Auxiliary IFE%20Research%20Database%2FAirlines%2FSingapore%20Airlines%2FFirst%2FA380%2F2023",
+    "caption": "Remote, Seat presents",
+    "reason": "file no longer on SharePoint (checked Oct 1, 2026)"
+   },
+   {
+    "src": "https://zodiacii.sharepoint.com/sites/RAVESoftwareProducts/Internal%20Documentation/Forms/AllItems.aspx?id=%2Fsites%2FRAVESoftwareProducts%2FInternal%20Documentation%2FAirline%20Auxiliary IFE%20Research%20Database%2FAirlines%2FSingapore%20Airlines%2FFirst%2FA380%2F2023%2FSingapore%20Airlines%2DFirst%2DMovie%20Description%2Ejpeg&viewid=c651d6c1%2D0057%2D494f%2D95ce%2D5d19b8c7e565&parent=%2Fsites%2FRAVESoftwareProducts%2FInternal%20Documentation%2FAirline%20Auxiliary IFE%20Research%20Database%2FAirlines%2FSingapore%20Airlines%2FFirst%2FA380%2F2023",
+    "caption": "Guides & Pages",
+    "reason": "file no longer on SharePoint (checked Oct 1, 2026)"
+   }
+  ],
+  "ife_system_confidence": 1.0,
+  "pruned_reason": "internal review with 0 screenshots"
+ },
+ {
+  "url": "internal://940ca847a5fd614a",
+  "title": "Swiss Air · B777-300er · Economy · Panasonic eX3",
+  "year": 2023,
+  "published_at": "2023-01-01T00:00:00Z",
+  "channel_title": "Mani Thackeray",
+  "view_count": 0,
+  "like_count": 0,
+  "ife_system": "Panasonic eX3",
+  "ife_system_manual": true,
+  "ife_system_inferred": false,
+  "media_type": "internal",
+  "airlines_mentioned": [
+   {
+    "keyword": "swiss air",
+    "mentions": 1
+   },
+   {
+    "keyword": "swiss",
+    "mentions": 2
+   }
+  ],
+  "aircraft_mentioned": [
+   {
+    "keyword": "b777-300er",
+    "mentions": 1
+   }
+  ],
+  "ife_features": {
+   "entertainment_system": true,
+   "content": true
+  },
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": "Online IFE review of Swiss Air B777-300er (Economy) on Panasonic eX3. Screens captured: Audio & Music, Guides & Pages, Media.",
+  "internal_text": "Online IFE review of Swiss Air B777-300er (Economy) on Panasonic eX3. Screens captured: Audio & Music, Guides & Pages, Media.",
+  "internal_rating": null,
+  "internal_author": "Mani Thackeray",
+  "captions": [],
+  "chapters": [],
+  "source_tier": 1,
+  "source_name": "Internal",
+  "sentiment": "neutral",
+  "images": [],
+  "screen_tags": [
+   "Audio & Music",
+   "Guides & Pages",
+   "Media"
+  ],
+  "screen_tag_source": "manual",
+  "seat_class": "Economy",
+  "internal_source": "Online",
+  "internal_email": "mani.thackeray@zii.aero",
+  "title_lang": "en",
+  "ife_system_confidence": 1.0,
+  "pruned_reason": "internal review with 0 screenshots"
+ },
+ {
+  "url": "internal://92d8083484fd7822",
+  "title": "Swiss Air · A330-300 · Business · Panasonic eX2",
+  "year": 2023,
+  "published_at": "2023-01-01T00:00:00Z",
+  "channel_title": "Mani Thackeray",
+  "view_count": 0,
+  "like_count": 0,
+  "ife_system": "Panasonic eX2",
+  "ife_system_manual": true,
+  "ife_system_inferred": false,
+  "media_type": "internal",
+  "airlines_mentioned": [
+   {
+    "keyword": "swiss air",
+    "mentions": 1
+   },
+   {
+    "keyword": "swiss",
+    "mentions": 2
+   }
+  ],
+  "aircraft_mentioned": [
+   {
+    "keyword": "a330-300",
+    "mentions": 1
+   }
+  ],
+  "ife_features": {
+   "entertainment_system": true
+  },
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": "Online IFE review of Swiss Air A330-300 (Business) on Panasonic eX2. Screens captured: Guides & Pages, Map.",
+  "internal_text": "Online IFE review of Swiss Air A330-300 (Business) on Panasonic eX2. Screens captured: Guides & Pages, Map.",
+  "internal_rating": null,
+  "internal_author": "Mani Thackeray",
+  "captions": [],
+  "chapters": [],
+  "source_tier": 1,
+  "source_name": "Internal",
+  "sentiment": "neutral",
+  "images": [],
+  "screen_tags": [
+   "Guides & Pages",
+   "Map"
+  ],
+  "screen_tag_source": "manual",
+  "seat_class": "Business",
+  "internal_source": "Online",
+  "internal_email": "mani.thackeray@zii.aero",
+  "title_lang": "en",
+  "ife_system_confidence": 1.0,
+  "pruned_reason": "internal review with 0 screenshots"
+ },
+ {
+  "url": "internal://fb9bb04f593a2c79",
+  "title": "Swiss Air · B777-300er · First · Panasonic eX3",
+  "year": 2023,
+  "published_at": "2023-01-01T00:00:00Z",
+  "channel_title": "Mani Thackeray",
+  "view_count": 0,
+  "like_count": 0,
+  "ife_system": "Panasonic eX3",
+  "ife_system_manual": true,
+  "ife_system_inferred": false,
+  "media_type": "internal",
+  "airlines_mentioned": [
+   {
+    "keyword": "swiss air",
+    "mentions": 1
+   },
+   {
+    "keyword": "swiss",
+    "mentions": 2
+   }
+  ],
+  "aircraft_mentioned": [
+   {
+    "keyword": "b777-300er",
+    "mentions": 1
+   }
+  ],
+  "ife_features": {
+   "entertainment_system": true
+  },
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": "Online IFE review of Swiss Air B777-300er (First) on Panasonic eX3. Screens captured: Auxiliary IFE (Remote), Guides & Pages, Map.",
+  "internal_text": "Online IFE review of Swiss Air B777-300er (First) on Panasonic eX3. Screens captured: Auxiliary IFE (Remote), Guides & Pages, Map.",
+  "internal_rating": null,
+  "internal_author": "Mani Thackeray",
+  "captions": [],
+  "chapters": [],
+  "source_tier": 1,
+  "source_name": "Internal",
+  "sentiment": "neutral",
+  "images": [],
+  "screen_tags": [
+   "Auxiliary IFE (Remote)",
+   "Guides & Pages",
+   "Map"
+  ],
+  "screen_tag_source": "manual",
+  "seat_class": "First",
+  "internal_source": "Online",
+  "internal_email": "mani.thackeray@zii.aero",
+  "title_lang": "en",
+  "ife_system_confidence": 1.0,
+  "pruned_reason": "internal review with 0 screenshots"
+ },
+ {
+  "url": "internal://efa2d2f18e747098",
+  "title": "Turkish Airlines · Unknown · Economy · Unknown Unknown",
+  "year": 2023,
+  "published_at": "2023-01-01T00:00:00Z",
+  "channel_title": "Mani Thackeray",
+  "view_count": 0,
+  "like_count": 0,
+  "ife_system": "Unknown Unknown",
+  "ife_system_manual": true,
+  "ife_system_inferred": false,
+  "media_type": "internal",
+  "airlines_mentioned": [
+   {
+    "keyword": "turkish airlines",
+    "mentions": 1
+   }
+  ],
+  "aircraft_mentioned": [
+   {
+    "keyword": "unknown",
+    "mentions": 1
+   }
+  ],
+  "ife_features": {
+   "entertainment_system": true
+  },
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": "Online IFE review of Turkish Airlines Unknown (Economy) on Unknown Unknown. Screens captured: GUI, Guides & Pages, Media.",
+  "internal_text": "Online IFE review of Turkish Airlines Unknown (Economy) on Unknown Unknown. Screens captured: GUI, Guides & Pages, Media.",
+  "internal_rating": null,
+  "internal_author": "Mani Thackeray",
+  "captions": [],
+  "chapters": [],
+  "source_tier": 1,
+  "source_name": "Internal",
+  "sentiment": "neutral",
+  "images": [],
+  "screen_tags": [
+   "GUI",
+   "Guides & Pages",
+   "Media"
+  ],
+  "screen_tag_source": "manual",
+  "seat_class": "Economy",
+  "internal_source": "Online",
+  "internal_email": "mani.thackeray@zii.aero",
+  "title_lang": "en",
+  "ife_system_confidence": 1.0,
+  "pruned_reason": "internal review with 0 screenshots"
+ },
+ {
+  "url": "internal://050b8fce87cb85d7",
+  "title": "United · B787-900 · Business · Panasonic eX3",
+  "year": 2023,
+  "published_at": "2023-01-01T00:00:00Z",
+  "channel_title": "Chad Alexander",
+  "view_count": 0,
+  "like_count": 0,
+  "ife_system": "Panasonic eX3",
+  "ife_system_manual": true,
+  "ife_system_inferred": false,
+  "media_type": "internal",
+  "airlines_mentioned": [
+   {
+    "keyword": "united",
+    "mentions": 1
+   }
+  ],
+  "aircraft_mentioned": [
+   {
+    "keyword": "b787-900",
+    "mentions": 1
+   }
+  ],
+  "ife_features": {
+   "entertainment_system": true,
+   "connectivity": true
+  },
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": "Online IFE review of United B787-900 (Business) on Panasonic eX3. Screens captured: Connectivity, GUI, Guides & Pages.",
+  "internal_text": "Online IFE review of United B787-900 (Business) on Panasonic eX3. Screens captured: Connectivity, GUI, Guides & Pages.",
+  "internal_rating": null,
+  "internal_author": "Chad Alexander",
+  "captions": [],
+  "chapters": [],
+  "source_tier": 1,
+  "source_name": "Internal",
+  "sentiment": "neutral",
+  "images": [],
+  "screen_tags": [
+   "Connectivity",
+   "GUI",
+   "Guides & Pages"
+  ],
+  "screen_tag_source": "manual",
+  "seat_class": "Business",
+  "internal_source": "Online",
+  "internal_email": "chad alexander",
+  "title_lang": "en",
+  "ife_system_confidence": 1.0,
+  "pruned_reason": "internal review with 0 screenshots"
+ },
+ {
+  "url": "internal://e794af394e4fb021",
+  "title": "United · A320 · First · Panasonic Astrova",
+  "year": 2023,
+  "published_at": "2023-01-01T00:00:00Z",
+  "channel_title": "Mani Thackeray",
+  "view_count": 0,
+  "like_count": 0,
+  "ife_system": "Panasonic Astrova",
+  "ife_system_manual": true,
+  "ife_system_inferred": false,
+  "media_type": "internal",
+  "airlines_mentioned": [
+   {
+    "keyword": "united",
+    "mentions": 1
+   }
+  ],
+  "aircraft_mentioned": [
+   {
+    "keyword": "a320",
+    "mentions": 1
+   }
+  ],
+  "ife_features": {
+   "entertainment_system": true
+  },
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": "Online IFE review of United A320 (First) on Panasonic Astrova. Screens captured: Guides & Pages.",
+  "internal_text": "Online IFE review of United A320 (First) on Panasonic Astrova. Screens captured: Guides & Pages.",
+  "internal_rating": null,
+  "internal_author": "Mani Thackeray",
+  "captions": [],
+  "chapters": [],
+  "source_tier": 1,
+  "source_name": "Internal",
+  "sentiment": "neutral",
+  "images": [],
+  "screen_tags": [
+   "Guides & Pages"
+  ],
+  "screen_tag_source": "manual",
+  "seat_class": "First",
+  "internal_source": "Online",
+  "internal_email": "mani.thackeray@zii.aero",
+  "title_lang": "en",
+  "ife_system_confidence": 1.0,
+  "pruned_reason": "internal review with 0 screenshots"
+ },
+ {
+  "url": "internal://eff7110db4340a91",
+  "title": "United · A320 · Economy · Panasonic eXW",
+  "year": 2024,
+  "published_at": "2024-01-01T00:00:00Z",
+  "channel_title": "Mani Thackeray",
+  "view_count": 0,
+  "like_count": 0,
+  "ife_system": "Panasonic eXW",
+  "ife_system_manual": true,
+  "ife_system_inferred": false,
+  "media_type": "internal",
+  "airlines_mentioned": [
+   {
+    "keyword": "united",
+    "mentions": 1
+   }
+  ],
+  "aircraft_mentioned": [
+   {
+    "keyword": "a320",
+    "mentions": 1
+   }
+  ],
+  "ife_features": {
+   "entertainment_system": true
+  },
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": "Online IFE review of United A320 (Economy) on Panasonic eXW. Screens captured: Auxiliary IFE (VR).",
+  "internal_text": "Online IFE review of United A320 (Economy) on Panasonic eXW. Screens captured: Auxiliary IFE (VR).",
+  "internal_rating": null,
+  "internal_author": "Mani Thackeray",
+  "captions": [],
+  "chapters": [],
+  "source_tier": 1,
+  "source_name": "Internal",
+  "sentiment": "neutral",
+  "images": [],
+  "screen_tags": [
+   "Auxiliary IFE (VR)"
+  ],
+  "screen_tag_source": "manual",
+  "seat_class": "Economy",
+  "internal_source": "Online",
+  "internal_email": "mani.thackeray@zii.aero",
+  "title_lang": "en",
+  "ife_system_confidence": 1.0,
+  "pruned_reason": "internal review with 0 screenshots"
+ },
+ {
+  "url": "internal://36ff2f4487107081",
+  "title": "Virgin Atlantic · B787-900 · Economy · Panasonic Vera",
+  "year": 2023,
+  "published_at": "2023-01-01T00:00:00Z",
+  "channel_title": "Orlandoaviation",
+  "view_count": 0,
+  "like_count": 0,
+  "ife_system": "Panasonic Vera",
+  "ife_system_manual": true,
+  "ife_system_inferred": false,
+  "media_type": "internal",
+  "airlines_mentioned": [
+   {
+    "keyword": "virgin atlantic",
+    "mentions": 1
+   }
+  ],
+  "aircraft_mentioned": [
+   {
+    "keyword": "b787-900",
+    "mentions": 1
+   }
+  ],
+  "ife_features": {
+   "entertainment_system": true
+  },
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": "Online IFE review of Virgin Atlantic B787-900 (Economy) on Panasonic Vera. Screens captured: Guides & Pages, Map.",
+  "internal_text": "Online IFE review of Virgin Atlantic B787-900 (Economy) on Panasonic Vera. Screens captured: Guides & Pages, Map.",
+  "internal_rating": null,
+  "internal_author": "Orlandoaviation",
+  "captions": [],
+  "chapters": [],
+  "source_tier": 1,
+  "source_name": "Internal",
+  "sentiment": "neutral",
+  "images": [],
+  "screen_tags": [
+   "Guides & Pages",
+   "Map"
+  ],
+  "screen_tag_source": "manual",
+  "seat_class": "Economy",
+  "internal_source": "Online",
+  "internal_email": "OrlandoAviation",
+  "title_lang": "en",
+  "ife_system_confidence": 1.0,
+  "pruned_reason": "internal review with 0 screenshots"
+ },
+ {
+  "url": "internal://fad6a9b13c983253",
+  "title": "Virgin Atlantic · B787 · Business · Panasonic Vera 2",
+  "year": 2023,
+  "published_at": "2023-01-01T00:00:00Z",
+  "channel_title": "Traverse",
+  "view_count": 0,
+  "like_count": 0,
+  "ife_system": "Panasonic Vera 2",
+  "ife_system_manual": true,
+  "ife_system_inferred": false,
+  "media_type": "internal",
+  "airlines_mentioned": [
+   {
+    "keyword": "virgin atlantic",
+    "mentions": 1
+   }
+  ],
+  "aircraft_mentioned": [
+   {
+    "keyword": "b787",
+    "mentions": 1
+   }
+  ],
+  "ife_features": {
+   "entertainment_system": true
+  },
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": "Online IFE review of Virgin Atlantic B787 (Business) on Panasonic Vera 2. Screens captured: Guides & Pages, Map, Media.",
+  "internal_text": "Online IFE review of Virgin Atlantic B787 (Business) on Panasonic Vera 2. Screens captured: Guides & Pages, Map, Media.",
+  "internal_rating": null,
+  "internal_author": "Traverse",
+  "captions": [],
+  "chapters": [],
+  "source_tier": 1,
+  "source_name": "Internal",
+  "sentiment": "neutral",
+  "images": [],
+  "screen_tags": [
+   "Guides & Pages",
+   "Map",
+   "Media"
+  ],
+  "screen_tag_source": "manual",
+  "seat_class": "Business",
+  "internal_source": "Online",
+  "internal_email": "Traverse",
+  "title_lang": "en",
+  "ife_system_confidence": 1.0,
+  "pruned_reason": "internal review with 0 screenshots"
+ },
+ {
+  "url": "internal://f9c1b8bf0a7168ce",
+  "title": "Virgin Atlantic · A350 · First · Panasonic Vera 2",
+  "year": 2023,
+  "published_at": "2023-01-01T00:00:00Z",
+  "channel_title": "Itripreport",
+  "view_count": 0,
+  "like_count": 0,
+  "ife_system": "Panasonic Vera 2",
+  "ife_system_manual": true,
+  "ife_system_inferred": false,
+  "media_type": "internal",
+  "airlines_mentioned": [
+   {
+    "keyword": "virgin atlantic",
+    "mentions": 1
+   }
+  ],
+  "aircraft_mentioned": [
+   {
+    "keyword": "a350",
+    "mentions": 1
+   }
+  ],
+  "ife_features": {
+   "entertainment_system": true
+  },
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": "Online IFE review of Virgin Atlantic A350 (First) on Panasonic Vera 2. Screens captured: Flight Info, Guides & Pages, Map.",
+  "internal_text": "Online IFE review of Virgin Atlantic A350 (First) on Panasonic Vera 2. Screens captured: Flight Info, Guides & Pages, Map.",
+  "internal_rating": null,
+  "internal_author": "Itripreport",
+  "captions": [],
+  "chapters": [],
+  "source_tier": 1,
+  "source_name": "Internal",
+  "sentiment": "neutral",
+  "images": [],
+  "screen_tags": [
+   "Flight Info",
+   "Guides & Pages",
+   "Map"
+  ],
+  "screen_tag_source": "manual",
+  "seat_class": "First",
+  "internal_source": "Online",
+  "internal_email": "iTripReport",
+  "title_lang": "en",
+  "ife_system_confidence": 1.0,
+  "pruned_reason": "internal review with 0 screenshots"
+ },
+ {
+  "url": "internal://d06e4a19f880d089",
+  "title": "Etihad · A350 · Economy · Thales Thales AVANT",
+  "year": 2025,
+  "published_at": "2025-01-01T00:00:00Z",
+  "channel_title": "Eduardo Duran",
+  "view_count": 0,
+  "like_count": 0,
+  "ife_system": "Thales Thales AVANT",
+  "ife_system_manual": true,
+  "ife_system_inferred": false,
+  "media_type": "internal",
+  "airlines_mentioned": [
+   {
+    "keyword": "etihad",
+    "mentions": 1
+   }
+  ],
+  "aircraft_mentioned": [
+   {
+    "keyword": "a350",
+    "mentions": 1
+   }
+  ],
+  "ife_features": {
+   "entertainment_system": true
+  },
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": "Employee IFE review of Etihad A350 (Economy) on Thales Thales AVANT. Screens captured: Camera, GUI, Guides & Pages, Map, Settings.",
+  "internal_text": "Employee IFE review of Etihad A350 (Economy) on Thales Thales AVANT. Screens captured: Camera, GUI, Guides & Pages, Map, Settings.",
+  "internal_rating": null,
+  "internal_author": "Eduardo Duran",
+  "captions": [],
+  "chapters": [],
+  "source_tier": 1,
+  "source_name": "Internal",
+  "sentiment": "neutral",
+  "images": [],
+  "screen_tags": [
+   "Camera",
+   "GUI",
+   "Guides & Pages",
+   "Map",
+   "Settings"
+  ],
+  "screen_tag_source": "manual",
+  "seat_class": "Economy",
+  "internal_source": "Employee",
+  "internal_email": "Eduardo.Duran@zii.aero",
+  "title_lang": "en",
+  "ife_system_confidence": 1.0,
+  "pruned_reason": "internal review with 0 screenshots"
+ },
+ {
+  "url": "internal://b9d71cbc57b7bde1",
+  "title": "Emirates · A350 · Economy · Unknown Unknown",
+  "year": 2025,
+  "published_at": "2025-01-01T00:00:00Z",
+  "channel_title": "Mathieu Barrandon",
+  "view_count": 0,
+  "like_count": 0,
+  "ife_system": "Unknown Unknown",
+  "ife_system_manual": true,
+  "ife_system_inferred": false,
+  "media_type": "internal",
+  "airlines_mentioned": [
+   {
+    "keyword": "emirates",
+    "mentions": 1
+   }
+  ],
+  "aircraft_mentioned": [
+   {
+    "keyword": "a350",
+    "mentions": 1
+   }
+  ],
+  "ife_features": {
+   "entertainment_system": true
+  },
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": "Employee IFE review of Emirates A350 (Economy) on Unknown Unknown. Screens captured: Auxiliary IFE (Remote), Guides & Pages, Map, Media.",
+  "internal_text": "Employee IFE review of Emirates A350 (Economy) on Unknown Unknown. Screens captured: Auxiliary IFE (Remote), Guides & Pages, Map, Media.",
+  "internal_rating": null,
+  "internal_author": "Mathieu Barrandon",
+  "captions": [],
+  "chapters": [],
+  "source_tier": 1,
+  "source_name": "Internal",
+  "sentiment": "neutral",
+  "images": [],
+  "screen_tags": [
+   "Auxiliary IFE (Remote)",
+   "Guides & Pages",
+   "Map",
+   "Media"
+  ],
+  "screen_tag_source": "manual",
+  "seat_class": "Economy",
+  "internal_source": "Employee",
+  "internal_email": "Mathieu.Barrandon@zii.aero",
+  "title_lang": "en",
+  "ife_system_confidence": 1.0,
+  "pruned_reason": "internal review with 0 screenshots"
  }
 ]
