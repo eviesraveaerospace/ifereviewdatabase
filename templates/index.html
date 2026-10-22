@@ -1456,9 +1456,10 @@ function openModal(idx,rows){
     // mentions) become sub-rows of the IFE chapter they fall in: one row per
     // tag at its first sighting, >= 80% confidence only, click to jump there.
     const dets=[...(r.ife_tags||[]),...(r.caption_tags||[])].filter(d=>d.sec!=null&&(d.conf==null||d.conf>=0.8));
+    const OCR_CAND_RE=/\b(?:take[\s-]?off|landing|menu)\b/i; // keep in step with EXTRA_CHAPTER_RE in gather_short_chapters.py
     const chapOf=sec=>{let k=-1;chaps.forEach((c,i)=>{if(c.sec!=null&&sec>=c.sec)k=i;});return k;};
     const byChap={};
-    dets.sort((a,b)=>a.sec-b.sec).forEach(d=>{const k=d.chapter!=null?d.chapter:chapOf(d.sec);if(k<0||!chaps[k].ife)return;(byChap[k]=byChap[k]||[]);if(!byChap[k].some(x=>x.tag===d.tag))byChap[k].push(d);});
+    dets.sort((a,b)=>a.sec-b.sec).forEach(d=>{const k=d.chapter!=null?d.chapter:chapOf(d.sec);if(k<0||!(chaps[k].ife||OCR_CAND_RE.test(chaps[k].title||'')))return;(byChap[k]=byChap[k]||[]);if(!byChap[k].some(x=>x.tag===d.tag))byChap[k].push(d);});
     side+=chaps.map((ch,i)=>{
       let h='<div class="cap chap'+(ch.ife?' ife':'')+'" data-s="'+(ch.sec!=null?ch.sec:'')+'"><span class="cts">'+esc(ch.t||'')+'</span><span>'+(ch.ife?'✦ ':'')+esc(ch.title)+'</span></div>';
       if(i===sysChap){

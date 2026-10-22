@@ -36,7 +36,7 @@ def _richness(r):
 
 # OCR results one machine computed must survive the other machine winning the
 # row on transcript/captions (two machines now run the IFE-chapter pass).
-_OCR_KEYS = ("ife_tags", "ife_tags_status", "chapters_ocr_status")
+_OCR_KEYS = ("ife_tags", "ife_tags_status", "ife_tags_scope", "chapters_ocr_status")
 
 
 def _carry_ocr(win, lose):

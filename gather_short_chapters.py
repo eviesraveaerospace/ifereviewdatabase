@@ -239,12 +239,22 @@ IFE_SPAN_MAX = 5 * 60      # cap per chapter: the IFE talk is in the first minut
 TAG_CONF_MIN = 0.8         # a screen seen in one sampled frame only is not shown
 
 
-def ife_spans(r):
-    """[(chapter_index, start, end)] for each description chapter flagged IFE."""
+# Chapters that are not flagged IFE but usually show the screen: takeoff/landing
+# (tail and belly cameras, the map) and menu chapters (the meal menu on the IFE).
+# Keep in step with OCR_CAND_RE in templates/index.html.
+EXTRA_CHAPTER_RE = re.compile(r"\b(?:take[\s-]?off|landing|menu)\b", re.I)
+SCOPE_V = 2   # 1 = IFE-flagged chapters only; 2 = also takeoff/landing/menu chapters
+
+
+def ife_spans(r, extra=True):
+    """[(chapter_index, start, end)] for each chapter flagged IFE, plus (extra=True)
+    takeoff/landing/menu chapters, which typically show part of the IFE."""
     chs = r.get("chapters") or []
     out = []
     for i, c in enumerate(chs):
-        if not c.get("ife") or c.get("sec") is None:
+        if c.get("sec") is None:
+            continue
+        if not (c.get("ife") or (extra and EXTRA_CHAPTER_RE.search(c.get("title") or ""))):
             continue
         nxt = chs[i + 1]["sec"] if i + 1 < len(chs) and chs[i + 1].get("sec") is not None else None
         if c.get("end"):            # transcript-derived chapters carry their own end
@@ -253,6 +263,15 @@ def ife_spans(r):
         if end > c["sec"]:
             out.append((i, c["sec"], end))
     return out
+
+
+def _needs_ife_ocr(r):
+    """Not yet tagged, or tagged before the takeoff/landing/menu chapters were included."""
+    st = r.get("ife_tags_status")
+    if not st:
+        return True
+    return (st in ("done", "none") and r.get("ife_tags_scope", 1) < SCOPE_V
+            and len(ife_spans(r)) > len(ife_spans(r, extra=False)))
 
 
 def tag_detections(rows, offset, chapter_idx, interval):
@@ -333,7 +352,7 @@ def main():
         # a video that already failed is not retried every night.
         todo = [r for r in rows if r.get("media_type") == "video" and _yt_id(r.get("url"))
                 and r.get("chapters_source") in ("description", "transcript") and ife_spans(r)
-                and not r.get("ife_tags_status")]
+                and _needs_ife_ocr(r)]
         todo.sort(key=lambda r: r.get("published_at") or "", reverse=not a.oldest_first)
     elif a.long:
         # Full-length external reviews without description chapters: OCR gives
@@ -367,7 +386,7 @@ def main():
     stats = {"ok": 0, "skip": 0, "fail": 0, "block": 0}
 
     OWN = ("chapters", "chapters_source", "chapters_ocr_status", "screen_tags", "screen_tag_source", "ife_features",
-           "ife_tags", "ife_tags_status")
+           "ife_tags", "ife_tags_status", "ife_tags_scope")
     touched = {}
 
     def save():
@@ -418,6 +437,7 @@ def main():
                 continue
             r["ife_tags"] = dets
             r["ife_tags_status"] = "done" if dets else "none"
+            r["ife_tags_scope"] = SCOPE_V
             tags = sorted({d["tag"] for d in dets} | set(r.get("screen_tags") or []))
             if tags:
                 r["screen_tags"] = tags
