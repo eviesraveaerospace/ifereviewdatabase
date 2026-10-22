@@ -34,6 +34,29 @@ def _richness(r):
             len(r.get("chapters") or []), len(r.get("images") or []), len(json.dumps(r)))
 
 
+# OCR results one machine computed must survive the other machine winning the
+# row on transcript/captions (two machines now run the IFE-chapter pass).
+_OCR_KEYS = ("ife_tags", "ife_tags_status", "chapters_ocr_status")
+
+
+def _carry_ocr(win, lose):
+    if lose.get("ife_tags_status") and not win.get("ife_tags_status"):
+        for k in _OCR_KEYS:
+            if k in lose:
+                win[k] = lose[k]
+        tags = sorted(set(win.get("screen_tags") or []) | set(lose.get("screen_tags") or []))
+        if tags:
+            win["screen_tags"] = tags
+            if "screen_tag_source" in lose:
+                win.setdefault("screen_tag_source", lose["screen_tag_source"])
+        feats = dict(lose.get("ife_features") or {})
+        feats.update(win.get("ife_features") or {})
+        if feats:
+            win["ife_features"] = feats
+    if lose.get("chapters_ocr_status") and not win.get("chapters_ocr_status") and not win.get("chapters"):
+        win["chapters_ocr_status"] = lose["chapters_ocr_status"]
+
+
 def main():
     ours, theirs = _stage(2), _stage(3)
     if ours is None or theirs is None:
@@ -45,8 +68,12 @@ def main():
             u = r.get("url")
             if not u:
                 continue
-            if u not in merged or _richness(r) > _richness(merged[u]):
+            if u not in merged:
                 merged[u] = r
+                continue
+            win, lose = (r, merged[u]) if _richness(r) > _richness(merged[u]) else (merged[u], r)
+            _carry_ocr(win, lose)
+            merged[u] = win
     # Rows the prune removed on purpose must not come back from the other side.
     kept = pruned_urls.drop_pruned(merged.values())
     dropped = len(merged) - len(kept)

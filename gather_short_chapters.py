@@ -279,19 +279,27 @@ import contextlib
 
 @contextlib.contextmanager
 def _cache_lock():
-    """Serialise cache writes between parallel shards (POSIX flock; no-op on Windows)."""
+    """Serialise cache writes between parallel shards (flock on POSIX, msvcrt on Windows)."""
     lock = CACHE.with_suffix(".lock")
-    try:
-        import fcntl
-    except ImportError:
-        yield
-        return
-    with open(lock, "w") as fh:
-        fcntl.flock(fh, fcntl.LOCK_EX)
+    with open(lock, "a+") as fh:
+        try:
+            import fcntl
+            fcntl.flock(fh, fcntl.LOCK_EX)
+            release = lambda: fcntl.flock(fh, fcntl.LOCK_UN)  # noqa: E731
+        except ImportError:
+            import msvcrt
+            fh.seek(0)
+            while True:                       # LK_LOCK gives up after ~10 s; keep waiting
+                try:
+                    msvcrt.locking(fh.fileno(), msvcrt.LK_LOCK, 1)
+                    break
+                except OSError:
+                    time.sleep(0.2)
+            release = lambda: (fh.seek(0), msvcrt.locking(fh.fileno(), msvcrt.LK_UNLCK, 1))  # noqa: E731
         try:
             yield
         finally:
-            fcntl.flock(fh, fcntl.LOCK_UN)
+            release()
 
 
 def main():
@@ -305,6 +313,9 @@ def main():
     ap.add_argument("--shard", default="", help="K/N: process every Nth video starting at K (parallel workers)")
     ap.add_argument("--long", action="store_true",
                     help="full-length videos (not Shorts) that have no chapters at all, newest first")
+    ap.add_argument("--oldest-first", action="store_true",
+                    help="with --ife-chapters: start from the oldest videos, so a second machine "
+                         "does not pick the same ones as the newest-first nightly pass")
     ap.add_argument("--ife-chapters", action="store_true",
                     help="videos with a description chapter flagged IFE: OCR just that chapter and "
                          "store its screen-tag detections as ife_tags (newest first)")
@@ -323,7 +334,7 @@ def main():
         todo = [r for r in rows if r.get("media_type") == "video" and _yt_id(r.get("url"))
                 and r.get("chapters_source") in ("description", "transcript") and ife_spans(r)
                 and not r.get("ife_tags_status")]
-        todo.sort(key=lambda r: r.get("published_at") or "", reverse=True)
+        todo.sort(key=lambda r: r.get("published_at") or "", reverse=not a.oldest_first)
     elif a.long:
         # Full-length external reviews without description chapters: OCR gives
         # them tag-only chapters (long_form merge rules). Newest first, and a
