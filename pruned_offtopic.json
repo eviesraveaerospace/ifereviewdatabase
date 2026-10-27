@@ -227428,5 +227428,92 @@
   "screen_tags": [],
   "screen_tag_source": "ocr-video",
   "ocr_tagger_v": 3
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=nQahQLHU_y0",
+  "title": "Business class flight from Qatar to SG part 1 #qatarairways #businessclass #travel",
+  "year": 2026,
+  "published_at": "2026-09-17T09:56:31Z",
+  "channel_title": "mattnmich",
+  "view_count": 1201,
+  "like_count": 5,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": null,
+  "chapters": [
+   {
+    "t": "0:24",
+    "sec": 24,
+    "end": 24,
+    "title": "LATE NIGHT DINING",
+    "tags": [],
+    "ife": false,
+    "source": "ocr"
+   }
+  ],
+  "media_type": "video",
+  "airlines_mentioned": [],
+  "aircraft_mentioned": [],
+  "ife_features": {
+   "seat": true
+  },
+  "ife_specs": {},
+  "transcript_available": true,
+  "transcript_excerpt": "Come with me on my 7-hour business class flight from Qatar to Singapore.…",
+  "captions": [],
+  "transcript_full": " Come with me on my 7-hour business class flight from Qatar to Singapore.  Each seat is like an individual cabin with spacious interior and a closed door divider for privacy.  There's a space to put your shoes so that you can change to their slippers and pajamas.  Yes, you heard me right.  Slippers and pajamas.  Buttons are on the side to recline your chair to become a bed.  Supper and breakfast are provided and they look good.  Pillow, blankets and amenity kit are provided and the brand is diptick.  The blanket was so big and thick that I struggled with it but it was comfy.  I took a short nap and soon it was supper.  The table was nicely decorated and they gave me a small bottle of olive oil.  The basket of bread was hot and toasty and I dipped it with the olive oil.  The olive oil was definitely evu, I could taste the fruitiness of it.  That's some expensive oil there.  Next I tried it with the butter and oh my god it tasted like heaven.  The butter melted on the hot and toasty bread and it was so so good.  Next is the Watton noodles as the main dish.  I couldn't find the fork but the steward gave me one quickly.  Time to give the noodles a try.  The soup was just basic chicken soup but the wattons were really plump and juicy.  Noodles we cooked just rice and not soggy.  Overall pretty good.  It says it's a Nan alcoholic pink beverage.  Follow us for part two to review the rest of the flight.",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "sentiment": "neutral",
+  "sentiment_score": 0.0,
+  "duration_seconds": 98,
+  "is_short": true,
+  "transcript_source": "whisper",
+  "transcript_lang": "en",
+  "title_lang": "en",
+  "chapters_source": "ocr",
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=gNF78G6Llh0",
+  "title": "Flying Qatar Airways Qsuite Business Class ✈️ Is It Worth It?",
+  "year": 2026,
+  "published_at": "2026-09-02T10:16:06Z",
+  "duration_seconds": 29,
+  "is_short": true,
+  "channel_title": "Anna Espina",
+  "view_count": 1561,
+  "like_count": 10,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": "Oryx One",
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "qatar airways",
+    "mentions": 1
+   }
+  ],
+  "aircraft_mentioned": [],
+  "ife_features": {},
+  "ife_specs": {},
+  "transcript_available": true,
+  "transcript_excerpt": "Showing you the cute sweet first classic experience of Katana Grace, they work on all the work of cream.…",
+  "captions": [],
+  "transcript_full": " Showing you the cute sweet first classic experience of Katana Grace, they work on all the work of cream.  There's a lot of heart, many lot of options for breakfast, dinner, and in the flight.  It's very cute and cozy, they have this set up for the food.  And then the food is amazing actually, and the dessert is important.  And the best of it is that you can fully lay down on a made bed.",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "sentiment": "positive",
+  "sentiment_score": 0.226,
+  "transcript_source": "whisper",
+  "transcript_lang": "en",
+  "title_lang": "en",
+  "chapters_source": "ocr",
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3
  }
 ]
