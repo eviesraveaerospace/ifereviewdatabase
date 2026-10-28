@@ -227515,5 +227515,710 @@
   "screen_tags": [],
   "screen_tag_source": "ocr-video",
   "ocr_tagger_v": 3
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=TiTO6078Yqw",
+  "title": "How to Get the MOST Out of Emirates A380 First Class 🤯✈️",
+  "title_en": null,
+  "year": 2026,
+  "published_at": "2026-10-25T08:35:49Z",
+  "duration_seconds": 16,
+  "is_short": true,
+  "channel_title": "Charles Shan | Eagle Jetss",
+  "view_count": 24223,
+  "like_count": 328,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": "Emirates ICE",
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "emirates",
+    "mentions": 3
+   }
+  ],
+  "aircraft_mentioned": [
+   {
+    "keyword": "a380",
+    "mentions": 4
+   }
+  ],
+  "ife_features": {
+   "seat": true
+  },
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "chapters_source": "ocr",
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3,
+  "title_lang": "en",
+  "sentiment": "neutral",
+  "sentiment_score": 0.0
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=PbB8FQ1FOfk",
+  "title": "Airline Reviews Coming Soon: Bangkok, Cathay, Delta! #shorts 👀",
+  "title_en": null,
+  "year": 2026,
+  "published_at": "2026-10-26T20:03:39Z",
+  "duration_seconds": 44,
+  "is_short": true,
+  "channel_title": "OwenTravels",
+  "view_count": 51,
+  "like_count": 1,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": "Thales AVANT",
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "delta",
+    "mentions": 2
+   },
+   {
+    "keyword": "cathay pacific",
+    "mentions": 1
+   },
+   {
+    "keyword": "bangkok airways",
+    "mentions": 1
+   },
+   {
+    "keyword": "philippine airlines",
+    "mentions": 1
+   }
+  ],
+  "aircraft_mentioned": [
+   {
+    "keyword": "airbus",
+    "mentions": 1
+   }
+  ],
+  "ife_features": {},
+  "ife_specs": {},
+  "transcript_available": true,
+  "transcript_excerpt": "Anyway, safe travels, everybody. Have a…",
+  "captions": [],
+  "transcript_full": "By the way, thank you so much for watching and I I hope that you will subscribe on my channel. Please watch out for my next vlog and I'll be featuring Bangkok Airways, Philippine Airlines, Cathay Pacific Airbus 350, and Delta Airlines. So, stay tuned to that. Anyway, safe travels, everybody. Have a great day. Kop Khun Mak Krub.",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "chapters_source": "ocr",
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3,
+  "transcript_source": "youtube",
+  "yt_captions": "ok",
+  "transcript_lang": "en",
+  "title_lang": "en",
+  "sentiment": "positive",
+  "sentiment_score": 0.493
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=6UuB-1Kc-Bg",
+  "title": "Cathay Pacific vs Singapore Airlines Business Class… WHO WINS? 🤯✈️",
+  "title_en": null,
+  "year": 2026,
+  "published_at": "2026-10-21T08:37:48Z",
+  "duration_seconds": 16,
+  "is_short": true,
+  "channel_title": "Charles Shan | Eagle Jetss",
+  "view_count": 8093,
+  "like_count": 121,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": "KrisWorld",
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "singapore airlines",
+    "mentions": 1
+   },
+   {
+    "keyword": "cathay pacific",
+    "mentions": 1
+   }
+  ],
+  "aircraft_mentioned": [],
+  "ife_features": {
+   "seat": true
+  },
+  "ife_specs": {},
+  "transcript_available": true,
+  "transcript_excerpt": "टेक डीप…",
+  "captions": [],
+  "transcript_full": "टेक डीप [संगीत]",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "chapters_source": "ocr",
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3,
+  "transcript_source": "youtube",
+  "yt_captions": "ok",
+  "title_lang": "en",
+  "sentiment": "positive",
+  "sentiment_score": 0.663
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=U_AhQ6t8fJw",
+  "title": "The Complete IndiGo Flight ECONOMY Class Review 😱 | Flight Andar Se Kaisi Hoti Hai? ✈️  Full Tour",
+  "title_en": null,
+  "year": 2026,
+  "published_at": "2026-10-25T16:33:28Z",
+  "duration_seconds": 370,
+  "is_short": false,
+  "channel_title": "Tina Good Life",
+  "view_count": 56,
+  "like_count": 6,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": null,
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "indigo",
+    "mentions": 1
+   }
+  ],
+  "aircraft_mentioned": [],
+  "ife_features": {
+   "seat": true
+  },
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "chapters_source": "ocr",
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3,
+  "title_lang": "en",
+  "sentiment": "neutral",
+  "sentiment_score": 0.0
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=Rwuw1TjuaTs",
+  "title": "Tomato Soup on Emirates A380 Business Class",
+  "title_en": null,
+  "year": 2026,
+  "published_at": "2026-10-21T22:14:53Z",
+  "duration_seconds": 40,
+  "is_short": true,
+  "channel_title": "BigBossUNBOXING",
+  "view_count": 1473,
+  "like_count": 9,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": "Emirates ICE",
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "emirates",
+    "mentions": 1
+   }
+  ],
+  "aircraft_mentioned": [
+   {
+    "keyword": "a380",
+    "mentions": 1
+   }
+  ],
+  "ife_features": {},
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "chapters_source": "ocr",
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3,
+  "title_lang": "en",
+  "sentiment": "neutral",
+  "sentiment_score": 0.0
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=C2uw57QjzMM",
+  "title": "17 hour flight from Dubai to Los Angeles on Emirates A380 in business class",
+  "title_en": null,
+  "year": 2026,
+  "published_at": "2026-10-14T10:11:16Z",
+  "duration_seconds": 24,
+  "is_short": true,
+  "channel_title": "calithekid",
+  "view_count": 12565,
+  "like_count": 280,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": "Emirates ICE",
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "emirates",
+    "mentions": 2
+   }
+  ],
+  "aircraft_mentioned": [
+   {
+    "keyword": "a380",
+    "mentions": 2
+   }
+  ],
+  "ife_features": {},
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "chapters_source": "ocr",
+  "title_lang": "en",
+  "sentiment": "neutral",
+  "sentiment_score": 0.0,
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=Ng-tY2YLmW0",
+  "title": "A 380 Business Class, Doha - Paris (CDG) - Qatar Airways",
+  "title_en": null,
+  "year": 2026,
+  "published_at": "2026-10-20T14:00:11Z",
+  "duration_seconds": 842,
+  "is_short": false,
+  "channel_title": "HP.Travel Stories",
+  "view_count": 844,
+  "like_count": 8,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": "Oryx One",
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "qatar airways",
+    "mentions": 1
+   }
+  ],
+  "aircraft_mentioned": [],
+  "ife_features": {},
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "chapters_source": "ocr",
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3,
+  "title_lang": "en",
+  "sentiment": "neutral",
+  "sentiment_score": 0.0
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=mNaDsgNMVYA",
+  "title": "Qatar Airways Business Class POV ✈️ Overnight at 38,000ft 🌙 #QatarAirways #flightambience",
+  "title_en": null,
+  "year": 2026,
+  "published_at": "2026-10-11T09:43:11Z",
+  "duration_seconds": 9,
+  "is_short": true,
+  "channel_title": "City Escape Studio",
+  "view_count": 1339,
+  "like_count": 19,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": "Oryx One",
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "qatar airways",
+    "mentions": 1
+   }
+  ],
+  "aircraft_mentioned": [],
+  "ife_features": {},
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "chapters_source": "ocr",
+  "title_lang": "en",
+  "sentiment": "neutral",
+  "sentiment_score": 0.0,
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=JwJERIe7eS0",
+  "title": "**TRIP REPORT 39** | Qatar Airways | Airbus A350-900 - A7-AMI | Doha to Muscat",
+  "title_en": null,
+  "year": 2026,
+  "published_at": "2026-10-24T18:00:07Z",
+  "duration_seconds": 790,
+  "is_short": false,
+  "channel_title": "JustFly",
+  "view_count": 269,
+  "like_count": 2,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": "Oryx One",
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "qatar airways",
+    "mentions": 2
+   }
+  ],
+  "aircraft_mentioned": [
+   {
+    "keyword": "airbus",
+    "mentions": 5
+   },
+   {
+    "keyword": "a350-900",
+    "mentions": 3
+   },
+   {
+    "keyword": "787",
+    "mentions": 2
+   },
+   {
+    "keyword": "777",
+    "mentions": 2
+   },
+   {
+    "keyword": "a350",
+    "mentions": 2
+   }
+  ],
+  "ife_features": {
+   "seat": true
+  },
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "chapters_source": "ocr",
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3,
+  "title_lang": "en",
+  "sentiment": "neutral",
+  "sentiment_score": 0.0
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=EHa7OmQ8FAw",
+  "title": "Baby born mid-flight on Jazeera Airways flight from Kuwait City to Colombo | #shorts",
+  "title_en": null,
+  "year": 2026,
+  "published_at": "2026-10-19T15:00:06Z",
+  "duration_seconds": 31,
+  "is_short": true,
+  "channel_title": "The Federal",
+  "view_count": 1548,
+  "like_count": 12,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": null,
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "jazeera",
+    "mentions": 2
+   }
+  ],
+  "aircraft_mentioned": [],
+  "ife_features": {},
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "chapters_source": "ocr",
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3,
+  "title_lang": "en",
+  "sentiment": "neutral",
+  "sentiment_score": 0.0
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=MMJZXwLmgjU",
+  "title": "Meet with Bangladeshi Chacha 🇧🇩🇵🇰// Milk Selection in Saudia  so difficult 😭...#viral #treanding",
+  "title_en": null,
+  "year": 2026,
+  "published_at": "2026-10-24T14:56:27Z",
+  "duration_seconds": 423,
+  "is_short": false,
+  "channel_title": "Talha Pak Saudia",
+  "view_count": 5,
+  "like_count": 1,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": null,
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "saudia",
+    "mentions": 1
+   }
+  ],
+  "aircraft_mentioned": [],
+  "ife_features": {},
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "chapters_source": "ocr",
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3,
+  "title_lang": "en",
+  "sentiment": "negative",
+  "sentiment_score": -0.501
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=2H2N3fh3MzA",
+  "title": "International flight Gulf Air Arrive in HYD Airport",
+  "title_en": null,
+  "year": 2026,
+  "published_at": "2026-10-10T15:26:23Z",
+  "duration_seconds": 85,
+  "is_short": true,
+  "channel_title": "Airport life ",
+  "view_count": 56,
+  "like_count": 0,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": null,
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "gulf air",
+    "mentions": 1
+   }
+  ],
+  "aircraft_mentioned": [],
+  "ife_features": {},
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "chapters_source": "ocr",
+  "title_lang": "en",
+  "sentiment": "neutral",
+  "sentiment_score": 0.0,
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=7gAJzbe-DX0",
+  "title": "BEAUTIFUL LANDING GULF AIR A330 INTO BAHRAIN 🇧🇭✈️",
+  "title_en": null,
+  "year": 2026,
+  "published_at": "2026-10-20T18:11:57Z",
+  "duration_seconds": 163,
+  "is_short": true,
+  "channel_title": "Mohammed Firaas Naeem",
+  "view_count": 14,
+  "like_count": 2,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": "Panasonic eX3",
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "gulf air",
+    "mentions": 2
+   }
+  ],
+  "aircraft_mentioned": [
+   {
+    "keyword": "a330",
+    "mentions": 1
+   }
+  ],
+  "ife_features": {},
+  "ife_specs": {},
+  "transcript_available": true,
+  "transcript_excerpt": "Ladies and gentlemen,…",
+  "captions": [],
+  "transcript_full": "Ladies and gentlemen, please remain seated with your seatbelt fastened until the aircraft has come to a final stop and the seatbelt sign has been switched off. Smoking is not permitted until you are in the designated smoking areas of the airport terminal building. It is now safe to switch on mobile phones and personal electronic devices. Before leaving the aircraft, please ensure you have all your personal belongings with you, taking care when opening the overhead lockers. Ladies and gentlemen, on behalf of the captain and crew, it has been our pleasure to be of service today and we look forward to welcoming you on board again in the future. Thank you for choosing Gulf Air, the national carrier of the Kingdom of Bahrain.",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "chapters_source": "ocr",
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3,
+  "transcript_source": "youtube",
+  "yt_captions": "ok",
+  "transcript_lang": "en",
+  "title_lang": "en",
+  "sentiment": "positive",
+  "sentiment_score": 0.684
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=A0CIcKuO8ag",
+  "title": "The Beauty of High-Altitude Flight - Swiss Air Airbus A320",
+  "title_en": null,
+  "year": 2024,
+  "published_at": "2024-09-29T08:50:52Z",
+  "duration_seconds": 19,
+  "is_short": true,
+  "channel_title": "Dody Febriarto",
+  "view_count": 704,
+  "like_count": 16,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": "Thales AVANT",
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "swiss",
+    "mentions": 2
+   }
+  ],
+  "aircraft_mentioned": [
+   {
+    "keyword": "a320",
+    "mentions": 2
+   },
+   {
+    "keyword": "airbus",
+    "mentions": 2
+   }
+  ],
+  "ife_features": {},
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "discovered_by": "channel:Dody Febriarto",
+  "chapters_source": "ocr",
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=ooO4tZf7ofY",
+  "title": "Singapore - New York | Singapore Airlines Longest Flight Route #aviation",
+  "title_en": null,
+  "year": 2024,
+  "published_at": "2024-02-26T03:12:41Z",
+  "duration_seconds": 54,
+  "is_short": true,
+  "channel_title": "Dody Febriarto",
+  "view_count": 4347,
+  "like_count": 44,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": "KrisWorld",
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "singapore airlines",
+    "mentions": 2
+   }
+  ],
+  "aircraft_mentioned": [],
+  "ife_features": {},
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "discovered_by": "channel:Dody Febriarto",
+  "chapters_source": "ocr",
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=SbhzTTQv7J8",
+  "title": "Emirates Business Class to Kuala Lumpur in two Minutes. #aviation #emirates #business class ss",
+  "title_en": null,
+  "year": 2025,
+  "published_at": "2025-08-02T19:27:14Z",
+  "duration_seconds": 106,
+  "is_short": true,
+  "channel_title": "The Layover Aviation",
+  "view_count": 16588,
+  "like_count": 551,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": "Emirates ICE",
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "emirates",
+    "mentions": 2
+   }
+  ],
+  "aircraft_mentioned": [],
+  "ife_features": {},
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "discovered_by": "channel:The Layover Aviation",
+  "chapters_source": "ocr",
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3
  }
 ]
