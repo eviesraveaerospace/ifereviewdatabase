@@ -415,6 +415,22 @@ def transcript_ife_evidence(text: str) -> bool:
     return len({m.lower() for m in _IFE_SPEECH_RE.findall(text)}) >= 2
 
 
+# Screen tags a video can show without anyone using the IFE: the flight-info / map / PA /
+# ad graphics, a menu, the meal card. Real reviews show them too, so on their own they are
+# weak evidence; with a transcript that never talks about the IFE they mean the video is not
+# about it (35 of 415 untrusted tagged videos with a transcript: meal reviews, booking
+# guides, news, one Collins product video). A tag type alone cannot split these: "Flight
+# info" is on 42% of trusted reviews and 40% of transcript-silent ones.
+AMBIENT_SCREEN_TAGS = frozenset({
+    "Flight info", "Map", "Ads", "Passenger Announcement", "Navigation Menu",
+    "Food & beverage", "Weather", "Cabin & seat features", "Error & troubleshooting"})
+
+
+def ambient_tags_only(r: dict) -> bool:
+    tags = set(r.get("screen_tags") or []) | {d.get("tag") for d in r.get("ife_tags") or []}
+    return bool(tags) and tags <= AMBIENT_SCREEN_TAGS
+
+
 def junk_transcript(r: dict) -> bool:
     """A YouTube transcript that says nothing about the review: mostly music tags
     ("Heat.") or under 20 words a minute on a video of 5 min or more. Whisper

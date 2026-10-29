@@ -28,7 +28,7 @@ os.environ.setdefault("IFE_NO_TRANSLATE", "1")   # gate on the raw title; no net
 import pruned_urls  # noqa: E402
 from ife_crawler import (IFECrawler, _is_offtopic_video, _is_trusted_channel, _gate_title,  # noqa: E402
                          AIRLINE_KEYWORDS, GLOBAL_AIRLINES, junk_transcript, transcript_ife_evidence,
-                         transcript_words, TRANSCRIPT_MIN_WORDS)
+                         transcript_words, TRANSCRIPT_MIN_WORDS, ambient_tags_only)
 
 _AIRLINE_NAMES = set(AIRLINE_KEYWORDS) | {a.lower() for a in GLOBAL_AIRLINES}
 
@@ -57,6 +57,7 @@ def ocr_found_nothing(r):
     return processed and not r.get("screen_tags") and not r.get("ife_system") and not feats
 
 
+AMBIENT_WAIT_DAYS = 14  # a held video with only ambient tags waits this long for Whisper's transcript
 GATE_WAIT_DAYS = 120   # backstop for a held video OCR never reaches or that keeps failing; a queue
                        # that is merely long is not a reason to drop (see the queue line in main)
 
@@ -86,23 +87,33 @@ def ocr_tried(r):
             or r.get("chapters_source") == "ocr" or r.get("screen_tag_source") == "ocr-video")
 
 
+def _age_days(r):
+    try:
+        return (datetime.now(timezone.utc).date() - date.fromisoformat(r.get("ife_gate_since") or "")).days
+    except ValueError:
+        return GATE_WAIT_DAYS
+
+
 def gate_verdict(r, weak=False):
     """Fate of a video held at admission (ife_gate == "pending"): "keep" once it has
     chapters and tags, "drop" when OCR has read it and it still lacks them, when it
     was admitted on weak evidence (no IFE word in title or description, not a trusted
     channel) and its transcript never talks about the IFE, or when it has waited
-    GATE_WAIT_DAYS; otherwise "wait" for the nightly OCR pass."""
+    GATE_WAIT_DAYS; otherwise "wait" for the nightly OCR pass. A weak video whose tags are
+    all ambient (flight info, map, menus...) is judged on its transcript too, and waits up
+    to AMBIENT_WAIT_DAYS for one."""
     if has_chapters_and_tags(r):
+        if weak and ambient_tags_only(r) and not r.get("ife_system"):
+            if _usable_transcript(r):
+                return "keep" if _speaks_of_ife(r) else "drop"
+            if _age_days(r) < AMBIENT_WAIT_DAYS:
+                return "wait"
         return "keep"
     if ocr_tried(r):
         return "drop"
     if weak and _usable_transcript(r) and not _speaks_of_ife(r):
         return "drop"
-    try:
-        age = (datetime.now(timezone.utc).date() - date.fromisoformat(r.get("ife_gate_since") or "")).days
-    except ValueError:
-        age = GATE_WAIT_DAYS
-    return "drop" if age >= GATE_WAIT_DAYS else "wait"
+    return "drop" if _age_days(r) >= GATE_WAIT_DAYS else "wait"
 
 
 def should_prune(r):
@@ -124,8 +135,11 @@ def should_prune(r):
         return True       # the OCR pass watched it and saw no IFE screen, and nothing else says IFE
     if _is_trusted_channel(ch):
         return False
-    if _usable_transcript(r) and not (r.get("ife_system") or r.get("screen_tags")) and not _speaks_of_ife(r):
-        return True       # the transcript never talks about the IFE, and nothing else says it does
+    if _usable_transcript(r) and not r.get("ife_system") and not _speaks_of_ife(r):
+        # The transcript never talks about the IFE, and the screens OCR found (if any) are
+        # only ambient ones: flight-info graphics, a map, a menu.
+        if not (r.get("screen_tags") or r.get("ife_tags")) or ambient_tags_only(r):
+            return True
     if has_ife_evidence(r):
         return False
     # Off-topic only (news, hobby/sim, story narration, documentaries, other

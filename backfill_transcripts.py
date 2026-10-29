@@ -45,7 +45,7 @@ def _setup_cookies(tmpdir: str) -> str | None:
         print(f"  Warning: could not decode YOUTUBE_COOKIES_B64 — {e}")
         return None
 
-from ife_crawler import IFECrawler, IFE_FEATURE_KEYWORDS, IFE_SYSTEM_PATTERNS, junk_transcript
+from ife_crawler import IFECrawler, IFE_FEATURE_KEYWORDS, IFE_SYSTEM_PATTERNS, junk_transcript, ambient_tags_only, _is_trusted_channel
 
 # Reuse the crawler's strict IFE caption picker (drops greetings/filler, no
 # evenly-spaced padding) so Whisper captions match the rest of the app.
@@ -277,7 +277,10 @@ def main():
     # which left recent reviews behind a years-old backlog.
     def _prio(r):
         feats = {k for k in (r.get("ife_features") or {}) if k != "seat"}
-        return (bool(r.get("is_short") or "/shorts/" in r.get("url", "")),
+        # First: videos whose only OCR tags are ambient (flight info, map...) and that are not from a
+        # trusted channel: their transcript decides whether they are about the IFE at all.
+        return (ambient_tags_only(r) and not _is_trusted_channel(r.get("channel_title") or ""),
+                bool(r.get("is_short") or "/shorts/" in r.get("url", "")),
                 any(c.get("ife") for c in r.get("chapters") or []),
                 bool(r.get("ife_system")), min(len(feats), 3), r.get("published_at") or "")
     targets.sort(key=_prio, reverse=True)
@@ -290,7 +293,8 @@ def main():
         print(f"Captions-only mode: {len(targets)} videos not yet checked")
     else:
         # Whisper is slow: spend it where captions are known to be absent first.
-        targets.sort(key=lambda r: not (r.get("yt_captions") == "none" or _junk_transcript(r)))
+        targets.sort(key=lambda r: (not (ambient_tags_only(r) and not _is_trusted_channel(r.get("channel_title") or "")),
+                                    not (r.get("yt_captions") == "none" or _junk_transcript(r))))
     print(f"Videos without transcript: {len(targets)}")
 
     # Set up cookies (bypasses IP block on GitHub Actions datacenter IPs)
