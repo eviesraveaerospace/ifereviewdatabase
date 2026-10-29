@@ -283,6 +283,9 @@ def main():
                 bool(r.get("is_short") or "/shorts/" in r.get("url", "")),
                 any(c.get("ife") for c in r.get("chapters") or []),
                 bool(r.get("ife_system")), min(len(feats), 3), r.get("published_at") or "")
+    only_url = os.environ.get("ONLY_URL", "").strip()     # one video, e.g. to settle a gate verdict now
+    if only_url:
+        targets = [r for r in targets if r.get("url") == only_url]
     targets.sort(key=_prio, reverse=True)
     # CAPTIONS_ONLY=1 (the laptop, whose egress YouTube serves captions to):
     # YouTube captions only, no Whisper; a video with none is marked so the
