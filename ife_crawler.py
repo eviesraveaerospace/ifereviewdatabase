@@ -971,6 +971,19 @@ AIRLINE_KEYWORDS = [
     "flynas", "flyadeal", "jazeera", "air astana", "oman air", "gulf air", "kuwait airways",
     "royal jordanian", "flydubai", "air arabia", "egyptair", "ethiopian airlines",
     "kenya airways", "royal air maroc", "starlux", "asiana", "vietnam airlines",
+    # carriers GLOBAL_AIRLINES searches for, or that titles name, that were never matched
+    # (full names where the short one is a common word: Norwegian, Play, SAS, GOL, Azul, Peach)
+    "air china", "shanghai airlines", "sichuan airlines", "xiamen air", "xiamen airlines",
+    "juneyao", "hong kong airlines", "bamboo airways", "jeju air", "jin air", "t'way air",
+    "air busan", "air premia", "peach aviation", "jetstar", "virgin australia", "fiji airways",
+    "air tahiti nui", "air austral", "air mauritius", "south african airways", "rwandair",
+    "all nippon airways", "scandinavian airlines", "norwegian air", "norse atlantic",
+    "brussels airlines", "lot polish airlines", "aeroflot", "vueling", "eurowings", "edelweiss",
+    "aegean airlines", "air europa", "airbaltic", "air serbia", "pegasus airlines", "sunexpress",
+    "transavia", "loganair", "helvetic airways", "uzbekistan airways", "azerbaijan airlines",
+    "riyadh air", "copa airlines", "gol airlines", "azul airlines", "sky airline", "jetsmart",
+    "aerolineas argentinas", "flair airlines", "air transat", "sunwing", "avelo", "rex airlines",
+    "iran air", "mahan air", "middle east airlines", "taag", "air algerie", "tunisair",
 ]
 
 AIRCRAFT_KEYWORDS = [
@@ -991,6 +1004,12 @@ _KEYWORD_RE_CACHE: Dict[str, "re.Pattern"] = {}
 # see "Iceland Air" / "Iceland-Air" as Icelandair.
 AIRLINE_ALIASES: Dict[str, List[str]] = {
     "icelandair": ["iceland air", "iceland-air", "icelandic air"],
+    "srilankan": ["sri lankan"],
+    "airasia": ["air asia"],
+    "saudia": ["saudi arabian airlines"],
+    "ethiopian airlines": ["ethiopian air"],
+    "airbaltic": ["air baltic"],
+    "ana": ["all nippon"],
 }
 
 
