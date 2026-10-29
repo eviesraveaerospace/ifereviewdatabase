@@ -81,9 +81,14 @@ ocr_pass() {        # ocr_pass NAME CAP SHARDS [gather_short_chapters.py args...
     log "OCR $name: budget ${b} min, took $(( (SECONDS - t0) / 60 )) min"
 }
 
-# Results a second machine (the laptop: laptop_ocr.ps1) pushed in ocr_results/*.json are
-# applied first, so the passes below skip those videos.
-"$PY" ocr_results.py >> "$LOG" 2>&1
+# Results other machines computed are applied first, so the passes below skip those videos:
+# the laptop's (laptop_ocr.ps1 pushes ocr_results/laptop.json) and the cloud job's (the
+# ios-screen-recording-ocr repo's Actions workflow commits cloud/ocr_results/cloud.json there).
+apply_ocr_results() {
+    git -C "$OCR_REPO" pull --ff-only -q >> "$LOG" 2>&1 || log "could not pull $OCR_REPO: cloud OCR results may be stale"
+    "$PY" ocr_results.py ocr_results/*.json "$OCR_REPO"/cloud/ocr_results/*.json >> "$LOG" 2>&1
+}
+apply_ocr_results
 
 log "time budget: $(minutes_left) min until $NIGHT_DEADLINE_UTC UTC"
 OCR_READY=0
@@ -143,7 +148,7 @@ fi
 # Whisper over the internal reviews' own recordings (dashboard venv has whisper).
 "$PY" -u transcribe_internal.py >> "$LOG" 2>&1
 
-"$PY" ocr_results.py >> "$LOG" 2>&1
+apply_ocr_results
 
 # Drop entries the gate rejects today and videos the OCR pass has sampled
 # without finding an IFE screen (copies kept in pruned_offtopic.json).

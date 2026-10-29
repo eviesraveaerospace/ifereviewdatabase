@@ -10,6 +10,13 @@ cache (the VM) runs
 
 under the same lock the OCR shards save with. A row already read at the same or a newer
 tagger version with chapters and tags keeps what it has.
+
+The cloud workflow (ios-screen-recording-ocr/.github/workflows/ocr_backlog.yml, exported by
+export_cloud_ocr.py) uses two more modes:
+
+    python ocr_results.py --slim OUT       # a small cache for the OCR jobs: only YouTube rows,
+                                           # only the fields the OCR passes read, results applied
+    python ocr_results.py --combine OUT IN [IN ...]   # union results files into OUT
 """
 import contextlib
 import glob
@@ -103,7 +110,41 @@ def merge_into_cache(files, cache=CACHE):
     return n
 
 
+# Fields the OCR passes read besides the ones they own (queue order, Short/long split, gates).
+SLIM_KEYS = ("url", "title", "media_type", "is_short", "published_at", "duration_seconds", "channel_title",
+             "source_tier", "ife_system", "ife_system_guess", "airlines_mentioned", "transcript_available",
+             "ife_gate", "ife_gate_since") + OWN
+
+
+def slim_cache(dst, results_files=(), cache=CACHE):
+    """A few-MB stand-in for the 55 MB LFS cache, so every OCR job does not pull it."""
+    rows = json.loads(Path(cache).read_text(encoding="utf-8")).get("reviews", [])
+    # Public YouTube videos only: internal reviews, articles and uploads never leave the cache.
+    rows = [r for r in rows if r.get("media_type") == "video" and "youtube.com" in (r.get("url") or "")]
+    for f in results_files:
+        apply_results(rows, load_results(f))
+    slim = [{k: r[k] for k in SLIM_KEYS if k in r} for r in rows]
+    Path(dst).write_text(json.dumps({"reviews": slim}, ensure_ascii=False), encoding="utf-8")
+    return len(slim)
+
+
+def combine_results(out, files):
+    res = load_results(out)
+    for f in files:
+        res.update(load_results(f))
+    Path(out).parent.mkdir(parents=True, exist_ok=True)
+    Path(out).write_text(json.dumps(res, ensure_ascii=False), encoding="utf-8")
+    return len(res)
+
+
 def main(argv):
+    if argv and argv[0] == "--slim":
+        files = sorted(glob.glob(str(HERE / "ocr_results" / "*.json")))
+        print(f"ocr_results: slim cache with {slim_cache(argv[1], files)} rows ({len(files)} results file(s) applied)")
+        return 0
+    if argv and argv[0] == "--combine":
+        print(f"ocr_results: {combine_results(argv[1], argv[2:])} rows in {argv[1]}")
+        return 0
     files = argv or sorted(glob.glob(str(HERE / "ocr_results" / "*.json")))
     if not files:
         print("ocr_results: no results files")
