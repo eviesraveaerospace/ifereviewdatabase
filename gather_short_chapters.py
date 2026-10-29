@@ -374,7 +374,8 @@ def main():
                     help="videos with a description chapter flagged IFE: OCR just that chapter and "
                          "store its screen-tag detections as ife_tags (newest first)")
     ap.add_argument("--new", action="store_true",
-                    help="every video published in the last --since-days that no OCR pass has tried, "
+                    help="every video published in the last --since-days (or held at admission until it has "
+                         "chapters and tags) that no OCR pass has tried, "
                          "whatever its kind (Short, chaptered, long), newest first: run first each night "
                          "so a new video gets its detections ahead of the backlog")
     ap.add_argument("--since-days", type=int, default=14)
@@ -386,7 +387,8 @@ def main():
     if a.new:
         cutoff = (datetime.now(timezone.utc) - timedelta(days=a.since_days)).strftime("%Y-%m-%d")
         todo = [r for r in rows if r.get("media_type") == "video" and _yt_id(r.get("url"))
-                and (r.get("published_at") or "")[:10] >= cutoff and _never_tried(r)]
+                and ((r.get("published_at") or "")[:10] >= cutoff or r.get("ife_gate") == "pending")
+                and _never_tried(r)]
         todo.sort(key=lambda r: r.get("published_at") or "", reverse=True)
     elif a.url:
         # An explicit URL may be any video (OCR works on full-length reviews

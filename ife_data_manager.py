@@ -117,12 +117,13 @@ class IFEDataManager:
 
     def save_cache(self):
         self._dedupe_reviews()
+        held = [r for r in getattr(self, "_held", []) if r.get("url") not in {x.get("url") for x in self.data["reviews"]}]
         self.data["last_updated"] = datetime.now().isoformat()
         # Write beside, then rename: the OCR tagger the dashboard triggers reads and
         # writes this file while requests are served, and must never see half of it.
         tmp = f"{self.cache_file}.tmp{os.getpid()}"
         with open(tmp, "w", encoding="utf-8") as f:
-            json.dump(self.data, f, indent=2, ensure_ascii=False)
+            json.dump({**self.data, "reviews": self.data["reviews"] + held}, f, indent=2, ensure_ascii=False)
         os.replace(tmp, self.cache_file)
 
     def known_urls(self):
@@ -146,6 +147,11 @@ class IFEDataManager:
             r for r in self.data.get("reviews", [])
             if r.get("source_tier", 3) < 3
         ]
+        # Videos held until a transcript shows they talk about the IFE stay out of
+        # the dashboard, but are kept for save_cache so the nightly pass can judge them.
+        self._held = [r for r in self.data["reviews"] if r.get("ife_gate") == "pending"]
+        if self._held:
+            self.data["reviews"] = [r for r in self.data["reviews"] if r.get("ife_gate") != "pending"]
 
     def _backfill_fields(self):
         """Add default values for fields introduced after initial seed."""

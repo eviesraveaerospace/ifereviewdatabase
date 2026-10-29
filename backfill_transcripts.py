@@ -45,7 +45,7 @@ def _setup_cookies(tmpdir: str) -> str | None:
         print(f"  Warning: could not decode YOUTUBE_COOKIES_B64 — {e}")
         return None
 
-from ife_crawler import IFECrawler, IFE_FEATURE_KEYWORDS, IFE_SYSTEM_PATTERNS
+from ife_crawler import IFECrawler, IFE_FEATURE_KEYWORDS, IFE_SYSTEM_PATTERNS, junk_transcript
 
 # Reuse the crawler's strict IFE caption picker (drops greetings/filler, no
 # evenly-spaced padding) so Whisper captions match the rest of the app.
@@ -257,19 +257,7 @@ def fetch_whisper_segs(model, video_id, cookies_path=None, browser_cookie_opts=N
         return _WHISPER_FAIL, None, str(e)[:200]
 
 
-def _junk_transcript(r):
-    """A YouTube transcript that says nothing about the review: mostly music tags
-    ("Heat.") or under 20 words a minute on a video of 5 min or more. Whisper
-    should redo it instead of the video counting as transcribed forever; a video
-    Whisper already failed on is left alone."""
-    if r.get("transcript_source") == "whisper" or r.get("whisper_status") == "fail":
-        return False
-    mins = (r.get("duration_seconds") or 0) / 60
-    if mins < 5:
-        return False
-    words = re.findall(r"[A-Za-z']+", r.get("transcript_full") or "")
-    heat = sum(w.lower() == "heat" for w in words)
-    return len(words) / mins < 20 or (len(words) >= 20 and heat / len(words) > 0.2)
+_junk_transcript = junk_transcript
 
 
 def main():

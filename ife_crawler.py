@@ -388,6 +388,48 @@ def _has_strong_ife_keyword(text: str) -> bool:
     return any(_keyword_re(kw).search(t) for kw in IFE_TITLE_KEYWORDS if kw not in _IFE_TITLE_ONLY_KEYWORDS)
 
 
+# What a video says while it shows or discusses the IFE. Reviewers rarely say
+# "entertainment system": they say "the screen", "movies", "headphones". Scored on
+# the cache (363 OCR-confirmed IFE videos with a real transcript vs 216 pruned
+# off-topic ones): two different words from this list give 83% recall, 9% false pass.
+_IFE_SPEECH_RE = re.compile(
+    r"\b(?:entertainment|screens?|monitors?|movies?|films?|tv|television|headphones?|earphones?"
+    r"|touch ?screen|seat-?back|remote|selection|catalogue|library|new releases|in-?\s?flight"
+    r"|ife|ifec|vod|moving map|flight map|tail cam\w*|wi-?fi|games?|podcasts?)\b",
+    re.IGNORECASE)
+TRANSCRIPT_MIN_WORDS = 300    # a shorter one (music over the footage) says nothing either way
+
+
+def transcript_words(r: dict) -> int:
+    return len(re.findall(r"[A-Za-z']+", r.get("transcript_full_en") or r.get("transcript_full") or ""))
+
+
+def transcript_ife_evidence(text: str) -> bool:
+    """True when a transcript talks about the inflight entertainment: a strong IFE
+    term (a system name, "inflight entertainment", "seatback") or two different
+    words from the IFE vocabulary."""
+    if not text:
+        return False
+    if _has_strong_ife_keyword(text) or _IFE_INTL_RE.search(text):
+        return True
+    return len({m.lower() for m in _IFE_SPEECH_RE.findall(text)}) >= 2
+
+
+def junk_transcript(r: dict) -> bool:
+    """A YouTube transcript that says nothing about the review: mostly music tags
+    ("Heat.") or under 20 words a minute on a video of 5 min or more. Whisper
+    should redo it instead of the video counting as transcribed forever; a video
+    Whisper already failed on is left alone."""
+    if r.get("transcript_source") == "whisper" or r.get("whisper_status") == "fail":
+        return False
+    mins = (r.get("duration_seconds") or 0) / 60
+    if mins < 5:
+        return False
+    words = re.findall(r"[A-Za-z']+", r.get("transcript_full") or "")
+    heat = sum(w.lower() == "heat" for w in words)
+    return len(words) / mins < 20 or (len(words) >= 20 and heat / len(words) > 0.2)
+
+
 def _is_non_review_content(title: str) -> bool:
     """Industry analysis or destination promo with no review signal and no
     strong IFE keyword. Checked for every channel, trusted or not."""
@@ -1938,6 +1980,20 @@ class IFECrawler:
             return True
         return any(k in t for k in self._AVIATION_REVIEW_TERMS)
 
+    @staticmethod
+    def _transcript_gate(weak: bool, trans_ok: bool, full_transcript: str, duration_seconds):
+        """Extra entry fields, or None to drop the video. A new video is held
+        ("pending") and hidden from the dashboard until the OCR pass has given it
+        chapters and tags; prune_offtopic.py releases or drops it. One admitted on
+        weak evidence (no IFE word in its title or description, not a trusted
+        channel) whose transcript is already in hand and never talks about the IFE
+        is dropped here without waiting."""
+        row = {"duration_seconds": duration_seconds, "transcript_full": full_transcript}
+        if (weak and trans_ok and transcript_words(row) >= TRANSCRIPT_MIN_WORDS
+                and not junk_transcript(row) and not transcript_ife_evidence(full_transcript)):
+            return None
+        return {"ife_gate": "pending", "ife_gate_since": time.strftime("%Y-%m-%d", time.gmtime())}
+
     def _build_youtube_entry_from_api(self, video_id: str, item: dict, trusted: bool = False) -> Optional[dict]:
         """Build a result entry from a YouTube Data API videos.list item.
         `trusted` relaxes the keyword gate for known reviewer channels."""
@@ -1955,6 +2011,7 @@ class IFECrawler:
         # Description-only: skip broad keywords (flight review, seat review, etc.)
         # so AI drama / movie review descriptions don't slip through via "life"/"wife".
         desc_match = self._has_ife_keyword(description, skip_broad=True)
+        weak = not trusted and not self._has_ife_keyword(gate_title, skip_broad=True) and not desc_match
         if not title_match and not desc_match:
             # Accept any genuine flight/cabin review even without an explicit
             # IFE keyword — most cabin reviews cover the IFE anyway. Title only:
@@ -1995,7 +2052,11 @@ class IFECrawler:
 
         stats = item.get("statistics", {})
         duration_seconds = _iso_duration_seconds(duration_iso)
+        gate = self._transcript_gate(weak, trans_ok, full_transcript, duration_seconds)
+        if gate is None:
+            return None
         return {
+            **gate,
             "url":                  url,
             "title":                title[:150],
             "title_en":             title_en,
@@ -2100,6 +2161,7 @@ class IFECrawler:
                     return None
             strong = (self._has_ife_keyword(gate_title, skip_broad=True)
                       or self._has_ife_keyword(description, skip_broad=True))
+            weak = not strong and not _is_trusted_channel(channel_title)
             if (not _is_trusted_channel(channel_title) and not strong
                     and _is_offtopic_video(gate_title, channel_title)):
                 return None
@@ -2123,7 +2185,11 @@ class IFECrawler:
             detected    = self._detect_system(search_text)
             guess       = None if detected else infer_ife_system(airlines_m, aircraft_m)
 
+            gate = self._transcript_gate(weak, trans_ok, full_transcript, None)
+            if gate is None:
+                return None
             return {
+                **gate,
                 "url":                  url,
                 "title":                title[:150],
                 "title_en":             title_en,
