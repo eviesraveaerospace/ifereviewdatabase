@@ -57,7 +57,8 @@ def ocr_found_nothing(r):
     return processed and not r.get("screen_tags") and not r.get("ife_system") and not feats
 
 
-GATE_WAIT_DAYS = 30    # a held video OCR never reached (or that nothing would read) is dropped after this long
+GATE_WAIT_DAYS = 120   # backstop for a held video OCR never reaches or that keeps failing; a queue
+                       # that is merely long is not a reason to drop (see the queue line in main)
 
 
 def _speaks_of_ife(r):
@@ -80,8 +81,9 @@ def ocr_tried(r):
     """An OCR pass has read this video (whatever it found). A generic download
     failure ("fail") may be transient, so it does not count: that video waits out
     GATE_WAIT_DAYS instead."""
-    return bool((r.get("chapters_ocr_status") and r.get("chapters_ocr_status") != "fail") or r.get("ife_tags_status")
-                or r.get("chapters_source") == "ocr" or r.get("screen_tag_source") == "ocr-video")
+    status = [v for v in (r.get("chapters_ocr_status"), r.get("ife_tags_status")) if v]
+    return (any(v != "fail" for v in status)
+            or r.get("chapters_source") == "ocr" or r.get("screen_tag_source") == "ocr-video")
 
 
 def gate_verdict(r, weak=False):
@@ -142,6 +144,13 @@ def main():
     cleared = [r for r in rows if r.get("ife_gate") == "pending" and r not in gone and gate_verdict(r) == "keep"]
     waiting = sum(1 for r in rows if r.get("ife_gate") == "pending" and r not in gone and r not in cleared)
     print(f"{len(cleared)} held videos now have chapters + tags; {waiting} still wait for OCR")
+    queue = [r for r in rows if r.get("ife_gate") == "pending" and r not in gone and r not in cleared]
+    if queue:
+        ages = sorted((datetime.now(timezone.utc).date() - date.fromisoformat(r.get("ife_gate_since") or "1970-01-01")).days
+                      for r in queue)
+        print(f"hold queue: {len(queue)} videos, oldest {ages[-1]} d, median {ages[len(ages) // 2]} d, "
+              f"{sum(1 for a in ages if a >= GATE_WAIT_DAYS * 2 // 3)} within a third of the {GATE_WAIT_DAYS} d backstop "
+              f"- if this grows night over night, OCR hours are short")
     # Rows already in the pruned list that a cache merge brought back: drop them
     # again (the list already holds their copy).
     listed = pruned_urls.load()

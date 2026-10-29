@@ -301,6 +301,14 @@ def _never_tried(r):
     return not r.get("chapters")
 
 
+def _tag_only(r):
+    """A chaptered video with no IFE-looking chapter: no pass reads it, so it has no
+    tags. Its description chapters stay; whole-video OCR adds the screen tags only."""
+    return (r.get("chapters_source") in ("description", "transcript") and bool(r.get("chapters"))
+            and not ife_spans(r) and not (r.get("screen_tags") or r.get("ife_tags"))
+            and not (r.get("chapters_ocr_status") or r.get("ife_tags_status")))
+
+
 def _needs_ife_ocr(r):
     """Not yet tagged, or tagged by an older tagger version. A failure is not retried."""
     st = r.get("ife_tags_status")
@@ -370,6 +378,9 @@ def main():
     ap.add_argument("--oldest-first", action="store_true",
                     help="with --ife-chapters: start from the oldest videos, so a second machine "
                          "does not pick the same ones as the newest-first nightly pass")
+    ap.add_argument("--tag-chaptered", action="store_true",
+                    help="videos with description chapters but none that look like IFE, and no tags: "
+                         "OCR the whole video for screen tags only (the chapters are kept)")
     ap.add_argument("--ife-chapters", action="store_true",
                     help="videos with a description chapter flagged IFE: OCR just that chapter and "
                          "store its screen-tag detections as ife_tags (newest first)")
@@ -385,11 +396,23 @@ def main():
     data = json.loads(CACHE.read_text(encoding="utf-8"))
     rows = data.get("reviews", [])
     if a.new:
-        cutoff = (datetime.now(timezone.utc) - timedelta(days=a.since_days)).strftime("%Y-%m-%d")
+        # A held video whose last download failed generically ("fail") is tried again; the
+        # status is dropped in memory and the row is saved with it gone when it is processed.
+        for r in rows:
+            if r.get("ife_gate") == "pending":
+                for k in ("chapters_ocr_status", "ife_tags_status"):
+                    if r.get(k) == "fail":
+                        del r[k]
+        cutoff =(datetime.now(timezone.utc) - timedelta(days=a.since_days)).strftime("%Y-%m-%d")
         todo = [r for r in rows if r.get("media_type") == "video" and _yt_id(r.get("url"))
                 and ((r.get("published_at") or "")[:10] >= cutoff or r.get("ife_gate") == "pending")
-                and _never_tried(r)]
-        todo.sort(key=lambda r: r.get("published_at") or "", reverse=True)
+                and (_never_tried(r) or _tag_only(r))]
+        # Best IFE-review candidates first, newest within a tier: when a night's budget
+        # runs out, what waits is the least likely to be an IFE review.
+        todo.sort(key=lambda r: (_long_priority(r), r.get("published_at") or ""), reverse=True)
+    elif a.tag_chaptered:
+        todo = [r for r in rows if r.get("media_type") == "video" and _yt_id(r.get("url")) and _tag_only(r)]
+        todo.sort(key=lambda r: (_long_priority(r), r.get("published_at") or ""), reverse=True)
     elif a.url:
         # An explicit URL may be any video (OCR works on full-length reviews
         # too — it is just slower), not only a Short.
@@ -426,7 +449,8 @@ def main():
         todo = todo[k::n_sh]
     if a.limit:
         todo = todo[:a.limit]
-    kind = 'new videos' if a.new else 'IFE chapters' if a.ife_chapters else 'full-length videos' if a.long else 'Shorts'
+    kind = ('new videos' if a.new else 'chaptered videos without tags' if a.tag_chaptered
+            else 'IFE chapters' if a.ife_chapters else 'full-length videos' if a.long else 'Shorts')
     print(f"OCR repo: {REPO}\n{len(todo)} {kind} to tag")
     if a.dry_run or not todo:
         return
@@ -464,6 +488,39 @@ def main():
             break
         vid = _yt_id(r["url"])
         print(f"\n[{n}/{len(todo)}] {vid}  {r.get('title', '')[:70]}")
+        if a.tag_chaptered or (a.new and _tag_only(r)):
+            with tempfile.TemporaryDirectory() as tmp:
+                path, status = download(vid, tmp)
+                stats[status if status in stats else "fail"] += 1
+                if status == "block":
+                    print("  YouTube is rate-limiting/bot-checking downloads — stopping this run.")
+                    break
+                chaps = None
+                if path:
+                    try:
+                        chaps = ocr_chapters(path, ocr, a.interval, os.path.join(tmp, "out"), long_form=True)
+                    except Exception as exc:  # noqa: BLE001
+                        print(f"  OCR failed: {exc}")
+                        status = "ocr-error"
+            if chaps is None:
+                print(f"  {status}")
+                r["ife_tags_status"] = status if status != "ok" else "fail"
+                touched[r["url"]] = r
+                failed += 1
+                continue
+            # The description chapters stay as they are; only the screen tags are added.
+            tags = sorted({t for c in chaps for t in c["tags"]})
+            r["screen_tags"] = tags
+            r["screen_tag_source"] = "ocr-video"
+            r["ife_tags_status"] = "done" if tags else "none"
+            r["ocr_tagger_v"] = TAGGER_V
+            r["ife_features"] = to_ife_features(tags, r.get("ife_features") or {})
+            touched[r["url"]] = r
+            done += 1
+            print(f"  tags: {', '.join(tags) or '(no readable IFE screens)'}")
+            if done % 10 == 0:
+                save()
+            continue
         if a.ife_chapters or (a.new and r.get("chapters_source") in ("description", "transcript")):
             dets, status = [], "ok"
             for ci, start, end in ife_spans(r):
