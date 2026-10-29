@@ -228220,5 +228220,671 @@
   "screen_tags": [],
   "screen_tag_source": "ocr-video",
   "ocr_tagger_v": 3
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=BWx64CUVQiM",
+  "title": "Qatar Airways Business Class on their 787-900. Not The Qsuite, but even better. 😍",
+  "year": 2026,
+  "published_at": "2026-09-23T21:18:46Z",
+  "duration_seconds": 71,
+  "is_short": true,
+  "channel_title": "Shubhit Khurana",
+  "view_count": 1475,
+  "like_count": 23,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": "Oryx One",
+  "chapters": [
+   {
+    "t": "0:26",
+    "sec": 26,
+    "end": 26,
+    "title": "BEVERAGES",
+    "tags": [],
+    "ife": false,
+    "source": "ocr"
+   }
+  ],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "qatar airways",
+    "mentions": 1
+   },
+   {
+    "keyword": "level",
+    "mentions": 1
+   }
+  ],
+  "aircraft_mentioned": [],
+  "ife_features": {
+   "seat": true
+  },
+  "ife_specs": {},
+  "transcript_available": true,
+  "transcript_excerpt": "And the noise-canceling headphones.…",
+  "captions": [],
+  "transcript_full": " This is Qatar's business suite and not the Q suite.  Let's go.  At his Qatar's gorgeous business suite,  I made myself very, very comfortable.  Got my dip-tick kit.  Let's get this journey started.  Champagne Cheers, this time it's rosé.  A long dress, yes, it's medium.  Then I got some loungewear.  I'm so glad he gave me medium and not large.  Got fully ready and comfy for this flight to take off.  Now the extravagant menu and wine list.  I'm level two certified and wine,  so I can tell when the list is amazing.  Some mint lemonade with nut.  You know what's then served?  With some red wine from Bordeaux.  Because I like my wine French and my olive oil spicy.  Then I devoured my meal, which was these braised ribs.  Moxamon and cream cheese bagel with avocado.  With some side salad.  Got my favorite somn in your bowl after that.  Because it'll be rude not to.  Then I got some Pierre Macralloni.  Time for bed, so I changed into my nightwear  from the white company London.  With some skincare.  Because a good night's sleep is a real luxury.  So I got settled and wore the plushed away.  And shut the world off.  But on some deptique lip balm.  And the noise-canceling headphones.  Joe's a film.  Order a decaf soy ice latte.  Got some popcorn.  And enjoyed my time in the sky.  And for breakfast, come to part two.  Okay, bye.",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "transcript_source": "whisper",
+  "transcript_lang": "en",
+  "title_lang": "en",
+  "sentiment": "positive",
+  "sentiment_score": 0.593,
+  "chapters_source": "ocr",
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=hiMpGhSSE8Y",
+  "title": "I Flew Etihad's A380 Apartments in The Sky...",
+  "title_en": null,
+  "year": 2026,
+  "published_at": "2026-10-26T17:30:21Z",
+  "duration_seconds": 67,
+  "is_short": true,
+  "channel_title": "Travels by Dreamer",
+  "view_count": 697,
+  "like_count": 24,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": "Panasonic eX3",
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "etihad",
+    "mentions": 4
+   }
+  ],
+  "aircraft_mentioned": [
+   {
+    "keyword": "a380",
+    "mentions": 3
+   }
+  ],
+  "ife_features": {
+   "seat": true
+  },
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "chapters_source": "ocr",
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3,
+  "title_lang": "en",
+  "sentiment": "neutral",
+  "sentiment_score": 0.0
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=N9t51LPzsJc",
+  "title": "Emirates A380 First Class vs Business Class 🤯✈️",
+  "title_en": null,
+  "year": 2026,
+  "published_at": "2026-10-27T08:09:42Z",
+  "duration_seconds": 17,
+  "is_short": true,
+  "channel_title": "Charles Shan | Eagle Jetss",
+  "view_count": 3497,
+  "like_count": 55,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": "Emirates ICE",
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "emirates",
+    "mentions": 3
+   }
+  ],
+  "aircraft_mentioned": [
+   {
+    "keyword": "a380",
+    "mentions": 2
+   }
+  ],
+  "ife_features": {
+   "seat": true
+  },
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "chapters_source": "ocr",
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3,
+  "title_lang": "en",
+  "sentiment": "neutral",
+  "sentiment_score": 0.0
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=2Zduf52THVU",
+  "title": "Inside the Delta One Lounge at LAX ✈️",
+  "title_en": null,
+  "year": 2026,
+  "published_at": "2026-10-28T02:07:53Z",
+  "duration_seconds": 142,
+  "is_short": true,
+  "channel_title": "John Montoya",
+  "view_count": 369,
+  "like_count": 7,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": "Thales AVANT",
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "delta",
+    "mentions": 3
+   }
+  ],
+  "aircraft_mentioned": [],
+  "ife_features": {},
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "chapters_source": "ocr",
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3,
+  "title_lang": "en",
+  "sentiment": "neutral",
+  "sentiment_score": 0.0
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=qPty04zsT-8",
+  "title": "Our First Time Flying First Class on American Airlines! ✈️😂 #shorts",
+  "title_en": null,
+  "year": 2026,
+  "published_at": "2026-10-28T00:30:19Z",
+  "duration_seconds": 37,
+  "is_short": true,
+  "channel_title": "Xavier_Winters",
+  "view_count": 4,
+  "like_count": 0,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": "Panasonic eX3",
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "american airlines",
+    "mentions": 1
+   }
+  ],
+  "aircraft_mentioned": [],
+  "ife_features": {
+   "seat": true
+  },
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "chapters_source": "ocr",
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3,
+  "title_lang": "en",
+  "sentiment": "neutral",
+  "sentiment_score": 0.0
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=vAHfuwIuFcs",
+  "title": "🚨 DEAL ALERT: Starlux Business Class — 85K Points to Vietnam! #Shorts",
+  "title_en": null,
+  "year": 2026,
+  "published_at": "2026-10-21T15:21:38Z",
+  "duration_seconds": 21,
+  "is_short": true,
+  "channel_title": "Nam Do",
+  "view_count": 55,
+  "like_count": 1,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": null,
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "starlux",
+    "mentions": 4
+   }
+  ],
+  "aircraft_mentioned": [],
+  "ife_features": {
+   "seat": true
+  },
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "chapters_source": "ocr",
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3,
+  "title_lang": "en",
+  "sentiment": "positive",
+  "sentiment_score": 0.498
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=fopGsZYyN9w",
+  "title": "Is Juneyao Air China’s Hidden Gem? I Flew Their 787 Business Class",
+  "title_en": null,
+  "year": 2026,
+  "published_at": "2026-10-26T15:32:15Z",
+  "duration_seconds": 398,
+  "is_short": false,
+  "channel_title": "maxivdo",
+  "view_count": 145,
+  "like_count": 3,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": "Panasonic eX3",
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [],
+  "aircraft_mentioned": [
+   {
+    "keyword": "787",
+    "mentions": 2
+   },
+   {
+    "keyword": "boeing",
+    "mentions": 2
+   },
+   {
+    "keyword": "787-9",
+    "mentions": 1
+   }
+  ],
+  "ife_features": {
+   "seat": true
+  },
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "chapters_source": "ocr",
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3,
+  "title_lang": "en",
+  "sentiment": "neutral",
+  "sentiment_score": 0.0
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=xs8_OZKw9Qo",
+  "title": "Juneyao Air Airbus A321 Sunset Landing | Shanghai 🇨🇳 [PVG/ZSPD]",
+  "title_en": null,
+  "year": 2026,
+  "published_at": "2026-10-21T10:00:07Z",
+  "duration_seconds": 1715,
+  "is_short": false,
+  "channel_title": "Flying Asia",
+  "view_count": 294,
+  "like_count": 9,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": "Viasat (streaming)",
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [],
+  "aircraft_mentioned": [
+   {
+    "keyword": "airbus",
+    "mentions": 3
+   },
+   {
+    "keyword": "a321",
+    "mentions": 2
+   }
+  ],
+  "ife_features": {
+   "seat": true
+  },
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "chapters_source": "ocr",
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3,
+  "title_lang": "en",
+  "sentiment": "neutral",
+  "sentiment_score": 0.0
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=OY_7KnxtVfQ",
+  "title": "Emirates A380 Business Class to Sydney | Vlog",
+  "title_en": null,
+  "year": 2026,
+  "published_at": "2026-10-23T14:47:58Z",
+  "duration_seconds": 459,
+  "is_short": false,
+  "channel_title": "Ashutosh Vashishtha",
+  "view_count": 487,
+  "like_count": 4,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": "Emirates ICE",
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "emirates",
+    "mentions": 1
+   }
+  ],
+  "aircraft_mentioned": [
+   {
+    "keyword": "a380",
+    "mentions": 1
+   }
+  ],
+  "ife_features": {},
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "chapters_source": "ocr",
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3,
+  "title_lang": "en",
+  "sentiment": "neutral",
+  "sentiment_score": 0.0
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=T3YpM2pRIgI",
+  "title": "We Spent $10,000 on Emirates First Class… Worth It?! ✈️",
+  "title_en": null,
+  "year": 2026,
+  "published_at": "2026-10-28T01:32:44Z",
+  "duration_seconds": 47,
+  "is_short": true,
+  "channel_title": "Upgrade Atlas",
+  "view_count": 262,
+  "like_count": 5,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": "Emirates ICE",
+  "chapters": [
+   {
+    "t": "0:36",
+    "sec": 36,
+    "end": 36,
+    "title": "Information",
+    "tags": [],
+    "ife": false,
+    "source": "ocr"
+   }
+  ],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "emirates",
+    "mentions": 2
+   }
+  ],
+  "aircraft_mentioned": [
+   {
+    "keyword": "777",
+    "mentions": 2
+   },
+   {
+    "keyword": "a380",
+    "mentions": 2
+   },
+   {
+    "keyword": "airbus",
+    "mentions": 1
+   },
+   {
+    "keyword": "boeing",
+    "mentions": 1
+   }
+  ],
+  "ife_features": {},
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "chapters_source": "ocr",
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3,
+  "title_lang": "en",
+  "sentiment": "positive",
+  "sentiment_score": 0.294
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=rCARzcj9qnk",
+  "title": "#88 Etihad Business Class",
+  "title_en": null,
+  "year": 2026,
+  "published_at": "2026-10-21T08:38:02Z",
+  "duration_seconds": 382,
+  "is_short": false,
+  "channel_title": "Jessable Manuel",
+  "view_count": 50,
+  "like_count": 0,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": "Panasonic eX3",
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "etihad",
+    "mentions": 1
+   }
+  ],
+  "aircraft_mentioned": [],
+  "ife_features": {},
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "chapters_source": "ocr",
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3,
+  "title_lang": "en",
+  "sentiment": "neutral",
+  "sentiment_score": 0.0
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=YmaUVMY3ojw",
+  "title": "Perfect Ryanair Under‑Seat Bag ✈️ Kono TVK2521 24L Travel Duffel",
+  "title_en": null,
+  "year": 2026,
+  "published_at": "2026-09-28T10:12:07Z",
+  "duration_seconds": 8,
+  "is_short": true,
+  "channel_title": "misslulubags",
+  "view_count": 814,
+  "like_count": 0,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": null,
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "ryanair",
+    "mentions": 1
+   }
+  ],
+  "aircraft_mentioned": [],
+  "ife_features": {
+   "seat": true
+  },
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "chapters_source": "ocr",
+  "title_lang": "en",
+  "sentiment": "positive",
+  "sentiment_score": 0.572,
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=WczYKfOwV8g",
+  "title": "Dammam Airport Latest Update – 22 October 2026 🇸🇦",
+  "title_en": null,
+  "year": 2026,
+  "published_at": "2026-10-22T08:02:17Z",
+  "duration_seconds": 259,
+  "is_short": false,
+  "channel_title": "My life In Saudi Arabia ",
+  "view_count": 10597,
+  "like_count": 0,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": null,
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [],
+  "aircraft_mentioned": [],
+  "ife_features": {},
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "chapters_source": "ocr",
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3,
+  "title_lang": "en",
+  "sentiment": "neutral",
+  "sentiment_score": 0.0
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=HBdpY6d5vOg",
+  "title": "Emirates New Business Class seats are Amazing! #emirates #businessclass #aviation",
+  "title_en": null,
+  "year": 2026,
+  "published_at": "2026-10-15T22:55:37Z",
+  "duration_seconds": 12,
+  "is_short": true,
+  "channel_title": "Trendy Travel",
+  "view_count": 84,
+  "like_count": 2,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": "Emirates ICE",
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "emirates",
+    "mentions": 2
+   }
+  ],
+  "aircraft_mentioned": [],
+  "ife_features": {},
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "discovered_by": "channel:Andreas Luxury Travel",
+  "chapters_source": "ocr",
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=4nHwIEtIQ-c",
+  "title": "Emirates new Business Class seats are amazing! #emirates #777 #businessclass",
+  "title_en": null,
+  "year": 2026,
+  "published_at": "2026-10-14T22:25:05Z",
+  "duration_seconds": 8,
+  "is_short": true,
+  "channel_title": "Trendy Travel",
+  "view_count": 564,
+  "like_count": 8,
+  "ife_system": null,
+  "ife_system_inferred": false,
+  "ife_system_guess": "Emirates ICE",
+  "chapters": [],
+  "media_type": "video",
+  "airlines_mentioned": [
+   {
+    "keyword": "emirates",
+    "mentions": 2
+   }
+  ],
+  "aircraft_mentioned": [
+   {
+    "keyword": "777",
+    "mentions": 1
+   }
+  ],
+  "ife_features": {},
+  "ife_specs": {},
+  "transcript_available": false,
+  "transcript_excerpt": null,
+  "captions": [],
+  "transcript_full": "",
+  "source_tier": 2,
+  "source_name": "Creator",
+  "discovered_by": "channel:Andreas Luxury Travel",
+  "chapters_source": "ocr",
+  "screen_tags": [],
+  "screen_tag_source": "ocr-video",
+  "ocr_tagger_v": 3
  }
 ]
