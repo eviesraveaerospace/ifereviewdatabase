@@ -65,6 +65,7 @@ sys.path.insert(0, str(REPO))
 from ocr_video_chapters import analyze_frames  # noqa: E402
 from llm_video_chapters import sample_video     # noqa: E402
 from manual_review_tagger import to_ife_features  # noqa: E402
+from ocr_results import OWN, apply_results, cache_lock, load_results, save_results  # noqa: E402
 
 # Tags that are still an IFE screen but say nothing a reviewer would jump to.
 _QUIET_TAGS = {"Welcome screen"}
@@ -336,32 +337,8 @@ def tag_detections(rows, offset, chapter_idx, interval):
     return out
 
 
-import contextlib
-
-
-@contextlib.contextmanager
-def _cache_lock():
-    """Serialise cache writes between parallel shards (flock on POSIX, msvcrt on Windows)."""
-    lock = CACHE.with_suffix(".lock")
-    with open(lock, "a+") as fh:
-        try:
-            import fcntl
-            fcntl.flock(fh, fcntl.LOCK_EX)
-            release = lambda: fcntl.flock(fh, fcntl.LOCK_UN)  # noqa: E731
-        except ImportError:
-            import msvcrt
-            fh.seek(0)
-            while True:                       # LK_LOCK gives up after ~10 s; keep waiting
-                try:
-                    msvcrt.locking(fh.fileno(), msvcrt.LK_LOCK, 1)
-                    break
-                except OSError:
-                    time.sleep(0.2)
-            release = lambda: (fh.seek(0), msvcrt.locking(fh.fileno(), msvcrt.LK_UNLCK, 1))  # noqa: E731
-        try:
-            yield
-        finally:
-            release()
+def _cache_lock(path=None):
+    return cache_lock(path or CACHE)
 
 
 def main():
@@ -390,11 +367,19 @@ def main():
                          "whatever its kind (Short, chaptered, long), newest first: run first each night "
                          "so a new video gets its detections ahead of the backlog")
     ap.add_argument("--since-days", type=int, default=14)
+    ap.add_argument("--reverse", action="store_true",
+                    help="work through the queue from the other end (lowest priority first): a second "
+                         "machine meets the nightly pass in the middle instead of repeating its videos")
+    ap.add_argument("--results-out", default=os.environ.get("OCR_RESULTS_OUT", ""),
+                    help="write results to this small JSON (url -> OCR fields) instead of the cache; "
+                         "merge_ocr_results.py applies it to the cache on the machine that owns it")
     a = ap.parse_args()
     _cookies_from_env()
 
     data = json.loads(CACHE.read_text(encoding="utf-8"))
     rows = data.get("reviews", [])
+    if a.results_out:
+        print(f"{apply_results(rows, load_results(a.results_out))} rows already done in {a.results_out}")
     if a.new:
         # A held video whose last download failed generically ("fail") is tried again; the
         # status is dropped in memory and the row is saved with it gone when it is processed.
@@ -444,6 +429,8 @@ def main():
         todo = [r for r in todo if (not r.get("chapters") and r.get("chapters_source") != "ocr")
                 or (r.get("chapters_source") == "ocr" and (a.retag or (_stale(r) and not r.get("chapters_ocr_status"))))]
         todo.sort(key=lambda r: r.get("chapters_source") == "ocr")
+    if a.reverse:
+        todo.reverse()
     if a.shard:
         k, n_sh = (int(x) for x in a.shard.split("/"))
         todo = todo[k::n_sh]
@@ -462,11 +449,12 @@ def main():
     done = failed = 0
     stats = {"ok": 0, "skip": 0, "fail": 0, "block": 0}
 
-    OWN = ("chapters", "chapters_source", "chapters_ocr_status", "screen_tags", "screen_tag_source", "ife_features",
-           "ife_tags", "ife_tags_status", "ife_tags_scope", "ocr_tagger_v")
     touched = {}
 
     def save():
+        if a.results_out:
+            save_results(a.results_out, touched)
+            return
         # Merge, don't overwrite: the transcript backfill / media fetch / a
         # parallel shard may have written the cache since we loaded it. Re-read
         # under a lock and apply only our fields.

@@ -81,6 +81,10 @@ ocr_pass() {        # ocr_pass NAME CAP SHARDS [gather_short_chapters.py args...
     log "OCR $name: budget ${b} min, took $(( (SECONDS - t0) / 60 )) min"
 }
 
+# Results a second machine (the laptop: laptop_ocr.ps1) pushed in ocr_results/*.json are
+# applied first, so the passes below skip those videos.
+"$PY" ocr_results.py >> "$LOG" 2>&1
+
 log "time budget: $(minutes_left) min until $NIGHT_DEADLINE_UTC UTC"
 OCR_READY=0
 if [ -x "$OCR_PY" ] && [ -f "$OCR_REPO/ocr_video_chapters.py" ] && "$OCR_PY" -c "import yt_dlp" 2>/dev/null; then
@@ -138,6 +142,8 @@ fi
 
 # Whisper over the internal reviews' own recordings (dashboard venv has whisper).
 "$PY" -u transcribe_internal.py >> "$LOG" 2>&1
+
+"$PY" ocr_results.py >> "$LOG" 2>&1
 
 # Drop entries the gate rejects today and videos the OCR pass has sampled
 # without finding an IFE screen (copies kept in pruned_offtopic.json).

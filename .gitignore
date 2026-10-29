@@ -35,3 +35,10 @@ ife_ocr_shard*.txt
 ife_internal_ocr.lock
 ocr_trigger_log.txt
 ife_cache.json.tmp*
+
+# second-machine OCR: only the results JSON is shared; locks, temp files and per-shard logs are local
+ocr_results/*.lock
+ocr_results/*.tmp
+ocr_results/*.log
+ife_cache.lock
+ife_cache.mergetmp
